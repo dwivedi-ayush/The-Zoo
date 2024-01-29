@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def location_info(city=""):
+def get_location_info(city=""):
     # creating url and requests instance
     url = "https://www.google.com/search?q=" + "weather" + city
     html = requests.get(url).content
@@ -44,8 +44,8 @@ def get_time(timezone=""):
 
 
 def make_prompt(personality_id="", is_error=False):
-    print(get_time(timezone="America/New_York"))  # extra
-    print(location_info("New York"))  # might be unreliable
+    # print(get_time(timezone="America/New_York"))  # extra
+    location_info = get_location_info("New York")  # might be unreliable
     """
     personality + instruction + current info about the world(time, weather, custom scenario (maybe location dependant), random event (from event creator)) + previous summary
     fetch everything saperately

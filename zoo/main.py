@@ -64,21 +64,22 @@ while True:
     # check if the previous action is saved before proceeding (check here or just after executing action)
     # ====================================================================================================
 
-    if is_error:
-        # make prompt differently
-        prompt_content = make_prompt(personality_id, is_error=True)
+    # API call params
+    prompt_content = make_prompt(personality_id, is_error=is_error)
+    model = "gpt-3.5-turbo-instruct"
+    temperature = 0.8
+    max_tokens = 280
 
+    if is_error:
+        # maybe change temperature or model
         is_error = False
-        pass
-    else:
-        prompt_content = make_prompt(personality_id)
 
     # get response
     response = client.completions.create(
-        model="gpt-3.5-turbo-instruct",
+        model=model,
         prompt=prompt_content,
-        temperature=0.8,
-        max_tokens=280,
+        temperature=temperature,
+        max_tokens=max_tokens,
     )
     # max_tokens=number
     # if max token very less , reason for stopping becomes length
