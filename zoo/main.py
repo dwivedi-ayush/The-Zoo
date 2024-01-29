@@ -23,5 +23,5 @@ response = client.completions.create(
     temperature=0,
     max_tokens=10,
 )
-# if max topen very less , reason for stopping becomes length
+# if max token very less , reason for stopping becomes length
 print(response.choices[0].text)
