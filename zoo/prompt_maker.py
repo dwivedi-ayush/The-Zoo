@@ -1,4 +1,4 @@
-def make_prompt():
+def make_prompt(personality_id):
     """
     personality + instruction + current info about the world + previous summary
     fetch everything saperately

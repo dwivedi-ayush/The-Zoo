@@ -2,14 +2,44 @@ from dotenv import load_dotenv, find_dotenv
 import openai as ai
 import time
 import os
+import sys
+import argparse
 from prompt_maker import make_prompt
+
+"""
+python script.py personality
+python script.py personality -t
+python script.py personality -t -l 10
+
+"""
+
+test_mode = True
+loop_limit = 5
+parser = argparse.ArgumentParser()
+# Add the required personality argument
+parser.add_argument("personality", type=str, help="Specify the personality (required)")
+
+# Add the optional test mode flag
+parser.add_argument("-t", "--test_mode", action="store_true", help="Enable test mode")
+
+# Add the optional loop limit argument if test mode is active
+parser.add_argument(
+    "-l", "--loop_limit", type=int, help="Specify loop limit for test mode"
+)
+
+# Parse the command-line arguments
+args = parser.parse_args()
+
+# Access the values
+personality_id = args.personality
+test_mode = args.test_mode
+loop_limit = args.loop_limit
 
 load_dotenv(find_dotenv())
 
 api_key = os.getenv("API_KEY")
 client = ai.OpenAI(api_key=api_key)
-test_mode = True
-loop_limit = 5
+
 
 """ 
 check client.chat.completion also instead of prompt it has 
@@ -33,7 +63,7 @@ while True:
         pass
 
     # make prompt
-    prompt_content = make_prompt()
+    prompt_content = make_prompt(personality_id)
 
     # get response
     response = client.completions.create(
