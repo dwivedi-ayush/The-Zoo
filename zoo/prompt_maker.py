@@ -1,13 +1,51 @@
 from datetime import datetime
 import pytz
+import requests
+from bs4 import BeautifulSoup
+
+
+def location_info(city=""):
+    # creating url and requests instance
+    url = "https://www.google.com/search?q=" + "weather" + city
+    html = requests.get(url).content
+
+    # getting raw data
+    soup = BeautifulSoup(html, "html.parser")
+    temp = soup.find("div", attrs={"class": "BNeawe iBp4i AP7Wnd"}).text
+    str = soup.find("div", attrs={"class": "BNeawe tAd8D AP7Wnd"}).text
+
+    # formatting data
+    data = str.split("\n")
+    time = data[0]
+    sky = data[1]
+
+    # getting all div tag
+    # listdiv = soup.findAll("div", attrs={"class": "mPUmSe"}) # class keeps changing - need better way of doing this (humidity info, etc)
+    # print(listdiv)
+    # strd = listdiv[5].text
+
+    # getting other required data
+    # pos = strd.find("Wind")
+    # other_data = strd[pos:]
+
+    # printing all data
+    # print("Temperature is", temp)
+    # print("Time: ", time)
+    # print("Sky Description: ", sky)
+    # print(other_data)
+    return {"temp": temp, "time": time, "sky": sky, "other_data": "other_data"}
+
+
+def get_time(timezone=""):
+    # timezone = "America/New_York"  # get according to agent personality
+    t_obj = datetime.now(pytz.timezone(timezone))
+    time = t_obj.strftime("%I:%M %p")
+    return time
 
 
 def make_prompt(personality_id=""):
-    timezone = "America/New_York"  # get according to agent personality
-    t_obj = datetime.now(pytz.timezone(timezone))
-    time = t_obj.strftime("%I:%M %p")
-    print(time)
-
+    print(get_time(timezone="America/New_York"))  # extra
+    print(location_info("New York"))  # might be unreliable
     """
     personality + instruction + current info about the world(time, weather, custom scenario (maybe location dependant), random event (from event creator)) + previous summary
     fetch everything saperately
