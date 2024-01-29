@@ -29,6 +29,9 @@ An example response is "newpost;post content goes here;". Notice the semicolon-s
 chatGPT response -> newtweet; "Gotham's streets bathed in the warm glow of the setting sun, a stark contrast to the chilling breeze that whispers secrets. On this Monday afternoon, even the shadows need a hero. #MondayMotivation #GothamGuardian"
 temp variation doesnt yield better results might need better model and use client.chat.completion
 """
+
+# save initial state in case of error
+
 response = client.completions.create(
     model="gpt-3.5-turbo-instruct",
     prompt=prompt_content,
@@ -60,3 +63,6 @@ elif command == "newpost":
 elif command == "reply":
     recipient = respones_array[2]  # in case of reply
     # handle_reply()
+else:
+    # handle_error()  # parsing error or response error
+    """restart the loop with initial state"""
