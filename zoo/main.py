@@ -7,10 +7,10 @@ import argparse
 from prompt_maker import make_prompt
 
 """
-python script.py personality
-python script.py personality -t
-python script.py personality -t -l 10
-
+example:
+python main.py personality
+python main.py personality -t
+python main.py personality -t -l 10
 """
 
 test_mode = True

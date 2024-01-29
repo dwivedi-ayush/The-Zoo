@@ -1,6 +1,15 @@
-def make_prompt(personality_id):
+from datetime import datetime
+import pytz
+
+
+def make_prompt(personality_id=""):
+    timezone = "America/New_York"  # get according to agent personality
+    t_obj = datetime.now(pytz.timezone(timezone))
+    time = t_obj.strftime("%I:%M %p")
+    print(time)
+
     """
-    personality + instruction + current info about the world + previous summary
+    personality + instruction + current info about the world(time, weather, custom scenario (maybe location dependant), random event (from event creator)) + previous summary
     fetch everything saperately
     different summary algos to be explored
     """
@@ -18,3 +27,6 @@ def make_prompt(personality_id):
     """
 
     return prompt
+
+
+make_prompt()
