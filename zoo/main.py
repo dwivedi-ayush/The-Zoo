@@ -42,3 +42,21 @@ print(
     "============================================================================================================"
 )
 print(response.choices[0].text)
+print(
+    "============================================================================================================"
+)
+response_string = response.choices[0].text
+
+# parse the string
+respones_array = response_string.split(";")
+command = respones_array[0]
+message_content = recipient = ""
+if command == "like":
+    # handle_like()
+    """"""
+elif command == "newpost":
+    message_content = respones_array[1]  # in case of original tweet
+    # handle_new_tweet()
+elif command == "reply":
+    recipient = respones_array[2]  # in case of reply
+    # handle_reply()
