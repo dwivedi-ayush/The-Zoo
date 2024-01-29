@@ -15,6 +15,7 @@ python main.py personality -t -l 10
 
 test_mode = True
 loop_limit = 5
+action_frequency = 5  # action every 5 seconds
 parser = argparse.ArgumentParser()
 # Add the required personality argument
 parser.add_argument("personality", type=str, help="Specify the personality (required)")
@@ -57,13 +58,20 @@ while True:
         loop_limit -= 1
 
     # save initial state in case of error
+    prompt_content = "Error"
+
+    # ====================================================================================================
+    # check if the previous action is saved before proceeding (check here or just after executing action)
+    # ====================================================================================================
+
     if is_error:
         # make prompt differently
+        prompt_content = make_prompt(personality_id, is_error=True)
+
         is_error = False
         pass
-
-    # make prompt
-    prompt_content = make_prompt(personality_id)
+    else:
+        prompt_content = make_prompt(personality_id)
 
     # get response
     response = client.completions.create(
@@ -90,7 +98,7 @@ while True:
     message_content = recipient = ""
     if command == "like":
         # handle_like()
-        """"""
+        pass
     elif command == "newpost":
         message_content = respones_array[1]  # in case of original tweet
         # handle_new_tweet()
@@ -103,4 +111,4 @@ while True:
         is_error = True
         continue
 
-    time.sleep(5)
+    time.sleep(action_frequency)

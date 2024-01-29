@@ -43,7 +43,7 @@ def get_time(timezone=""):
     return time
 
 
-def make_prompt(personality_id=""):
+def make_prompt(personality_id="", is_error=False):
     print(get_time(timezone="America/New_York"))  # extra
     print(location_info("New York"))  # might be unreliable
     """
