@@ -16,22 +16,17 @@ python main.py personality -t -l 10
 test_mode = True
 loop_limit = 5
 action_frequency = 5  # action every 5 seconds
+
+
 parser = argparse.ArgumentParser()
-# Add the required personality argument
 parser.add_argument("personality", type=str, help="Specify the personality (required)")
-
-# Add the optional test mode flag
 parser.add_argument("-t", "--test_mode", action="store_true", help="Enable test mode")
-
-# Add the optional loop limit argument if test mode is active
 parser.add_argument(
     "-l", "--loop_limit", type=int, help="Specify loop limit for test mode"
 )
-
-# Parse the command-line arguments
 args = parser.parse_args()
 
-# Access the values
+
 personality_id = args.personality
 test_mode = args.test_mode
 loop_limit = args.loop_limit
@@ -58,7 +53,7 @@ while True:
         loop_limit -= 1
 
     # save initial state in case of error
-    prompt_content = "Error"
+    prompt_content = ""
 
     # ====================================================================================================
     # check if the previous action is saved before proceeding (check here or just after executing action)
