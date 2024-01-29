@@ -18,7 +18,7 @@ model predicts the next logical step
 client.completion is legacy (used here for testing only)
 """
 
-
+is_error = False
 while True:
     if test_mode:
         if loop_limit == 0:
@@ -39,7 +39,10 @@ while True:
     """
 
     # save initial state in case of error
-
+    if is_error:
+        # make prompt differently
+        is_error = False
+        pass
     # make prompt
     """
     personality + instruction + current info about the world + previous summary
@@ -81,5 +84,7 @@ while True:
     else:
         # handle_error()  # parsing error or response error
         """restart the loop with initial state"""
+        is_error = True
+        continue
 
     time.sleep(5)
