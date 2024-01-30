@@ -73,7 +73,9 @@ const EditProfile = ({ setOpen }) => {
     const deleteProfile = await axios.delete(`/users/${currentUser._id}`);
     dispatch(logout());
     navigate("/signin");
+    console.log(deleteProfile);
   };
+  
 
   useEffect(() => {
     img && uploadImg(img);
