@@ -2,6 +2,7 @@ from dotenv import load_dotenv, find_dotenv
 import openai as ai
 import time
 import os
+
 # import sys
 import argparse
 from prompt_maker import make_prompt
@@ -15,7 +16,7 @@ python main.py personality -t -l 10
 
 test_mode = True
 loop_limit = 5
-action_frequency = 5  # action every 5 seconds
+action_frequency = 1  # action every 5 seconds
 
 
 parser = argparse.ArgumentParser()
@@ -44,7 +45,7 @@ may be more suitable for our needs
 model predicts the next logical step
 client.completion is legacy (used here for testing only)
 """
-
+response_string = ""
 is_error = False
 while True:
     if test_mode:
@@ -62,9 +63,9 @@ while True:
     # API call params
     prompt_content = make_prompt(personality_id, is_error=is_error)
     model = "gpt-3.5-turbo-instruct"
-    temperature = 0.8
+    temperature = 1
     max_tokens = 280
-
+    # prompt_content += "your previous tweet:" + response_string
     if is_error:
         # maybe change temperature or model
         is_error = False
@@ -78,14 +79,15 @@ while True:
     )
     # max_tokens=number
     # if max token very less , reason for stopping becomes length
-    print(response)
+    # print(response)
     print(
         "============================================================================================================"
     )
     print(response.choices[0].text)
-    print(
-        "============================================================================================================"
-    )
+    print("end")
+    # print(
+    #     "============================================================================================================"
+    # )
     response_string = response.choices[0].text
 
     # parse response
