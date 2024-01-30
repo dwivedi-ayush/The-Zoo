@@ -1,2 +1,5 @@
 python-dotenv
 openai
+bert-extractive-summarizer
+transformers
+torch

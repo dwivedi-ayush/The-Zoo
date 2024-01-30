@@ -2,7 +2,7 @@ from dotenv import load_dotenv, find_dotenv
 import openai as ai
 import time
 import os
-import sys
+# import sys
 import argparse
 from prompt_maker import make_prompt
 
