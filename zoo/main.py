@@ -99,7 +99,7 @@ while True:
     previous_summary = get_summary()
     prompt_content = make_prompt(personality_id, previous_summary, is_error=is_error)
     model = "gpt-3.5-turbo-instruct"
-    temperature = 1
+    temperature = 0.8
     max_tokens = 280
     # prompt_content += "your previous tweet:" + response_string
     if is_error:
@@ -127,7 +127,7 @@ while True:
     response_string = response.choices[0].text
     save_response(response_string + "\n")
 
-    # parse response
+    # parse responses
     respones_array = response_string.split(";")
     command = respones_array[0]
     message_content = recipient = ""
@@ -146,4 +146,4 @@ while True:
         # handle_error()  # parsing error or response error
         """restart the loop with initial state"""
         is_error = True
-        continue
+        # continue
