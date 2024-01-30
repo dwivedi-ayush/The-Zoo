@@ -6,6 +6,7 @@ import os
 # import sys
 import argparse
 from prompt_maker import make_prompt
+from summary_algo_test import openAI_summariser
 
 """
 example:
@@ -13,6 +14,36 @@ python main.py personality
 python main.py personality -t
 python main.py personality -t -l 10
 """
+
+
+def save_response(resp):
+    try:
+        file_name = "./tweet_history/" + personality_id + ".txt"
+        f = open(file_name, "a+")  # open file in write mode
+        f.write(resp)
+        f.close()
+    except Exception as error:
+        print("Error Saving info :", error)
+
+
+def get_response_log():
+    try:
+        file_name = "./tweet_history/" + personality_id + ".txt"
+        f = open(file_name, "r")  # open file in write mode
+        data = f.read()
+        f.close()
+        return data
+    except Exception as error:
+        print("Error getting info :", error)
+        return ""
+
+
+def get_summary():
+    log = get_response_log()
+    if log == "":
+        return ""
+    return openAI_summariser(log)
+
 
 test_mode = True
 loop_limit = 5
@@ -45,9 +76,13 @@ may be more suitable for our needs
 model predicts the next logical step
 client.completion is legacy (used here for testing only)
 """
+
+
 response_string = ""
 is_error = False
+"""============== core ==============="""
 while True:
+    start_time = time.time()
     if test_mode:
         if loop_limit == 0:
             break
@@ -61,7 +96,8 @@ while True:
     # ====================================================================================================
 
     # API call params
-    prompt_content = make_prompt(personality_id, is_error=is_error)
+    previous_summary = get_summary()
+    prompt_content = make_prompt(personality_id, previous_summary, is_error=is_error)
     model = "gpt-3.5-turbo-instruct"
     temperature = 1
     max_tokens = 280
@@ -89,11 +125,14 @@ while True:
     #     "============================================================================================================"
     # )
     response_string = response.choices[0].text
+    save_response(response_string + "\n")
 
     # parse response
     respones_array = response_string.split(";")
     command = respones_array[0]
     message_content = recipient = ""
+    print("Time this iteration: ", (time.time() - start_time))
+    time.sleep(max(0, action_frequency - (time.time() - start_time)))
     if command == "like":
         # handle_like()
         pass
@@ -108,5 +147,3 @@ while True:
         """restart the loop with initial state"""
         is_error = True
         continue
-
-    time.sleep(action_frequency)

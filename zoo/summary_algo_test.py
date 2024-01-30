@@ -1,4 +1,4 @@
-from chatlogs_test import test1, test2, test3, test4, test5
+# from chatlogs_test import test1, test2, test3, test4, test5
 
 # from summarizer import Summarizer
 # from transformers import BertTokenizer, BertModel
@@ -76,7 +76,7 @@ def openAI_summariser(orignal_txt):
     load_dotenv(find_dotenv())
 
     client = ai.OpenAI(api_key=os.getenv("API_KEY"))
-    prompt = "Could you please provide a concise and comprehensive summary of the given text? The summary should capture the main points and key details of the text while conveying the author's intended meaning accurately. Please ensure that the summary is well-organized and easy to read, with clear headings and subheadings to guide the reader through each section. The length of the summary should be appropriate to capture the main points and key details of the text, without including unnecessary information or becoming overly long:"
+    prompt = "Given is a set of tweet made by someone, summarize these tweets in short,tweets are:  The summary should capture the main points and key details of the text while conveying the author's intended meaning accurately. Please ensure that the summary is well-organized and easy to read, with clear headings and subheadings to guide the reader through each section. The length of the summary should be appropriate to capture the main points and key details of the text, without including unnecessary information or becoming overly long:"
 
     response = client.completions.create(
         model="gpt-3.5-turbo-instruct",
@@ -84,9 +84,9 @@ def openAI_summariser(orignal_txt):
         temperature=0.8,
         max_tokens=300,
     )
-    print("openAI summary:")
-    print(response.choices[0].text)
-    return
+    # print("openAI summary:")
+    # print(response.choices[0].text)
+    return response.choices[0].text
 
 
 # BERTsum(test1)
