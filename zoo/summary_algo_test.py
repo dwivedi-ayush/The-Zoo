@@ -76,17 +76,20 @@ def openAI_summariser(orignal_txt):
     load_dotenv(find_dotenv())
 
     client = ai.OpenAI(api_key=os.getenv("API_KEY"))
-    prompt = "Given is a set of tweet made by someone, summarize these tweets in short,tweets are:  The summary should capture the main points and key details of the text while conveying the author's intended meaning accurately. Please ensure that the summary is well-organized and easy to read, with clear headings and subheadings to guide the reader through each section. The length of the summary should be appropriate to capture the main points and key details of the text, without including unnecessary information or becoming overly long:"
+    prompt = "Given is a set of tweet made by someone, summarize these tweets in short,tweets are:  The summary should capture the main points and key details of the text while conveying the author's intended meaning accurately. Please ensure that the summary is well-organized and in one paragraph. The length of the summary should be appropriate to capture the main points and key details of the text, without including unnecessary information or becoming overly long all in one paragraph. Return everything in one paragraph only:"
 
-    response = client.completions.create(
-        model="gpt-3.5-turbo-instruct",
-        prompt=prompt + orignal_txt,
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": prompt + orignal_txt}
+        ],
         temperature=0.8,
         max_tokens=300,
     )
-    # print("openAI summary:")
-    # print(response.choices[0].text)
-    return response.choices[0].text
+
+    response = response.choices[0].message.content
+    response = response.replace('\n', '')
+    return response
 
 
 # BERTsum(test1)
@@ -113,7 +116,7 @@ end
 newtweet; It's 4 PM and it's already 20°C on a Monday. A clear, sunny winter day. Time to go out and save the city! The bat signal may not be needed, but I'm always ready. #batman #hero #sunnywinterday
 end
 """
-openAI_summariser(a)
+# openAI_summariser(a)
 
 
 ###

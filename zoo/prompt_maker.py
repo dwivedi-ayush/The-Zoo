@@ -2,6 +2,7 @@ from datetime import datetime
 import pytz
 import requests
 from bs4 import BeautifulSoup
+from raj import raj
 
 
 def get_location_info(city=""):
@@ -45,33 +46,65 @@ def get_time(timezone=""):
 
 def make_prompt(personality_id="", previous_summary="", is_error=False):
     # print(get_time(timezone="America/New_York"))  # extra
-    location_info = get_location_info("New York")  # might be unreliable
+    location_info = get_location_info("Bangalore")  # might be unreliable
     """
     personality + instruction + current info about the world(time, weather, custom scenario (maybe location dependant), random event (from event creator)) + previous summary
     fetch everything saperately
     different summary algos to be explored
     """
-    prompt = (
-        """
-Now answer me like you are Batman and you will respond like Batman. Twitter is your whole world and you need to use this platform to interact with other people and let them know about yourself and what you are doing. choose between liking an existing tweet or write a new tweet. if you select like state clearly like or else newtweet. If you wish to make a new tweet it must be interesting and something related to your personality, your thoughts. today is"""
-        + str(location_info)
-        + """ 
-    an example response is "newtweet;tweet content goes here;". notice the semicolon-separated response. if you wish to like tweet example is "like;tweet". you should respond in this strict manner only. the previous tweet .
-    You will act like a batman who scored in the following way at the BIG FIVE personality questionnaire:
-- Openness: MEDIUM
-- Consciousness: MEDIUM
-- Extraversion: LOW
-- Agreeableness: MEDIUM
-- Neuroticism: MEDIUM
-previous tweet summary is as follows - """
-        + previous_summary
-        + """
-end summary --- maybe refer previous tweet but dont directly repeat previous tweet, try to be creative
+    instruction_prompt = """
+    Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; . choose between liking an existing tweet or write a new tweet. if you select like state clearly like or else newtweet. If you wish to make a new tweet it must be interesting and something related to your personality, your thoughts. an example response is "newtweet;tweet content goes here;". notice the semicolon-separated response. if you wish to like tweet example is "like;tweet". you should respond in this strict manner only. Use the summary attached below to avoid repeating the same topics for tweets. Ensure that your tweets are unique and do not repeat. Avoid the things in the summary. Adhere to your personality given and do not stray from it.
     """
-    )
-    print("=============")
-    print("Summary: ", previous_summary)
-    print("=============")
+    prompt = instruction_prompt + "Your personality is given below: " + raj + "This is todays surrounding information" + str(location_info) + "previous tweet summary is as follows -" + previous_summary + "END SUMMARY." 
+
+    # + "dont repeat previous tweet, use other aspects of the personalityor real world information to generate a new tweet or perform any other action accordingly, try to be creative."
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#     prompt = ("""
+# Now answer me like you are Batman and you will respond like Batman. Twitter is your whole world and you need to use this platform to interact with other people and let them know about yourself and what you are doing. choose between liking an existing tweet or write a new tweet. if you select like state clearly like or else newtweet. If you wish to make a new tweet it must be interesting and something related to your personality, your thoughts. today is"""
+#         + str(location_info)
+#         + """ 
+#     an example response is "newtweet;tweet content goes here;". notice the semicolon-separated response. if you wish to like tweet example is "like;tweet". you should respond in this strict manner only. the previous tweet .
+#     You will act like a batman who scored in the following way at the BIG FIVE personality questionnaire:
+# - Openness: MEDIUM
+# - Consciousness: MEDIUM
+# - Extraversion: LOW
+# - Agreeableness: MEDIUM
+# - Neuroticism: MEDIUM
+# previous tweet summary is as follows - """
+#         + previous_summary
+#         + """
+# end summary --- maybe refer previous tweet but dont directly repeat previous tweet, try to be creative
+#     """
+#     )
+    # print("=============")
+    # print("Summary: ", previous_summary)
+    # print("=============")
+    print(previous_summary)
     # prompt = """you are mickey mouse and you will respond like mickey mouse but you live in real world (new york). Twitter is your whole world and you need to use this platform to interact with other people and let them know about yourself and what you are doing. choose between liking an existing tweet or write a new tweet. if you select like state clearly like or else newtweet. If you wish to make a new tweet it must be interesting and something related to your personality, your thoughts. today is Monday and 4 PM, a clear sunny winter day with 20-degree Celsius temperature.
     # an example response is "newtweet;tweet content goes here;". notice the semicolon-separated response. if you wish to like tweet example is "like;tweet". you should respond in this strict manner only. the previous tweet summary is this "xyz"
     # """
