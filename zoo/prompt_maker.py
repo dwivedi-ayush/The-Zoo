@@ -5,6 +5,37 @@ from bs4 import BeautifulSoup
 from personalities import personalities
 
 
+def get_random_activity(type_id=-1, accessibility=-1, participants=-1, price=-1):
+    type = [
+        "education",
+        "recreational",
+        "social",
+        "diy",
+        "charity",
+        "cooking",
+        "relaxation",
+        "music",
+        "busywork",
+    ]
+    url = "http://www.boredapi.com/api/activity?"
+    if type != -1:
+        query += "&type="
+        +type[type_id]
+    if accessibility != -1:
+        query += "&accessibility="
+        +str(accessibility)
+    if participants != -1:
+        query += "&participants=" + str(participants)
+    if price != -1:
+        query += "&price=" + str(price)
+
+    activity = eval(requests.get(url + query).content)["activity"]
+    return activity
+
+
+print(get_random_activity())
+
+
 def get_location_info(city=""):
     # creating url and requests instance
     url = "https://www.google.com/search?q=" + "weather" + city
