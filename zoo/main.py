@@ -97,6 +97,9 @@ while True:
 
     # API call params
     previous_summary = get_summary()
+    print("=============")
+    print("previous_summary: ", previous_summary)
+    print("=============")
     prompt_content = make_prompt(personality_id, previous_summary, is_error=is_error)
     # model = "gpt-3.5-turbo-instruct"
     model = "gpt-3.5-turbo-1106"
@@ -111,10 +114,10 @@ while True:
     # response = client.chat.completions.create(
     #     model=model,
     #     prompt=prompt_content,
-        # temperature=temperature,
-        # max_tokens=max_tokens,
+    # temperature=temperature,
+    # max_tokens=max_tokens,
     # )
-        
+
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -123,9 +126,6 @@ while True:
         temperature=temperature,
         max_tokens=max_tokens,
     )
-
-
-
 
     # max_tokens=number
     # if max token very less , reason for stopping becomes length
@@ -137,9 +137,9 @@ while True:
     response = response.choices[0].message.content
     print(response)
     print("end")
-    # print(
-    #     "============================================================================================================"
-    # )
+    print(
+        "============================================================================================================"
+    )
     response_string = response
     save_response(response_string + "\n")
 
