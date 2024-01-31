@@ -18,22 +18,19 @@ def get_random_activity(type_id=-1, accessibility=-1, participants=-1, price=-1)
         "busywork",
     ]
     url = "http://www.boredapi.com/api/activity?"
-    if type != -1:
-        query += "&type="
-        +type[type_id]
+    query = ""
+    if type_id != -1:
+        query += "&type=" + type[type_id]
     if accessibility != -1:
-        query += "&accessibility="
-        +str(accessibility)
+        query += "&accessibility=" + str(accessibility)
     if participants != -1:
         query += "&participants=" + str(participants)
     if price != -1:
         query += "&price=" + str(price)
 
     activity = eval(requests.get(url + query).content)["activity"]
+    print("random activity is : ", activity)
     return activity
-
-
-print(get_random_activity())
 
 
 def get_location_info(city=""):
@@ -95,6 +92,8 @@ def make_prompt(personality_id, previous_summary, is_error=False):
         + "previous tweet summary is as follows -"
         + previous_summary
         + "END SUMMARY."
+        + "random activity you are about to do is this if you wanr you can tweet about this too but it is not necessary:"
+        + get_random_activity(type_id=8)
     )
 
     # + "dont repeat previous tweet, use other aspects of the personalityor real world information to generate a new tweet or perform any other action accordingly, try to be creative."

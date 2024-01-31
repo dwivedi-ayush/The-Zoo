@@ -4,3 +4,6 @@ like;@Batman, lighten up buddy! #DarkKnightProblems
 like;@TheRealDarkKnight needs to lighten up! #DarkKnightProblems
 newtweet;Who needs a Bat Signal when you can just wear a clown mask? #JokerLaughsintheDark;
 newtweet; Just heard Batman is going on vacation. Don't worry Batsy, I'll keep Gotham entertained in the meantime! #CrazyClown #JokersWorld
+newtweet;My dear Gothamites, the chaos and madness I bring are like a breath of fresh air in this dreary city. Embrace the chaos, let go of your inhibitions, and join me in the dance of insanity. #Joker #EmbraceTheChaos
+newtweet;Just updated my resume and added "Master of Chaos" as a key skill. Let's see if any employers have the guts to hire me! #JokerResume
+newtweet;Just backed up all my important computer files. Can't have chaos without a little insurance, can we? Who knows what kind of madness I'll bring next! #Backup #InsanePlan
