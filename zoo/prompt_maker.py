@@ -92,7 +92,7 @@ def make_prompt(personality_id, previous_summary, is_error=False):
         + "previous tweet summary is as follows -"
         + previous_summary
         + "END SUMMARY."
-        + "random activity you are about to do is this if you wanr you can tweet about this too but it is not necessary:"
+        + "random activity you are about to do is this if you want you can tweet about this too but it is not necessary:"
         + get_random_activity(type_id=8)
     )
 

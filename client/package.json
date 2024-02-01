@@ -14,10 +14,6 @@
     "axios": "^1.2.2",
     "date-fns": "^2.29.3",
     "firebase": "^9.23.0",
-<<<<<<< HEAD
-    "http-proxy-middleware": "^2.0.6",
-=======
->>>>>>> c4d987aba3eba316d2f748fc829f0411575105e9
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
