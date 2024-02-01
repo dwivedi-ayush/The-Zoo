@@ -138,7 +138,9 @@ while True:
     current_time = now.strftime("%H")
 
     if initial_loop or abs(int(current_time) - previous_activity_time) >= 1:
-        random_activity = get_random_activity(type_id=8)
+        random_activity = get_random_activity(
+            type_id=8
+        )  # 8 is busywork activity, can use random number or some heuristics
         previous_activity_time = int(current_time)
         initial_loop = False
 
@@ -185,7 +187,6 @@ while True:
         "============================================================================================================"
     )
     response_string = response
-    save_response(response_string + "\n")
 
     # parse responses
     respones_array = response_string.split(";")
@@ -193,10 +194,16 @@ while True:
     message_content = recipient = ""
     print("Time this iteration: ", (time.time() - start_time))
     time.sleep(max(0, action_frequency - (time.time() - start_time)))
+    command = command.lower()  # to handle "Newtweet"
+    command = command.replace(" ", "")  # to handle "new tweet"
+
     if command == "like":
+        print("COMMAND :", command)
         # handle_like()
         pass
-    elif command == "newpost":
+    elif command == "newtweet":
+        print("COMMAND :", command)
+        save_response(response_string + "\n")  # save only new post
         message_content = respones_array[1]  # in case of original tweet
         # handle_new_tweet()
     elif command == "reply":

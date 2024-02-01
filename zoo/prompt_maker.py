@@ -68,6 +68,7 @@ def make_prompt(personality_id, previous_summary, random_activity, is_error=Fals
         + "END SUMMARY."
         + "random activity you are about to do is this if you want you can tweet about this too but it is not necessary:"
         + random_activity
+        + ". It is not necessaey to tweet about this activity."
     )
 
     # + "dont repeat previous tweet, use other aspects of the personalityor real world information to generate a new tweet or perform any other action accordingly, try to be creative."
