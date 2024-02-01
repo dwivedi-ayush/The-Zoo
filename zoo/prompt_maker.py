@@ -44,7 +44,9 @@ def get_time(timezone=""):
     return time
 
 
-def make_prompt(personality_id, previous_summary, random_activity, is_error=False):
+def make_prompt(
+    personality_id, previous_summary, previous_post, random_activity, is_error=False
+):
     # print(get_time(timezone="America/New_York"))  # extra
     location_info = get_location_info("Bangalore")  # might be unreliable
     """
@@ -66,6 +68,9 @@ def make_prompt(personality_id, previous_summary, random_activity, is_error=Fals
         + "previous tweet summary is as follows -"
         + previous_summary
         + "END SUMMARY."
+        + "previous tweet was this, avoid this at all cost if you are making a new post, if you want to refer to this tweet that is allowed but dont repeat the same tweet again"
+        + previous_post
+        + "..end post.."
         + "random activity you are about to do is this if you want you can tweet about this too but it is not necessary:"
         + random_activity
         + ". It is not necessaey to tweet about this activity."

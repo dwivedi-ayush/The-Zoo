@@ -113,6 +113,7 @@ is_error = False
 initial_loop = True
 random_activity = ""
 previous_activity_time = ""
+previous_post = ""
 """============== core ==============="""
 while True:
     start_time = time.time()
@@ -145,7 +146,11 @@ while True:
         initial_loop = False
 
     prompt_content = make_prompt(
-        personality_id, previous_summary, random_activity, is_error=is_error
+        personality_id,
+        previous_summary,
+        previous_post,
+        random_activity,
+        is_error=is_error,
     )
     # model = "gpt-3.5-turbo-instruct"
     model = "gpt-3.5-turbo-1106"
@@ -205,6 +210,7 @@ while True:
         print("COMMAND :", command)
         save_response(response_string + "\n")  # save only new post
         message_content = respones_array[1]  # in case of original tweet
+        previous_post = message_content
         # handle_new_tweet()
     elif command == "reply":
         recipient = respones_array[2]  # in case of reply
