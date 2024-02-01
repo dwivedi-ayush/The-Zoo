@@ -5,34 +5,6 @@ from bs4 import BeautifulSoup
 from personalities import personalities
 
 
-def get_random_activity(type_id=-1, accessibility=-1, participants=-1, price=-1):
-    type = [
-        "education",
-        "recreational",
-        "social",
-        "diy",
-        "charity",
-        "cooking",
-        "relaxation",
-        "music",
-        "busywork",
-    ]
-    url = "http://www.boredapi.com/api/activity?"
-    query = ""
-    if type_id != -1:
-        query += "&type=" + type[type_id]
-    if accessibility != -1:
-        query += "&accessibility=" + str(accessibility)
-    if participants != -1:
-        query += "&participants=" + str(participants)
-    if price != -1:
-        query += "&price=" + str(price)
-
-    activity = eval(requests.get(url + query).content)["activity"]
-    print("random activity is : ", activity)
-    return activity
-
-
 def get_location_info(city=""):
     # creating url and requests instance
     url = "https://www.google.com/search?q=" + "weather" + city
@@ -72,7 +44,7 @@ def get_time(timezone=""):
     return time
 
 
-def make_prompt(personality_id, previous_summary, is_error=False):
+def make_prompt(personality_id, previous_summary, random_activity, is_error=False):
     # print(get_time(timezone="America/New_York"))  # extra
     location_info = get_location_info("Bangalore")  # might be unreliable
     """
@@ -83,6 +55,8 @@ def make_prompt(personality_id, previous_summary, is_error=False):
     instruction_prompt = """
     Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; . choose between liking an existing tweet or write a new tweet.  Avoid the things in the previous tweet summary provided below.if you select like state clearly like or else newtweet. If you wish to make a new tweet it must be interesting and something related to your personality, your thoughts. an example response is "newtweet;tweet content goes here;". notice the semicolon-separated response. if you wish to like tweet example is "like;tweet". you should respond in this strict manner only. Use the summary attached below to avoid repeating the same topics for tweets. Ensure that your tweets are unique and do not repeat. Adhere to your personality given and do not stray from it.
     """
+
+    # only get random activity after a certain amount of time has passed
     prompt = (
         instruction_prompt
         + "Your personality is given below: "
@@ -93,7 +67,7 @@ def make_prompt(personality_id, previous_summary, is_error=False):
         + previous_summary
         + "END SUMMARY."
         + "random activity you are about to do is this if you want you can tweet about this too but it is not necessary:"
-        + get_random_activity(type_id=8)
+        + random_activity
     )
 
     # + "dont repeat previous tweet, use other aspects of the personalityor real world information to generate a new tweet or perform any other action accordingly, try to be creative."

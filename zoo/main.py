@@ -2,6 +2,8 @@ from dotenv import load_dotenv, find_dotenv
 import openai as ai
 import time
 import os
+import requests
+from datetime import datetime
 
 # import sys
 import argparse
@@ -14,6 +16,34 @@ python main.py personality
 python main.py personality -t
 python main.py personality -t -l 10
 """
+
+
+def get_random_activity(type_id=-1, accessibility=-1, participants=-1, price=-1):
+    type = [
+        "education",
+        "recreational",
+        "social",
+        "diy",
+        "charity",
+        "cooking",
+        "relaxation",
+        "music",
+        "busywork",
+    ]
+    url = "http://www.boredapi.com/api/activity?"
+    query = ""
+    if type_id != -1:
+        query += "&type=" + type[type_id]
+    if accessibility != -1:
+        query += "&accessibility=" + str(accessibility)
+    if participants != -1:
+        query += "&participants=" + str(participants)
+    if price != -1:
+        query += "&price=" + str(price)
+
+    activity = eval(requests.get(url + query).content)["activity"]
+    print("random activity is : ", activity)
+    return activity
 
 
 def save_response(resp):
@@ -80,6 +110,9 @@ client.completion is legacy (used here for testing only)
 
 response_string = ""
 is_error = False
+initial_loop = True
+random_activity = ""
+previous_activity_time = ""
 """============== core ==============="""
 while True:
     start_time = time.time()
@@ -100,7 +133,18 @@ while True:
     print("=============")
     print("previous_summary: ", previous_summary)
     print("=============")
-    prompt_content = make_prompt(personality_id, previous_summary, is_error=is_error)
+
+    now = datetime.now()
+    current_time = now.strftime("%H")
+
+    if initial_loop or abs(int(current_time) - previous_activity_time) >= 1:
+        random_activity = get_random_activity(type_id=8)
+        previous_activity_time = int(current_time)
+        initial_loop = False
+
+    prompt_content = make_prompt(
+        personality_id, previous_summary, random_activity, is_error=is_error
+    )
     # model = "gpt-3.5-turbo-instruct"
     model = "gpt-3.5-turbo-1106"
     temperature = 0.8
