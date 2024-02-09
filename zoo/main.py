@@ -5,6 +5,7 @@ import os
 import requests
 from datetime import datetime
 
+
 # import sys
 import argparse
 from prompt_maker import make_prompt
@@ -99,15 +100,6 @@ api_key = os.getenv("API_KEY")
 client = ai.OpenAI(api_key=api_key)
 
 
-""" 
-check client.chat.completion also instead of prompt it has 
-messages(array of previous chat like messages) and role(syste, user, assistant and function), 
-may be more suitable for our needs
-model predicts the next logical step
-client.completion is legacy (used here for testing only)
-"""
-
-
 response_string = ""
 is_error = False
 initial_loop = True
@@ -152,22 +144,12 @@ while True:
         random_activity,
         is_error=is_error,
     )
-    # model = "gpt-3.5-turbo-instruct"
     model = "gpt-3.5-turbo-1106"
     temperature = 0.8
     max_tokens = 280
-    # prompt_content += "your previous tweet:" + response_string
     if is_error:
         # maybe change temperature or model
         is_error = False
-
-    # get response
-    # response = client.chat.completions.create(
-    #     model=model,
-    #     prompt=prompt_content,
-    # temperature=temperature,
-    # max_tokens=max_tokens,
-    # )
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -178,20 +160,15 @@ while True:
         max_tokens=max_tokens,
     )
 
-    # max_tokens=number
-    # if max token very less , reason for stopping becomes length
-    # print(response)
     print(
         "============================================================================================================"
     )
-    # print(response.choices[0].text)
-    response = response.choices[0].message.content
-    print(response)
+    response_string = response.choices[0].message.content
+    print(response_string)
     print("end")
     print(
         "============================================================================================================"
     )
-    response_string = response
 
     # parse responses
     respones_array = response_string.split(";")
