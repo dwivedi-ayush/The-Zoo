@@ -2,8 +2,17 @@
   "tweets": [
     {
       "id": "65b66c6d7d94dfa8ce1d46a9",
-      "userId": "65b66c3f7d94dfa8ce1d4699",
-      "description": "test tweet from user2",
+      "userId": "batman",
+      "description": "how are u gotham",
+      "likes": ["65b66c3f7d94dfa8ce1d4699"],
+      "replies": "",
+      "createdAt": "2024-01-28T15:02:05.411+00:00",
+      "updatedAt": "2024-01-28T15:02:08.863+00:00"
+    },
+    {
+      "id": "65b66c6d7d94dfa8ce1d46a9",
+      "userId": "batman",
+      "description": "is there any crime you can see around u? No? you are welcome",
       "likes": ["65b66c3f7d94dfa8ce1d4699"],
       "replies": "XYZ",
       "createdAt": "2024-01-28T15:02:05.411+00:00",
@@ -11,8 +20,8 @@
     },
     {
       "id": "65bb2dadca464f1ae5ff1e6a",
-      "userId": "65b6654eb2aa9545ab39b89d",
-      "description": "hi there!",
+      "userId": "joker",
+      "description": "Going to commit some crimes in gothan.",
       "likes": [],
       "replies": "ABC",
       "createdAt": "2024-02-01T05:35:41.728+00:00",
@@ -22,8 +31,8 @@
   "users": [
     {
       "id": "65b6654eb2aa9545ab39b89d",
-      "username": "user1",
-      "email": "user1@gmail.com",
+      "username": "batman",
+      "email": "batman@gmail.com",
       "password": "$2a$10$TVQaclxk1JNNDXUyf5uuPOul2poysKNzWQtvLyePM.1jaSypj7Gwm",
       "followers": [],
       "following": [],
@@ -32,41 +41,31 @@
     },
     {
       "id": "65b66c3f7d94dfa8ce1d4699",
-      "username": "user2",
-      "email": "user2@gmail.com",
+      "username": "joker",
+      "email": "joker@gmail.com",
       "password": "$2a$10$bkC/AlB0CKoSXsTQYKXZnOMK1nY7GwBLezMiINiT/QKb2ByeBowU2",
       "followers": [],
       "following": [],
       "createdAt": "2024-01-28T15:01:19.041+00:00",
       "updatedAt": "2024-01-28T15:01:19.041+00:00"
-    },
-    {
-      "id": "65b699bac7454dfcb399eb1d",
-      "username": "ayush",
-      "email": "ayush@gmail.com",
-      "password": "$2a$10$eBnoMNe6kbmXf/q2LGJFw.h1aUg6BVxi/fgQKv2v2DnJCbLt6cclW",
-      "followers": [],
-      "following": [],
-      "createdAt": "2024-01-28T18:15:22.214+00:00",
-      "updatedAt": "2024-01-28T18:15:22.214+00:00"
-    }    
+    }  
   ],
   "replies": {
     "XYZ" :[{
-        "userID" : "1",
-        "description": "test",
+        "userID" : "joker",
+        "description": "I can see one crime",
         "replyID": "A",
         "repliedTO" : ""
       },
       {
-        "userID" : "2",
-        "description": "replying to @1",
+        "userID" : "batman",
+        "description": "@joker thats impossible",
         "replyID": "B",
         "repliedTO" : "A"
       },
     {
-        "userID" : "3",
-        "description": "replying to @2",
+        "userID" : "joker",
+        "description": "@batman is not impossible if i am the one comiting the crime",
         "replyID": "C",
         "repliedTO" : "B"
       }]}

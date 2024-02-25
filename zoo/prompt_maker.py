@@ -3,7 +3,8 @@ import pytz
 import requests
 from bs4 import BeautifulSoup
 from personalities import personalities
-
+from explore import get_tweets,explore_tweets
+from summary_algo_test import openAI_summariser
 
 def get_location_info(city=""):
     # creating url and requests instance
@@ -45,36 +46,64 @@ def get_time(timezone=""):
 
 
 def make_prompt(
-    personality_id, previous_summary, previous_post, random_activity, is_error=False
+    personality_id="", previous_post="", random_activity="",activity_type="", is_error=False
 ):
     # print(get_time(timezone="America/New_York"))  # extra
-    location_info = get_location_info("Bangalore")  # might be unreliable
+    """
+    activity_type = 1 => tweet
+    activity_type = 2 => reply
+    """
     """
     personality + instruction + current info about the world(time, weather, custom scenario (maybe location dependant), random event (from event creator)) + previous summary
     fetch everything saperately
     different summary algos to be explored
     """
-    instruction_prompt = """
-    Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; . choose between liking an existing tweet or write a new tweet.  Avoid the things in the previous tweet summary provided below.if you select like state clearly like or else newtweet. If you wish to make a new tweet it must be interesting and something related to your personality, your thoughts. an example response is "newtweet;tweet content goes here;". notice the semicolon-separated response. if you wish to like tweet example is "like;tweet". you should respond in this strict manner only. Use the summary attached below to avoid repeating the same topics for tweets. Ensure that your tweets are unique and do not repeat. Adhere to your personality given and do not stray from it.
-    """
+    prompt="this is an error prompt, if you see this prompt, only reply with word error and nothing else. example response: 'Error' "
+    location_info = get_location_info("Bangalore")  # might be unreliable
+    if activity_type==2:
 
-    # only get random activity after a certain amount of time has passed
-    prompt = (
-        instruction_prompt
+        reply_prompt="""Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; you have to reply to the given tweets using the tweet itself , the replies to that tweet if any and your personality and opinions what a person of that personality would have.For example if you want to reply to directly tweet number 1 the format should be "replyto1;reply_content_goes_here", if you want to reply to 2nd reply of tweet number 1 the format should be "replyto1-replytoreply2;reply_content_goes_here." .ONLY reply in this format, only one reply should be outputted in your resposnse and it should be in that exact format. It is ok to assume things about the other person and assume their behavior, it is ok to be biased.
+        Adhere to this strict format only.
+        """
+        previous_tweets=explore_tweets()
+       
+        prompt = (
+        reply_prompt
         + "Your personality is given below: "
         + personalities[personality_id]
-        + "This is todays surrounding information"
+        + "This is today's surrounding information"
         + str(location_info)
-        + "previous tweet summary is as follows -"
-        + previous_summary
-        + "END SUMMARY."
-        + "previous tweet was this, avoid this at all cost if you are making a new post, if you want to refer to this tweet that is allowed but dont repeat the same tweet again"
-        + previous_post
-        + "..end post.."
-        + "random activity you are about to do is this if you want you can tweet about this too but it is not necessary:"
-        + random_activity
-        + ". It is not necessaey to tweet about this activity."
+        + "context tweets are as follows -"
+        + str(previous_tweets)
+        + "END context tweets."
+        + "comment on one of these tweets, the comment can be sarcastic, or playful or hateful or anything that can hold the reader's retention."
     )
+        
+
+    
+    else:
+        tweet_prompt="""
+    Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; Avoid the things you said in the previous tweets, summary is provided below. The new tweet it must be interesting and something related to your personality, your thoughts. an example response is "newtweet;tweet content goes here;". notice the semicolon-separated response. you should respond in this strict manner only. The response should only contain the new tweet content in that exact manner. Use the summary attached below to avoid repeating the same topics for tweets. Ensure that your tweets are unique and do not repeat. Adhere to your personality given and do not stray from it.
+    """
+        previous_tweets=get_tweets(personality_id)
+        previous_summary=openAI_summariser(" ".join(previous_tweets))
+        # only get random activity after a certain amount of time has passed
+        prompt = (
+            tweet_prompt
+            + "Your personality is given below: "
+            + personalities[personality_id]
+            + "This is today's surrounding information"
+            + str(location_info)
+            + "previous tweet summary is as follows -"
+            + previous_summary
+            + "END SUMMARY."
+            + "previous tweet that u made is given below, avoid this at all cost, if you want to refer to this tweet that is allowed but dont repeat the same tweet again"
+            + previous_post
+            + "..end post.."
+            + "random activity you are about to do is this if you want you can tweet about this too but it is not necessary:"
+            + random_activity
+            + ". It is not necessaey to tweet about this activity."
+        )
 
     # + "dont repeat previous tweet, use other aspects of the personalityor real world information to generate a new tweet or perform any other action accordingly, try to be creative."
 
@@ -110,3 +139,6 @@ def make_prompt(
     """
 
     return prompt
+
+
+# print(make_prompt(personality_id="batman",activity_type=1))

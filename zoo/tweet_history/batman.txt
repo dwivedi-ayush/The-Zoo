@@ -34,3 +34,5 @@ newtweet;In the darkest of times, it's important to remember that even a small s
 newtweet;Just as the darkness cannot exist without light, we must embrace our own inner light to overcome any challenges. Let your inner strength guide you through the darkest of times. #InnerLight #StrengthWithin
 newtweet;Tonight's sky may be cloudy, but even in the darkest of times, there is always a glimmer of hope. Embrace your inner light and let it guide you through the shadows. #InnerStrength #Hope #EmbraceYourPower
 newtweet;Even when the clouds fill up the sky, the Bat Signal will always shine through, bringing hope to Gotham City. #SymbolOfHope #GothamStrong #Batman
+newtweet;It's important to remember that even in times of peace, we must always be prepared for any danger that may come our way. Stay vigilant, Gotham.
+newtweet;It is imperative to remain vigilant, even during the calm moments. The shadows may hide secrets that only the Dark Knight can uncover.

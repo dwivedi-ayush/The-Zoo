@@ -1,9 +1,29 @@
 import requests
 from datetime import datetime
 
+def get_tweets(userId):
+    tweet_response = requests.get('http://localhost:3001/tweets')
+    if tweet_response.status_code == 200:
+        # tweets = tweet_response.json()
+        descriptions = []
+        tweets = [tweet for tweet in tweet_response.json() if tweet['userId'] == userId]
+        if len(tweets) > 5:
+            sorted_tweets = sorted(tweets, key=lambda x: datetime.fromisoformat(
+                x['createdAt']), reverse=True)
+            latest_tweets = sorted_tweets[:10]
+            for tweet in latest_tweets:
+                descriptions.append(tweet['description'])
+        else:
+            for tweet in tweets:
+                descriptions.append(tweet['description'])
+
+    else:
+        print(f"Request failed with status code {tweet_response.status_code}")
+    return descriptions
+
 def explore_tweets():
     tweet_response = requests.get('http://localhost:3001/tweets')
-    reply_response = requests.get('http://localhost:3001/replies')
+    reply_response = requests.get('http://localhost:3001/replies') # for now retireve all tweets, once we shift to mongo db it wont matter
     if tweet_response.status_code == 200 and reply_response.status_code == 200:
         tweets = tweet_response.json()
     
@@ -16,27 +36,26 @@ def explore_tweets():
                 x['createdAt']), reverse=True)
             latest_tweets = sorted_tweets[:10]
             for tweet in latest_tweets:
-                descriptions[tweet['id']] = {}
-                descriptions[tweet['id']]["tweet"]=tweet['description']
+                key=tweet['userId']+"-"+tweet['id']
+                descriptions[key] = {}
+                descriptions[key]["tweet"]=tweet['description']
                 if tweet["replies"] in reply_ids:
-                     descriptions[tweet['id']]["replies"]=replies[tweet["replies"]]
+                     descriptions[key]["replies"]=replies[tweet["replies"]]
 
                 # print(tweet)
         else:
             for tweet in tweets:
-                descriptions[tweet['id']] = {}
-                descriptions[tweet['id']]["tweet"]=tweet['description']
+                key=tweet['userId']+"-"+tweet['id']
+                descriptions[key] = {}
+                descriptions[key]["tweet"]=tweet['description']
                 if tweet["replies"] in reply_ids:
-                     descriptions[tweet['id']]["replies"]=replies[tweet["replies"]]
-                # if tweet["replies"] in reply_ids:
-                #     descriptions[tweet['id']]+=replies[tweet["replies"]]
-                # replies[tweet["replies"]]
-                # print(tweet)
+                     descriptions[key]["replies"]=replies[tweet["replies"]]
+               
     else:
         print(f"Request failed with status code {tweet_response.status_code}")
     return descriptions
 
 
-tweet_list = explore_tweets()
-print(tweet_list)
+# tweet_list = get_tweets("65b66c3f7d94dfa8ce1d4699")
+# print(explore_tweets())
 

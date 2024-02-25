@@ -4,12 +4,12 @@ import time
 import os
 import requests
 from datetime import datetime
-
+import random
 
 # import sys
 import argparse
 from prompt_maker import make_prompt
-from summary_algo_test import openAI_summariser
+# from summary_algo_test import openAI_summariser
 
 """
 example:
@@ -57,23 +57,23 @@ def save_response(resp):
         print("Error Saving info :", error)
 
 
-def get_response_log():
-    try:
-        file_name = "./tweet_history/" + personality_id + ".txt"
-        f = open(file_name, "r")  # open file in write mode
-        data = f.read()
-        f.close()
-        return data
-    except Exception as error:
-        print("Error getting info :", error)
-        return ""
+# def get_response_log():
+#     try:
+#         file_name = "./tweet_history/" + personality_id + ".txt"
+#         f = open(file_name, "r")  # open file in write mode
+#         data = f.read()
+#         f.close()
+#         return data
+#     except Exception as error:
+#         print("Error getting info :", error)
+#         return ""
 
 
-def get_summary():
-    log = get_response_log()
-    if log == "":
-        return ""
-    return openAI_summariser(log)
+# def get_summary():
+#     log = get_response_log()
+#     if log == "":
+#         return ""
+#     return openAI_summariser(log)
 
 
 test_mode = True
@@ -122,28 +122,42 @@ while True:
     # ====================================================================================================
 
     # API call params
-    previous_summary = get_summary()
-    print("=============")
-    print("previous_summary: ", previous_summary)
-    print("=============")
+    # previous_summary = get_summary()
+    # print("=============")
+    # print("previous_summary: ", previous_summary)
+    # print("=============")
+    # instead of summary we directly take previous tweets
+
 
     now = datetime.now()
     current_time = now.strftime("%H")
 
-    if initial_loop or abs(int(current_time) - previous_activity_time) >= 1:
-        random_activity = get_random_activity(
-            type_id=8
-        )  # 8 is busywork activity, can use random number or some heuristics
-        previous_activity_time = int(current_time)
-        initial_loop = False
-
+    
+    """
+    activity_type = 1 => tweet
+    activity_type = 2 => reply
+    """
+    random_activity=""
+    activity_type=2
+    if random.randint(1,4)==4: # 1 in 4 chance of tweet else reply
+        print("GOING TO MAKE A NEW TWEET")
+        activity_type=1
+        if initial_loop or abs(int(current_time) - previous_activity_time) >= 1:
+            random_activity = get_random_activity(
+                type_id=8
+            )  # 8 is busywork activity, can use random number or some heuristics
+            previous_activity_time = int(current_time)
+            initial_loop = False
+    else:
+        print("GOING TO REPLY")
     prompt_content = make_prompt(
-        personality_id,
-        previous_summary,
-        previous_post,
-        random_activity,
+        personality_id=personality_id,
+        previous_post=previous_post,
+        random_activity=random_activity,
+        activity_type=activity_type,
         is_error=is_error,
     )
+    print("Prompt content is --- ", prompt_content)
     model = "gpt-3.5-turbo-1106"
     temperature = 0.8
     max_tokens = 280
@@ -165,6 +179,10 @@ while True:
     )
     response_string = response.choices[0].message.content
     print(response_string)
+    if response_string=="Error" or response_string=="error":
+        is_error=True
+        print("Error has occured")
+        continue
     print("end")
     print(
         "============================================================================================================"
