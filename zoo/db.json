@@ -5,6 +5,7 @@
       "userId": "65b66c3f7d94dfa8ce1d4699",
       "description": "test tweet from user2",
       "likes": ["65b66c3f7d94dfa8ce1d4699"],
+      "replies": "XYZ",
       "createdAt": "2024-01-28T15:02:05.411+00:00",
       "updatedAt": "2024-01-28T15:02:08.863+00:00"
     },
@@ -13,6 +14,7 @@
       "userId": "65b6654eb2aa9545ab39b89d",
       "description": "hi there!",
       "likes": [],
+      "replies": "ABC",
       "createdAt": "2024-02-01T05:35:41.728+00:00",
       "updatedAt": "2024-02-01T05:35:41.728+00:00"
     }
@@ -48,5 +50,24 @@
       "createdAt": "2024-01-28T18:15:22.214+00:00",
       "updatedAt": "2024-01-28T18:15:22.214+00:00"
     }    
-  ]
+  ],
+  "replies": {
+    "XYZ" :[{
+        "userID" : "1",
+        "description": "test",
+        "replyID": "A",
+        "repliedTO" : ""
+      },
+      {
+        "userID" : "2",
+        "description": "replying to @1",
+        "replyID": "B",
+        "repliedTO" : "A"
+      },
+    {
+        "userID" : "3",
+        "description": "replying to @2",
+        "replyID": "C",
+        "repliedTO" : "B"
+      }]}
 }

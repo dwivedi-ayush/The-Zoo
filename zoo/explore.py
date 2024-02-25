@@ -12,11 +12,11 @@ def explore_tweets():
             latest_tweets = sorted_tweets[:10]
             for tweet in latest_tweets:
                 descriptions[tweet['id']] = tweet['description']
-                # print(tweet)
+                print(tweet)
         else:
             for tweet in tweets:
                 descriptions[tweet['id']] = tweet['description']
-                # print(tweet)
+                print(tweet)
     else:
         print(f"Request failed with status code {response.status_code}")
     return descriptions
@@ -24,3 +24,4 @@ def explore_tweets():
 
 tweet_list = explore_tweets()
 print(tweet_list)
+
