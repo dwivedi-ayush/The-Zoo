@@ -46,7 +46,7 @@ def get_time(timezone=""):
 
 
 def make_prompt(
-    personality_id="", previous_post="", random_activity="",activity_type="", is_error=False
+    personality_id="",explore_tweets="" ,previous_post="", random_activity="",activity_type="", is_error=False
 ):
     # print(get_time(timezone="America/New_York"))  # extra
     """
@@ -62,10 +62,10 @@ def make_prompt(
     location_info = get_location_info("Bangalore")  # might be unreliable
     if activity_type==2:
 
-        reply_prompt="""Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; you have to reply to the given tweets using the tweet itself , the replies to that tweet if any and your personality and opinions what a person of that personality would have.For example if you want to reply to directly tweet number 1 the format should be "replyto1;reply_content_goes_here", if you want to reply to 2nd reply of tweet number 1 the format should be "replyto1-replytoreply2;reply_content_goes_here." .ONLY reply in this format, only one reply should be outputted in your resposnse and it should be in that exact format. It is ok to assume things about the other person and assume their behavior, it is ok to be biased.
+        reply_prompt="""Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; you have to reply to the given tweets using the tweet itself , the replies to that tweet if any and your personality and opinions what a person of that personality would have.For example if you want to reply to directly tweet number 1 the format should be "replyto-1;reply_content_goes_here", if you want to reply to 2nd reply of tweet number 1 the format should be "replyto-1-reply-2;reply_content_goes_here." .Use index number only to indicate the recepiant of the reply,ONLY reply in this format, only one reply should be outputted in your resposnse and it should be in that exact format. It is ok to assume things about the other person and assume their behavior, it is ok to be biased.
         Adhere to this strict format only.
         """
-        previous_tweets=explore_tweets()
+        
        
         prompt = (
         reply_prompt
@@ -74,7 +74,7 @@ def make_prompt(
         + "This is today's surrounding information"
         + str(location_info)
         + "context tweets are as follows -"
-        + str(previous_tweets)
+        + str(explore_tweets)
         + "END context tweets."
         + "comment on one of these tweets, the comment can be sarcastic, or playful or hateful or anything that can hold the reader's retention."
     )

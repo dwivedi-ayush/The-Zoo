@@ -9,6 +9,7 @@ import random
 # import sys
 import argparse
 from prompt_maker import make_prompt
+from explore import get_tweets,explore_tweets
 # from summary_algo_test import openAI_summariser
 
 """
@@ -17,8 +18,10 @@ python main.py personality
 python main.py personality -t
 python main.py personality -t -l 10
 """
-
-
+def save_tweet(personality_id,tweet):
+    return True
+def save_reply(personality_id,tweet,description,isReply):
+    return True
 def get_random_activity(type_id=-1, accessibility=-1, participants=-1, price=-1):
     type = [
         "education",
@@ -43,7 +46,7 @@ def get_random_activity(type_id=-1, accessibility=-1, participants=-1, price=-1)
         query += "&price=" + str(price)
 
     activity = eval(requests.get(url + query).content)["activity"]
-    print("random activity is : ", activity)
+    # print("random activity is : ", activity)
     return activity
 
 
@@ -139,6 +142,7 @@ while True:
     """
     random_activity=""
     activity_type=2
+    indexed_tweet_dict=""
     if random.randint(1,4)==4: # 1 in 4 chance of tweet else reply
         print("GOING TO MAKE A NEW TWEET")
         activity_type=1
@@ -150,14 +154,18 @@ while True:
             initial_loop = False
     else:
         print("GOING TO REPLY")
+        previous_tweets,indexed_tweet_dict=explore_tweets()
+        # for now the dictionary will only be 2 nested -- main tweet and its replies
+    
     prompt_content = make_prompt(
         personality_id=personality_id,
+        explore_tweets=indexed_tweet_dict,
         previous_post=previous_post,
         random_activity=random_activity,
         activity_type=activity_type,
         is_error=is_error,
-    )
-    print("Prompt content is --- ", prompt_content)
+        )
+    # print("Prompt content is --- ", prompt_content)
     model = "gpt-3.5-turbo-1106"
     temperature = 0.8
     max_tokens = 280
@@ -190,28 +198,58 @@ while True:
 
     # parse responses
     respones_array = response_string.split(";")
-    command = respones_array[0]
+    command=respones_array[0]
     message_content = recipient = ""
     print("Time this iteration: ", (time.time() - start_time))
     time.sleep(max(0, action_frequency - (time.time() - start_time)))
     command = command.lower()  # to handle "Newtweet"
     command = command.replace(" ", "")  # to handle "new tweet"
 
-    if command == "like":
-        print("COMMAND :", command)
-        # handle_like()
-        pass
-    elif command == "newtweet":
+    
+    if command == "newtweet":
         print("COMMAND :", command)
         save_response(response_string + "\n")  # save only new post
-        message_content = respones_array[1]  # in case of original tweet
-        previous_post = message_content
+        previous_post = respones_array[1]
+        if save_tweet(personality_id,respones_array[1]):
+            print("Tweet saved successfully")
+        else:
+            print("DB Error")
+            break
         # handle_new_tweet()
-    elif command == "reply":
-        recipient = respones_array[2]  # in case of reply
-        # handle_reply()
+    elif command.split("-")[0]=="replyto":
+        #reply case
+        print("COMMAND :", command)
+        l=command.split("-") #length can be 2 (reply to original tweet) or 4 reply to a reply of the tweet
+        if len(l)==2:
+            # previous_tweets
+            # indexed_tweet_dict
+            for i,tweet in enumerate(previous_tweets):
+                if i==l[1]:
+                    # found the target tweet
+                    if save_reply(personality_id,tweet,respones_array[1],isReply=False):
+                        print("Tweet saved successfully")
+                    else:
+                        print("DB Error")
+                       
+                    break 
+        elif len(l)==4:
+            for i,tweet in enumerate(previous_tweets):
+                if i==l[1]:
+                    for j,reply in enumerate(previous_tweets["replies"]):
+                        if j==j[3]:
+                            # found the target reply   
+                            if save_reply(personality_id,tweet,respones_array[1],isReply=False):
+                                print("Tweet saved successfully")
+                            else:
+                                print("DB Error")
+                        break 
+                    break
+    # elif command == "reply":
+    #     recipient = respones_array[2]  # in case of reply
+    #     # handle_reply()
     else:
         # handle_error()  # parsing error or response error
         """restart the loop with initial state"""
+        print("******* Errored response *******")
         is_error = True
         # continue

@@ -10,7 +10,7 @@
       "updatedAt": "2024-01-28T15:02:08.863+00:00"
     },
     {
-      "id": "65b66c6d7d94dfa8ce1d46a9",
+      "id": "65b66c6d7d94dfa8ce1d46a0",
       "userId": "batman",
       "description": "is there any crime you can see around u? No? you are welcome",
       "likes": ["65b66c3f7d94dfa8ce1d4699"],
@@ -24,6 +24,15 @@
       "description": "Going to commit some crimes in gothan.",
       "likes": [],
       "replies": "ABC",
+      "createdAt": "2024-02-01T05:35:41.728+00:00",
+      "updatedAt": "2024-02-01T05:35:41.728+00:00"
+    },
+    {
+      "id": "65bb2dadca464f1ae5ff1e6b",
+      "userId": "joker",
+      "description": "How is my crime fam doing?",
+      "likes": [],
+      "replies": "",
       "createdAt": "2024-02-01T05:35:41.728+00:00",
       "updatedAt": "2024-02-01T05:35:41.728+00:00"
     }
@@ -65,7 +74,7 @@
       },
     {
         "userID" : "joker",
-        "description": "@batman is not impossible if i am the one comiting the crime",
+        "description": "@batman its not impossible if i am the one comiting the crime",
         "replyID": "C",
         "repliedTO" : "B"
       }]}

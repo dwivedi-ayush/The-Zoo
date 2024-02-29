@@ -48,14 +48,30 @@ def explore_tweets():
                 key=tweet['userId']+"-"+tweet['id']
                 descriptions[key] = {}
                 descriptions[key]["tweet"]=tweet['description']
+                descriptions[key]["replies"]={}
                 if tweet["replies"] in reply_ids:
                      descriptions[key]["replies"]=replies[tweet["replies"]]
                
     else:
         print(f"Request failed with status code {tweet_response.status_code}")
-    return descriptions
+    indexed_descriptions=dict()
+    for i,key in enumerate(descriptions.keys()):
+        indexed_descriptions[i]={}
+        indexed_descriptions[i]["Author"]=key.split("-")[0]
+        indexed_descriptions[i]["Tweet content"]=descriptions[key]["tweet"]
+        indexed_descriptions[i]["replies"]={}
+        # print(descriptions[key],"\n\n",descriptions[key]["replies"])
+        if descriptions[key]["replies"]:
+            # print(descriptions[key]["replies"])
+            for j,reply in enumerate(descriptions[key]["replies"]):
+                # print(j,reply)
+                indexed_descriptions[i]["replies"][j]={}
+                indexed_descriptions[i]["replies"][j]["Author"]=reply["userID"]
+                indexed_descriptions[i]["replies"][j]["reply content"]=reply["description"]
+    # print(indexed_descriptions)
+    return descriptions,indexed_descriptions
 
 
 # tweet_list = get_tweets("65b66c3f7d94dfa8ce1d4699")
-# print(explore_tweets())
+# explore_tweets()
 
