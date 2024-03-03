@@ -5,7 +5,8 @@ import os
 import requests
 from datetime import datetime
 import random
-
+import json
+import uuid
 # import sys
 import argparse
 from prompt_maker import make_prompt
@@ -18,10 +19,43 @@ python main.py personality
 python main.py personality -t
 python main.py personality -t -l 10
 """
-def save_tweet(personality_id,tweet):
-    return True
-def save_reply(personality_id,tweet,description,isReply):
-    return True
+
+def save_tweet(personality_id, tweet):
+    url = "http://localhost:3001/tweets"
+    new_tweet = {
+        "userId": personality_id,
+        "description": tweet,
+        "likes": [],
+        "replies": "",
+        "createdAt": datetime.now().isoformat(),
+        "updatedAt": datetime.now().isoformat()
+    }
+    headers = {'Content-type': 'application/json'}
+    response = requests.post(url, data=json.dumps(new_tweet), headers=headers)
+    if response.status_code == 201:
+        print("Tweet saved successfully")
+        return True
+    else:
+        print("Failed to save tweet")
+        return False
+
+def save_reply(personality_id, tweet_id, description):
+    url = "http://localhost:3001/replies"
+    new_reply = {
+        "userID": personality_id,
+        "description": description,
+        "repliedTO": tweet_id  # Assuming 'repliedTO' is the correct field to link to the tweet
+    }
+    headers = {'Content-type': 'application/json'}
+    response = requests.post(url, data=json.dumps(new_reply), headers=headers)
+    if response.status_code == 201:
+        print("Reply saved successfully")
+        return True
+    else:
+        print("Failed to save reply")
+        return False
+
+
 def get_random_activity(type_id=-1, accessibility=-1, participants=-1, price=-1):
     type = [
         "education",
@@ -230,7 +264,6 @@ while True:
                         print("Tweet saved successfully")
                     else:
                         print("DB Error")
-                       
                     break 
         elif len(l)==4:
             for i,tweet in enumerate(previous_tweets):
