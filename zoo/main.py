@@ -18,10 +18,13 @@ python main.py personality
 python main.py personality -t
 python main.py personality -t -l 10
 """
+
 def save_tweet(personality_id,tweet):
     return True
 def save_reply(personality_id,tweet,description,isReply):
     return True
+
+
 def get_random_activity(type_id=-1, accessibility=-1, participants=-1, price=-1):
     type = [
         "education",
