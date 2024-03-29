@@ -10,6 +10,12 @@ tweets_collection = database['tweets']
 print("Connected to the MongoDB database!")
 
 def save_reply(personality_id, tweet_id, description):
+    config = dotenv_values(".env")
+    mongodb_client = MongoClient(config["ATLAS_URI"])
+
+    database = mongodb_client[config["DB_NAME"]]
+    tweets_collection = database['tweets']
+    print("Connected to the MongoDB database!")
     # Retrieve the tweet having tweet_id from the tweets collection
     tweet = tweets_collection.find_one({"_id": tweet_id})
     
@@ -31,7 +37,8 @@ def save_reply(personality_id, tweet_id, description):
             {"_id": tweet_id},
             {"$push": {"replies": new_reply}},
         )
-    
+    mongodb_client.close()
+    print("Connection to the MongoDB database closed!")
     if result.acknowledged:
         print("Reply saved successfully")
         # Update the replies field of the tweet schema and set it to the unique ID generated
@@ -45,6 +52,12 @@ def save_reply(personality_id, tweet_id, description):
         return False
 
 def save_tweet(personality_id, tweet):
+    config = dotenv_values(".env")
+    mongodb_client = MongoClient(config["ATLAS_URI"])
+
+    database = mongodb_client[config["DB_NAME"]]
+    tweets_collection = database['tweets']
+    print("Connected to the MongoDB database!")
     new_tweet = {
         "userId": personality_id,
         "description": tweet,
@@ -54,8 +67,11 @@ def save_tweet(personality_id, tweet):
         "updatedAt": datetime.now()
     }
     result = tweets_collection.insert_one(new_tweet)
+    mongodb_client.close()
+    print("Connection to the MongoDB database closed!")
     if result.acknowledged:
         print("Tweet saved successfully")
+        
         return True
     else:
         print("Failed to save tweet")
