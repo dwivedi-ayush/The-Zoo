@@ -3,32 +3,28 @@ import json
 from datetime import datetime
 from pymongo import MongoClient
 from dotenv import dotenv_values
+from bson.json_util import dumps
+from bson.json_util import loads
+from bson.objectid import ObjectId
 
-config = dotenv_values(".env")
-mongodb_client = MongoClient(config["ATLAS_URI"])
-db = mongodb_client[config["DB_NAME"]]
-collection = db['tweets']
-tweet_response = collection.find()
-for _ in tweet_response:
-    print(_)
-
-
-
-def get_tweets(userId):
+def get_tweets(alias):
     # tweet_response = requests.get('http://localhost:3001/tweets')
 
     # db = client['test']
     # collection = db['tweets']
     # tweet_response = collection.find()
     # print(tweet_response)
-
-
-
-
-    if tweet_response.status_code == 200:
+    config = dotenv_values(".env")
+    mongodb_client = MongoClient(config["ATLAS_URI"])
+    db = mongodb_client[config["DB_NAME"]]
+    collection = db['tweets']
+    query_filter = {"alias": alias}
+    tweet_response = collection.find(query_filter)
+    tweets=(loads(dumps(tweet_response)))
+    if tweet_response:
         # tweets = tweet_response.json()
         descriptions = []
-        tweets = [tweet for tweet in tweet_response.json() if tweet['userId'] == userId]
+        # tweets = [tweet for tweet in tweet_response if tweet['alias'] == alias]
         if len(tweets) > 5:
             sorted_tweets = sorted(tweets, key=lambda x: datetime.fromisoformat(
                 x['createdAt']), reverse=True)
@@ -44,13 +40,22 @@ def get_tweets(userId):
     return descriptions
 
 def explore_tweets():
-    tweet_response = requests.get('http://localhost:3001/tweets')
-    reply_response = requests.get('http://localhost:3001/replies') # for now retireve all tweets, once we shift to mongo db it wont matter
-    if tweet_response.status_code == 200 and reply_response.status_code == 200:
-        tweets = tweet_response.json()
+    config = dotenv_values(".env")
+    mongodb_client = MongoClient(config["ATLAS_URI"])
+    db = mongodb_client[config["DB_NAME"]]
+    collection = db['tweets']
+    tweet_response = collection.find()
+    replies_collection = db['replies']
+    # reply_response = collection.find()
+
+    # tweet_response = requests.get('http://localhost:3001/tweets')
+    # reply_response = requests.get('http://localhost:3001/replies') # for now retireve all tweets, once we shift to mongo db it wont matter
+    if tweet_response:
+        tweets = loads(dumps(tweet_response))
     
-        replies=reply_response.json()
-        reply_ids=replies.keys()
+        # replies=loads(dumps(reply_response))
+        # print(replies)
+        # reply_ids=replies.keys()
 
         descriptions = {}
         if len(tweets) > 10:
@@ -58,21 +63,26 @@ def explore_tweets():
                 x['createdAt']), reverse=True)
             latest_tweets = sorted_tweets[:10]
             for tweet in latest_tweets:
-                key=tweet['userId']+"-"+tweet['id']
+                key=tweet['alias']+"-"+str(tweet['_id'])
                 descriptions[key] = {}
                 descriptions[key]["tweet"]=tweet['description']
-                if tweet["replies"] in reply_ids:
-                     descriptions[key]["replies"]=replies[tweet["replies"]]
+                if tweet["replies"]:
+                    query_filter = {"_id": (tweet["replies"])}
+                    #  descriptions[key]["replies"]=replies[tweet["replies"]]
+                    descriptions[key]["replies"]=loads(dumps(replies_collection.find(query_filter)))
 
                 # print(tweet)
         else:
             for tweet in tweets:
-                key=tweet['userId']+"-"+tweet['id']
+                key=tweet['alias']+"-"+str(tweet['_id'])
                 descriptions[key] = {}
                 descriptions[key]["tweet"]=tweet['description']
                 descriptions[key]["replies"]={}
-                if tweet["replies"] in reply_ids:
-                     descriptions[key]["replies"]=replies[tweet["replies"]]
+                if tweet["replies"]:
+                    query_filter = {"_id": (tweet["replies"])}
+                    descriptions[key]["replies"]=loads(dumps(replies_collection.find(query_filter)))
+                    #  descriptions[key]["replies"]=replies[tweet["replies"]]
+
                
     else:
         print(f"Request failed with status code {tweet_response.status_code}")
@@ -85,10 +95,10 @@ def explore_tweets():
         # print(descriptions[key],"\n\n",descriptions[key]["replies"])
         if descriptions[key]["replies"]:
             # print(descriptions[key]["replies"])
-            for j,reply in enumerate(descriptions[key]["replies"]):
+            for j,reply in enumerate(descriptions[key]["replies"][0]["reply_array"]):
                 # print(j,reply)
                 indexed_descriptions[i]["replies"][j]={}
-                indexed_descriptions[i]["replies"][j]["Author"]=reply["userID"]
+                indexed_descriptions[i]["replies"][j]["Author"]=reply["alias"]
                 indexed_descriptions[i]["replies"][j]["reply content"]=reply["description"]
     # print(indexed_descriptions)
     return descriptions,indexed_descriptions

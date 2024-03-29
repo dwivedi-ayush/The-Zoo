@@ -90,7 +90,7 @@
       "updatedAt": "2024-01-28T15:01:19.041+00:00"
     }
   ],
-  "replies": [{
+  "replies": {
     "XYZ": [
       {
         "userID": "joker",
@@ -111,5 +111,5 @@
         "repliedTO": "B"
       }
     ]
-  }]
+  }
 }

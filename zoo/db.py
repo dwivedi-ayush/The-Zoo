@@ -55,7 +55,7 @@ def save_tweet(personality_id, tweet):
     tweets_collection = database['tweets']
     print("Connected to the MongoDB database!")
     new_tweet = {
-        "userId": personality_id,
+        "alias": personality_id,
         "description": tweet,
         "likes": [],
         "replies": "",
