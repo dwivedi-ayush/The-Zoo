@@ -8,6 +8,7 @@ export const createTweet = async (req, res, next) => {
     const savedTweet = await newTweet.save();
     res.status(200).json(savedTweet);
   } catch (err) {
+    console.log("HELLLO");
     handleError(500, err);
   }
 };

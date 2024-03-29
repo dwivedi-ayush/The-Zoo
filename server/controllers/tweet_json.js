@@ -1,117 +1,70 @@
 import fs from "fs";
 import path from "path";
+import axios from 'axios';
 
-const dbPath = path.join(__dirname, "../db.json");
+const dbPath = "http://localhost:3001/";
 
-export const createTweet = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
+export const createTweet = async (req, res) => {
+  try {
     const newTweet = req.body;
-    db.tweets.push(newTweet);
-
-    fs.writeFile(dbPath, JSON.stringify(db, null, 2), (err) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Error writing to db.json");
-        return;
-      }
-      res.status(200).json(newTweet);
-    });
-  });
+    const response = await axios.post(`${dbPath}tweets`, newTweet);
+    res.status(200).json(response.data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error writing to the database");
+  }
 };
 
-export const deleteTweet = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
-    const tweetIndex = db.tweets.findIndex(
-      (tweet) => tweet._id === req.params.id
-    );
-
-    if (tweetIndex !== -1) {
-      db.tweets.splice(tweetIndex, 1);
-      fs.writeFile(dbPath, JSON.stringify(db, null, 2), (err) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error writing to db.json");
-          return;
-        }
-        res.status(200).send("Tweet deleted");
-      });
+export const deleteTweet = async (req, res) => {
+  try {
+    const response = await axios.delete(`${dbPath}tweets/${req.params.id}`);
+    if (response.status === 200) {
+      res.status(200).send("Tweet deleted");
     } else {
       res.status(404).send("Tweet not found");
     }
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error deleting from the database");
+  }
 };
 
-export const likeOrDislike = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
-    const tweet = db.tweets.find((tweet) => tweet._id === req.params.id);
-
-    if (tweet) {
-      const userIndex = tweet.likes.indexOf(req.body.id);
+export const likeOrDislike = async (req, res) => {
+  try {
+    const tweet = await axios.get(`${dbPath}tweets/${req.params.id}`);
+    if (tweet.data) {
+      const userIndex = tweet.data.likes.indexOf(req.body.id);
       if (userIndex === -1) {
-        tweet.likes.push(req.body.id);
+        tweet.data.likes.push(req.body.id);
         res.status(200).send("Tweet liked");
       } else {
-        tweet.likes.splice(userIndex, 1);
+        tweet.data.likes.splice(userIndex, 1);
         res.status(200).send("Tweet disliked");
       }
-
-      fs.writeFile(dbPath, JSON.stringify(db, null, 2), (err) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error writing to db.json");
-          return;
-        }
-      });
+      await axios.put(`${dbPath}tweets/${req.params.id}`, tweet.data);
     } else {
       res.status(404).send("Tweet not found");
     }
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error updating the database");
+  }
 };
 
-export const getAllTweets = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
-    res.status(200).json(db.tweets);
-  });
+export const getAllTweets = async (req, res) => {
+  try {
+    const response = await axios.get(`${dbPath}tweets`);
+    res.status(200).json(response.data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error reading from the database");
+  }
 };
 
-export const getUserTweets = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
-    const userTweets = db.tweets.filter(
+export const getUserTweets = async (req, res) => {
+  try {
+    const response = await axios.get(`${dbPath}tweets`);
+    const userTweets = response.data.filter(
       (tweet) => tweet.userId === req.params.id
     );
 
@@ -120,19 +73,16 @@ export const getUserTweets = (req, res) => {
     } else {
       res.status(404).send("No tweets found for this user");
     }
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error reading from the database");
+  }
 };
 
-export const getExploreTweets = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
-    const exploreTweets = db.tweets.filter(
+export const getExploreTweets = async (req, res) => {
+  try {
+    const response = await axios.get(`${dbPath}tweets`);
+    const exploreTweets = response.data.filter(
       (tweet) => tweet.likes && tweet.likes.length > 0
     );
 
@@ -141,6 +91,9 @@ export const getExploreTweets = (req, res) => {
     } else {
       res.status(404).send("No tweets found for exploration");
     }
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error reading from the database");
+  }
 };
 

@@ -3,3 +3,5 @@ openai
 bert-extractive-summarizer
 transformers
 torch
+fastapi[all]
+pymongo[srv] 

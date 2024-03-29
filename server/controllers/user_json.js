@@ -1,159 +1,70 @@
 import fs from "fs";
 import path from "path";
+import axios from 'axios';
 
-const dbPath = path.join(__dirname, "../db.json");
+const dbPath = "http://localhost:3001/";
 
-export const getAllUsers = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
-    res.status(200).json(db.users);
-  });
+export const getAllUsers = async (req, res) => {
+  try {
+    const response = await axios.get(`${dbPath}users`);
+    res.status(200).json(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error fetching users");
+  }
 };
 
-export const getUser = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
-    const user = db.users.find((user) => user._id === req.params.id);
-
-    if (user) {
-      res.status(200).json(user);
+export const getUser = async (req, res) => {
+  try {
+    const response = await axios.get(`${dbPath}users/${req.params.id}`);
+    if (response.data) {
+      res.status(200).json(response.data);
     } else {
       res.status(404).send("User not found");
     }
-  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error fetching user");
+  }
 };
 
-export const update = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
-    const userIndex = db.users.findIndex((user) => user._id === req.params.id);
-
-    if (userIndex !== -1) {
-      db.users[userIndex] = { ...db.users[userIndex], ...req.body };
-
-      fs.writeFile(dbPath, JSON.stringify(db, null, 2), (err) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error writing to db.json");
-          return;
-        }
-        res.status(200).json(db.users[userIndex]);
-      });
-    } else {
-      res.status(404).send("User not found");
-    }
-  });
+export const update = async (req, res) => {
+  try {
+    const response = await axios.put(`${dbPath}users/${req.params.id}`, req.body);
+    res.status(200).json(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error updating user");
+  }
 };
 
-export const deleteUser = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
-    const userIndex = db.users.findIndex((user) => user._id === req.params.id);
-
-    if (userIndex !== -1) {
-      db.users.splice(userIndex, 1);
-
-      // Optionally, remove all tweets associated with the user
-      db.tweets = db.tweets.filter((tweet) => tweet.userId !== req.params.id);
-
-      fs.writeFile(dbPath, JSON.stringify(db, null, 2), (err) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error writing to db.json");
-          return;
-        }
-        res.status(200).send("User deleted");
-      });
-    } else {
-      res.status(404).send("User not found");
-    }
-  });
+export const deleteUser = async (req, res) => {
+  try {
+    await axios.delete(`${dbPath}users/${req.params.id}`);
+    res.status(200).send("User deleted");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error deleting user");
+  }
 };
 
-export const follow = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
-    const user = db.users.find((user) => user._id === req.params.id);
-    const currentUser = db.users.find((user) => user._id === req.body.id);
-
-    if (user && currentUser && !user.followers.includes(req.body.id)) {
-      user.followers.push(req.body.id);
-      currentUser.following.push(req.params.id);
-
-      fs.writeFile(dbPath, JSON.stringify(db, null, 2), (err) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error writing to db.json");
-          return;
-        }
-        res.status(200).send("User followed");
-      });
-    } else {
-      res.status(403).send("Cannot follow this user");
-    }
-  });
+export const follow = async (req, res) => {
+  try {
+    const response = await axios.post(`${dbPath}users/${req.params.id}/follow`, req.body);
+    res.status(200).send(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error following user");
+  }
 };
 
-export const unFollow = (req, res) => {
-  fs.readFile(dbPath, "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error reading db.json");
-      return;
-    }
-
-    const db = JSON.parse(data);
-    const user = db.users.find((user) => user._id === req.params.id);
-    const currentUser = db.users.find((user) => user._id === req.body.id);
-
-    if (user && currentUser && user.followers.includes(req.body.id)) {
-      const followerIndex = user.followers.indexOf(req.body.id);
-      const followingIndex = currentUser.following.indexOf(req.params.id);
-
-      user.followers.splice(followerIndex, 1);
-      currentUser.following.splice(followingIndex, 1);
-
-      fs.writeFile(dbPath, JSON.stringify(db, null, 2), (err) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error writing to db.json");
-          return;
-        }
-        res.status(200).send("User unfollowed");
-      });
-    } else {
-      res.status(403).send("Cannot unfollow this user");
-    }
-  });
+export const unFollow = async (req, res) => {
+  try {
+    const response = await axios.post(`${dbPath}users/${req.params.id}/unfollow`, req.body);
+    res.status(200).send(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error unfollowing user");
+  }
 };
 
