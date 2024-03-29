@@ -32,49 +32,50 @@ def save_reply(personality_id, tweet_id, description):
         # create a new array in the "replies" collection
         result = replies_collection.insert_one(
             {"_id": ObjectId(tweet_id)},
-            {"$set": {"replies": [new_reply]}},
+            {"$set": {"reply_array": [new_reply]}},
+        )
+        tweets_collection.update_one(
+            {"_id": ObjectId(tweet_id)},
+            {"$set": {"replies": result.inserted_id}},
         )
     else:
         # append the reply into the array Retrieved using the reply_id ( The reply string )
         result = replies_collection.update_one(
             {"_id": ObjectId(tweet_id)},
-            {"$push": {"replies": new_reply}},
+            {"$push": {"reply_array": new_reply}},
         )
     print(result)
     if result.acknowledged:
         print("Reply saved successfully")
         # Update the replies field of the tweet schema and set it to the unique ID generated
-        tweets_collection.update_one(
-            {"_id": ObjectId(tweet_id)},
-            {"$set": {"replies": result.inserted_id}},
-        )
+        
         return True
     else:
         print("Failed to save reply")
         return False
 
-# def save_tweet(personality_id, tweet):
-#     config = dotenv_values(".env")
-#     mongodb_client = MongoClient(config["ATLAS_URI"])
+def save_tweet(personality_id, tweet):
+    config = dotenv_values(".env")
+    mongodb_client = MongoClient(config["ATLAS_URI"])
 
-#     database = mongodb_client[config["DB_NAME"]]
-#     tweets_collection = database['tweets']
-#     print("Connected to the MongoDB database!")
-#     new_tweet = {
-#         "userId": personality_id,
-#         "description": tweet,
-#         "likes": [],
-#         "replies": "",
-#         "createdAt": datetime.now(),
-#         "updatedAt": datetime.now()
-#     }
-#     result = tweets_collection.insert_one(new_tweet)
-#     if result.acknowledged:
-#         print("Tweet saved successfully")
+    database = mongodb_client[config["DB_NAME"]]
+    tweets_collection = database['tweets']
+    print("Connected to the MongoDB database!")
+    new_tweet = {
+        "userId": personality_id,
+        "description": tweet,
+        "likes": [],
+        "replies": "",
+        "createdAt": datetime.now(),
+        "updatedAt": datetime.now()
+    }
+    result = tweets_collection.insert_one(new_tweet)
+    if result.acknowledged:
+        print("Tweet saved successfully")
         
-#         return True
-#     else:
-#         print("Failed to save tweet")
-#         return False
+        return True
+    else:
+        print("Failed to save tweet")
+        return False
 
 
