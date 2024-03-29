@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 
 
 def save_reply(personality_id, tweet_id, description):
+    print("GLOBAL HELLO")
     config = dotenv_values(".env")
     mongodb_client = MongoClient(config["ATLAS_URI"])
 
@@ -59,8 +60,8 @@ def save_tweet(personality_id, tweet):
         "description": tweet,
         "likes": [],
         "replies": "",
-        "createdAt": datetime.now(),
-        "updatedAt": datetime.now()
+        "createdAt": datetime.now().isoformat(),
+        "updatedAt": datetime.now().isoformat()
     }
     result = tweets_collection.insert_one(new_tweet)
     if result.acknowledged:

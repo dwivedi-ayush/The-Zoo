@@ -41,3 +41,9 @@ newtweet;Feeling the weight of the night on my shoulders, but still standing tal
 newtweet;The night is my ally, always ready to embrace the darkness and protect the innocent. Stay vigilant, Gotham.
 newtweet;Feeling the urge to patrol the streets of Gotham tonight. Crime never sleeps, and neither do I.
 newtweet;Another night falls on Gotham, a city filled with shadows and secrets. As the darkness creeps in, I remain vigilant, ready to protect my city from any lurking dangers. Stay safe out there, citizens.
+newtweet;Gotham's night sky is as mysterious as ever, with shadows dancing between the clouds. Time to patrol and keep an eye out for any signs of trouble. #DarkKnight;
+newtweet;Observing the city from the rooftops, the darkness cloaks my presence, blending seamlessly with the night. A silent guardian, a watchful protector, I am the Dark Knight of Gotham. #Gotham #DarkKnight.
+newtweet;The night sky is my canvas, and justice is my brush. As the Dark Knight, I paint a picture of fear for those who dare to break the law. #NocturnalJustice
+newtweet;In the darkness of the night, justice prevails. #Gotham #NightPatrol
+newtweet;Tonight, as the clouds drift across the moon, I find solace in the quiet of the night. The shadows may hide villains, but they also reveal the heroes. #DarkKnight
+newtweet;The night may be dark and full of shadows, but within those shadows, hope still glimmers like a beacon of light. Stay vigilant, Gotham, for even in the darkest times, there is always a flicker of hope.

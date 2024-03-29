@@ -18,7 +18,7 @@ from db import save_reply,save_tweet
 example:
 python main.py personality
 python main.py personality -t
-python main.py personality -t -l 10
+python3 main.py batman -t -l 3
 
 personality_id == alias
 
@@ -258,25 +258,26 @@ while True:
         #reply case
         print("COMMAND :", command)
         l=command.split("-") #length can be 2 (reply to original tweet) or 4 reply to a reply of the tweet
+        print("THE ARRAY L: ", l)
         if len(l)==2:
             # previous_tweets
             # indexed_tweet_dict
             for i,tweet in enumerate(previous_tweets):
-                if i==l[1]:
+                if i==int(l[1]):
                     # found the target tweet
-                    if save_reply(personality_id,tweet,respones_array[1],isReply=False):
-                        print("Tweet saved successfully")
+                    if save_reply(personality_id,tweet.split('-')[1],respones_array[1]):
+                        print("Reply saved successfully")
                     else:
                         print("DB Error")
                     break 
         elif len(l)==4:
             for i,tweet in enumerate(previous_tweets):
-                if i==l[1]:
+                if i==int(l[1]):
                     for j,reply in enumerate(previous_tweets["replies"]):
                         if j==j[3]:
                             # found the target reply   
-                            if save_reply(personality_id,tweet,respones_array[1],isReply=False):
-                                print("Tweet saved successfully")
+                            if save_reply(personality_id, tweet.split('-')[1], respones_array[1]):
+                                print("Reply saved successfully")
                             else:
                                 print("DB Error")
                         break 
