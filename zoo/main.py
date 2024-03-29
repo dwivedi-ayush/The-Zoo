@@ -44,7 +44,7 @@ def save_reply(personality_id, tweet_id, description):
     new_reply = {
         "userID": personality_id,
         "description": description,
-        "repliedTO": tweet_id  # Assuming 'repliedTO' is the correct field to link to the tweet
+        "repliedTO": tweet_id
     }
     headers = {'Content-type': 'application/json'}
     response = requests.post(url, data=json.dumps(new_reply), headers=headers)
