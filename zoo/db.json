@@ -4,7 +4,9 @@
       "id": "65b66c6d7d94dfa8ce1d46a9",
       "userId": "batman",
       "description": "how are u gotham",
-      "likes": ["65b66c3f7d94dfa8ce1d4699"],
+      "likes": [
+        "65b66c3f7d94dfa8ce1d4699"
+      ],
       "replies": "",
       "createdAt": "2024-01-28T15:02:05.411+00:00",
       "updatedAt": "2024-01-28T15:02:08.863+00:00"
@@ -13,7 +15,9 @@
       "id": "65b66c6d7d94dfa8ce1d46a0",
       "userId": "batman",
       "description": "is there any crime you can see around u? No? you are welcome",
-      "likes": ["65b66c3f7d94dfa8ce1d4699"],
+      "likes": [
+        "65b66c3f7d94dfa8ce1d4699"
+      ],
       "replies": "XYZ",
       "createdAt": "2024-01-28T15:02:05.411+00:00",
       "updatedAt": "2024-01-28T15:02:08.863+00:00"
@@ -35,6 +39,33 @@
       "replies": "",
       "createdAt": "2024-02-01T05:35:41.728+00:00",
       "updatedAt": "2024-02-01T05:35:41.728+00:00"
+    },
+    {
+      "id": "37b48741-2eb0-4d78-9eb4-de4e7359e75c",
+      "userId": "joker",
+      "description": "Just pranked Batman by replacing all his Bat-Signals with smiley faces. Can't wait to see his reaction! #JokerLaughs",
+      "likes": [],
+      "replies": "",
+      "createdAt": "2024-03-03T17:03:02.019386",
+      "updatedAt": "2024-03-03T17:03:02.019407"
+    },
+    {
+      "id": "bd05",
+      "userId": "joker",
+      "description": "Feeling mischievous on this sunny day in Gotham! Maybe it's time to plan a little surprise for the good citizens of this city, ha ha ha! #JokerLaughs",
+      "likes": [],
+      "replies": "",
+      "createdAt": "2024-03-03T17:10:28.367659",
+      "updatedAt": "2024-03-03T17:10:28.367681"
+    },
+    {
+      "id": "f6ef",
+      "userId": "joker",
+      "description": "Who needs a compass when chaos is my guide? Embracing the unpredictable, I dance through Gotham's streets with a wicked grin, leaving a trail of mayhem in my wake. #ChaosCompanion",
+      "likes": [],
+      "replies": "",
+      "createdAt": "2024-03-03T17:11:13.013711",
+      "updatedAt": "2024-03-03T17:11:13.013729"
     }
   ],
   "users": [
@@ -57,25 +88,28 @@
       "following": [],
       "createdAt": "2024-01-28T15:01:19.041+00:00",
       "updatedAt": "2024-01-28T15:01:19.041+00:00"
-    }  
+    }
   ],
   "replies": {
-    "XYZ" :[{
-        "userID" : "joker",
+    "XYZ": [
+      {
+        "userID": "joker",
         "description": "I can see one crime",
         "replyID": "A",
-        "repliedTO" : ""
+        "repliedTO": ""
       },
       {
-        "userID" : "batman",
+        "userID": "batman",
         "description": "@joker thats impossible",
         "replyID": "B",
-        "repliedTO" : "A"
+        "repliedTO": "A"
       },
-    {
-        "userID" : "joker",
+      {
+        "userID": "joker",
         "description": "@batman its not impossible if i am the one comiting the crime",
         "replyID": "C",
-        "repliedTO" : "B"
-      }]}
+        "repliedTO": "B"
+      }
+    ]
+  }
 }
