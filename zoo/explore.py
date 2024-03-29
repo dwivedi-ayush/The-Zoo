@@ -1,8 +1,30 @@
 import requests
+import json
 from datetime import datetime
+from pymongo import MongoClient
+from dotenv import dotenv_values
+
+config = dotenv_values(".env")
+mongodb_client = MongoClient(config["ATLAS_URI"])
+db = mongodb_client[config["DB_NAME"]]
+collection = db['tweets']
+tweet_response = collection.find()
+for _ in tweet_response:
+    print(_)
+
+
 
 def get_tweets(userId):
-    tweet_response = requests.get('http://localhost:3001/tweets')
+    # tweet_response = requests.get('http://localhost:3001/tweets')
+
+    # db = client['test']
+    # collection = db['tweets']
+    # tweet_response = collection.find()
+    # print(tweet_response)
+
+
+
+
     if tweet_response.status_code == 200:
         # tweets = tweet_response.json()
         descriptions = []

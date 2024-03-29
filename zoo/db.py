@@ -4,12 +4,6 @@ from datetime import datetime
 from bson.objectid import ObjectId
 
 
-# config = dotenv_values(".env")
-# mongodb_client = MongoClient(config["ATLAS_URI"])
-
-# database = mongodb_client[config["DB_NAME"]]
-# tweets_collection = database['tweets']
-
 def save_reply(personality_id, tweet_id, description):
     config = dotenv_values(".env")
     mongodb_client = MongoClient(config["ATLAS_URI"])
@@ -31,8 +25,7 @@ def save_reply(personality_id, tweet_id, description):
     if not tweet["replies"]:
         # create a new array in the "replies" collection
         result = replies_collection.insert_one(
-            {"_id": ObjectId(tweet_id)},
-            {"$set": {"reply_array": [new_reply]}},
+            {"reply_array": [new_reply]},
         )
         tweets_collection.update_one(
             {"_id": ObjectId(tweet_id)},
