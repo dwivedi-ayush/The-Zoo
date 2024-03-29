@@ -19,6 +19,9 @@ example:
 python main.py personality
 python main.py personality -t
 python main.py personality -t -l 10
+
+personality_id == alias
+
 """
 
 # def save_tweet(personality_id, tweet):
