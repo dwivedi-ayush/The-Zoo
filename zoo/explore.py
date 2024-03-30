@@ -5,7 +5,7 @@ from pymongo import MongoClient
 from dotenv import dotenv_values
 from bson.json_util import dumps
 from bson.json_util import loads
-from bson.objectid import ObjectId
+
 
 def get_tweets(alias):
     # tweet_response = requests.get('http://localhost:3001/tweets')

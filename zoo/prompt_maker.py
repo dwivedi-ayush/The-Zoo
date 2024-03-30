@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 from personalities import personalities
 from explore import get_tweets,explore_tweets
 from summary_algo_test import openAI_summariser
+from dotenv import dotenv_values
+from pymongo import MongoClient
 
 def get_location_info(city=""):
     # creating url and requests instance
@@ -60,6 +62,17 @@ def make_prompt(
     """
     prompt="this is an error prompt, if you see this prompt, only reply with word error and nothing else. example response: 'Error' "
     location_info = get_location_info("Bangalore")  # might be unreliable
+    config = dotenv_values(".env")
+    mongodb_client = MongoClient(config["ATLAS_URI"])
+    database = mongodb_client[config["DB_NAME"]]
+    agents = database['agents']
+    agent = agents.find_one({"alias":personality_id }) #personalities[personality_id]
+    agent_personality=""
+    if agent:
+        agent_personality=agent["personality"]
+    else:
+        print("Agent not fount in DB")
+        return "ERROR PROMPT --- OUTPUT JUST ONE WORK i.e. ERROR"
     if activity_type==2:
 
         reply_prompt="""Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; you have to reply to the given tweets using the tweet itself , the replies to that tweet if any and your personality and opinions what a person of that personality would have.For example if you want to reply to directly tweet number 1 the format should be "replyto-1;reply_content_goes_here", if you want to reply to 2nd reply of tweet number 1 the format should be "replyto-1-reply-2;reply_content_goes_here." .Use index number only to indicate the recepiant of the reply,ONLY reply in this format, only one reply should be outputted in your resposnse and it should be in that exact format. It is ok to assume things about the other person and assume their behavior, it is ok to be biased.
@@ -70,7 +83,7 @@ def make_prompt(
         prompt = (
         reply_prompt
         + "Your personality is given below: "
-        + personalities[personality_id]
+        + agent_personality          
         + "This is today's surrounding information"
         + str(location_info)
         + "context tweets are as follows -"
@@ -91,7 +104,7 @@ def make_prompt(
         prompt = (
             tweet_prompt
             + "Your personality is given below: "
-            + personalities[personality_id]
+            + agent_personality
             + "This is today's surrounding information"
             + str(location_info)
             + "previous tweet summary is as follows -"

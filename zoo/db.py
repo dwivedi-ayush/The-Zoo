@@ -5,7 +5,7 @@ from bson.objectid import ObjectId
 
 
 def save_reply(personality_id, tweet_id, description):
-    print("GLOBAL HELLO")
+    
     config = dotenv_values(".env")
     mongodb_client = MongoClient(config["ATLAS_URI"])
 

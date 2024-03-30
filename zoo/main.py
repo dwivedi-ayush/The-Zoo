@@ -116,178 +116,186 @@ def save_response(resp):
 #         return ""
 #     return openAI_summariser(log)
 
-
+personality_id="batman"
 test_mode = True
 loop_limit = 5
 action_frequency = 1  # action every 5 seconds
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("personality", type=str, help="Specify the personality (required)")
-parser.add_argument("-t", "--test_mode", action="store_true", help="Enable test mode")
-parser.add_argument(
-    "-l", "--loop_limit", type=int, help="Specify loop limit for test mode"
-)
-args = parser.parse_args()
+# parser = argparse.ArgumentParser()
+# parser.add_argument("personality", type=str, help="Specify the personality (required)")
+# parser.add_argument("-t", "--test_mode", action="store_true", help="Enable test mode")
+# parser.add_argument(
+#     "-l", "--loop_limit", type=int, help="Specify loop limit for test mode"
+# )
+# args = parser.parse_args()
 
 
-personality_id = args.personality
-test_mode = args.test_mode
-loop_limit = args.loop_limit
-
-load_dotenv(find_dotenv())
-
-api_key = os.getenv("API_KEY")
-client = ai.OpenAI(api_key=api_key)
+# personality_id = args.personality
+# test_mode = args.test_mode
+# loop_limit = args.loop_limit
 
 
-response_string = ""
-is_error = False
-initial_loop = True
-random_activity = ""
-previous_activity_time = ""
-previous_post = ""
-"""============== core ==============="""
-while True:
-    start_time = time.time()
-    if test_mode:
-        if loop_limit == 0:
+
+def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
+
+    load_dotenv(find_dotenv())
+
+    api_key = os.getenv("API_KEY")
+    client = ai.OpenAI(api_key=api_key)
+
+
+    response_string = ""
+    is_error = False
+    initial_loop = True
+    random_activity = ""
+    previous_activity_time = ""
+    previous_post = ""
+    """============== core ==============="""
+    while True:
+        if stop_event.is_set():
             break
-        loop_limit -= 1
+        start_time = time.time()
+        if test_mode:
+            if loop_limit == 0:
+                break
+            loop_limit -= 1
 
-    # save initial state in case of error
-    prompt_content = ""
+        # save initial state in case of error
+        prompt_content = ""
 
-    # ====================================================================================================
-    # check if the previous action is saved before proceeding (check here or just after executing action)
-    # ====================================================================================================
+        # ====================================================================================================
+        # check if the previous action is saved before proceeding (check here or just after executing action)
+        # ====================================================================================================
 
-    # API call params
-    # previous_summary = get_summary()
-    # print("=============")
-    # print("previous_summary: ", previous_summary)
-    # print("=============")
-    # instead of summary we directly take previous tweets
+        # API call params
+        # previous_summary = get_summary()
+        # print("=============")
+        # print("previous_summary: ", previous_summary)
+        # print("=============")
+        # instead of summary we directly take previous tweets
 
 
-    now = datetime.now()
-    current_time = now.strftime("%H")
+        now = datetime.now()
+        current_time = now.strftime("%H")
 
-    
-    """
-    activity_type = 1 => tweet
-    activity_type = 2 => reply
-    """
-    random_activity=""
-    activity_type=2
-    indexed_tweet_dict=""
-    if random.randint(1,4)==4: # 1 in 4 chance of tweet else reply
-        print("GOING TO MAKE A NEW TWEET")
-        activity_type=1
-        if initial_loop or abs(int(current_time) - previous_activity_time) >= 1:
-            random_activity = get_random_activity(
-                type_id=8
-            )  # 8 is busywork activity, can use random number or some heuristics
-            previous_activity_time = int(current_time)
-            initial_loop = False
-    else:
-        print("GOING TO REPLY")
-        previous_tweets,indexed_tweet_dict=explore_tweets()
-        # for now the dictionary will only be 2 nested -- main tweet and its replies
-    
-    prompt_content = make_prompt(
-        personality_id=personality_id,
-        explore_tweets=indexed_tweet_dict,
-        previous_post=previous_post,
-        random_activity=random_activity,
-        activity_type=activity_type,
-        is_error=is_error,
-        )
-    # print("Prompt content is --- ", prompt_content)
-    model = "gpt-3.5-turbo-1106"
-    temperature = 0.8
-    max_tokens = 280
-    if is_error:
-        # maybe change temperature or model
-        is_error = False
-
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": prompt_content},
-        ],
-        temperature=temperature,
-        max_tokens=max_tokens,
-    )
-
-    print(
-        "============================================================================================================"
-    )
-    response_string = response.choices[0].message.content
-    print(response_string)
-    if response_string=="Error" or response_string=="error":
-        is_error=True
-        print("Error has occured")
-        continue
-    print("end")
-    print(
-        "============================================================================================================"
-    )
-
-    # parse responses
-    respones_array = response_string.split(";")
-    command=respones_array[0]
-    message_content = recipient = ""
-    print("Time this iteration: ", (time.time() - start_time))
-    time.sleep(max(0, action_frequency - (time.time() - start_time)))
-    command = command.lower()  # to handle "Newtweet"
-    command = command.replace(" ", "")  # to handle "new tweet"
-
-    
-    if command == "newtweet":
-        print("COMMAND :", command)
-        save_response(response_string + "\n")  # save only new post
-        previous_post = respones_array[1]
-        if save_tweet(personality_id,respones_array[1]):
-            print("Tweet saved successfully")
+        
+        """
+        activity_type = 1 => tweet
+        activity_type = 2 => reply
+        """
+        random_activity=""
+        activity_type=2
+        indexed_tweet_dict=""
+        if random.randint(1,4)==4: # 1 in 4 chance of tweet else reply
+            print("GOING TO MAKE A NEW TWEET")
+            activity_type=1
+            if initial_loop or abs(int(current_time) - previous_activity_time) >= 1:
+                random_activity = get_random_activity(
+                    type_id=8
+                )  # 8 is busywork activity, can use random number or some heuristics
+                previous_activity_time = int(current_time)
+                initial_loop = False
         else:
-            print("DB Error")
-            break
-        # handle_new_tweet()
-    elif command.split("-")[0]=="replyto":
-        #reply case
-        print("COMMAND :", command)
-        l=command.split("-") #length can be 2 (reply to original tweet) or 4 reply to a reply of the tweet
-        print("THE ARRAY L: ", l)
-        if len(l)==2:
-            # previous_tweets
-            # indexed_tweet_dict
-            for i,tweet in enumerate(previous_tweets):
-                if i==int(l[1]):
-                    # found the target tweet
-                    if save_reply(personality_id,tweet.split('-')[1],respones_array[1]):
-                        print("Reply saved successfully")
-                    else:
-                        print("DB Error")
-                    break 
-        elif len(l)==4:
-            for i,tweet in enumerate(previous_tweets):
-                if i==int(l[1]):
-                    for j,reply in enumerate(previous_tweets["replies"]):
-                        if j==j[3]:
-                            # found the target reply   
-                            if save_reply(personality_id, tweet.split('-')[1], respones_array[1]):
-                                print("Reply saved successfully")
-                            else:
-                                print("DB Error")
+            print("GOING TO REPLY")
+            previous_tweets,indexed_tweet_dict=explore_tweets()
+            # for now the dictionary will only be 2 nested -- main tweet and its replies
+        
+        prompt_content = make_prompt(
+            personality_id=personality_id,
+            explore_tweets=indexed_tweet_dict,
+            previous_post=previous_post,
+            random_activity=random_activity,
+            activity_type=activity_type,
+            is_error=is_error,
+            )
+        # print("Prompt content is --- ", prompt_content)
+        model = "gpt-3.5-turbo-1106"
+        temperature = 0.8
+        max_tokens = 280
+        if is_error:
+            # maybe change temperature or model
+            is_error = False
+
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": prompt_content},
+            ],
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+
+        print(
+            "============================================================================================================"
+        )
+        response_string = response.choices[0].message.content
+        print(response_string)
+        if response_string=="Error" or response_string=="error":
+            is_error=True
+            print("Error has occured")
+            continue
+        print("end")
+        print(
+            "============================================================================================================"
+        )
+
+        # parse responses
+        respones_array = response_string.split(";")
+        command=respones_array[0]
+        message_content = recipient = ""
+        print("Time this iteration: ", (time.time() - start_time))
+        time.sleep(max(0, action_frequency - (time.time() - start_time)))
+        command = command.lower()  # to handle "Newtweet"
+        command = command.replace(" ", "")  # to handle "new tweet"
+
+        
+        if command == "newtweet":
+            print("COMMAND :", command)
+            save_response(response_string + "\n")  # save only new post
+            previous_post = respones_array[1]
+            if save_tweet(personality_id,respones_array[1]):
+                print("Tweet saved successfully")
+            else:
+                print("DB Error")
+                break
+            # handle_new_tweet()
+        elif command.split("-")[0]=="replyto":
+            #reply case
+            print("COMMAND :", command)
+            l=command.split("-") #length can be 2 (reply to original tweet) or 4 reply to a reply of the tweet
+            print("THE ARRAY L: ", l)
+            if len(l)==2:
+                # previous_tweets
+                # indexed_tweet_dict
+                for i,tweet in enumerate(previous_tweets):
+                    if i==int(l[1]):
+                        # found the target tweet
+                        if save_reply(personality_id,tweet.split('-')[1],respones_array[1]):
+                            print("Reply saved successfully")
+                        else:
+                            print("DB Error")
                         break 
-                    break
-    # elif command == "reply":
-    #     recipient = respones_array[2]  # in case of reply
-    #     # handle_reply()
-    else:
-        # handle_error()  # parsing error or response error
-        """restart the loop with initial state"""
-        print("******* Errored response *******")
-        is_error = True
-        # continue
+            elif len(l)==4:
+                for i,tweet in enumerate(previous_tweets):
+                    if i==int(l[1]):
+                        for j,reply in enumerate(previous_tweets["replies"]):
+                            if j==j[3]:
+                                # found the target reply   
+                                if save_reply(personality_id, tweet.split('-')[1], respones_array[1]):
+                                    print("Reply saved successfully")
+                                else:
+                                    print("DB Error")
+                            break 
+                        break
+        # elif command == "reply":
+        #     recipient = respones_array[2]  # in case of reply
+        #     # handle_reply()
+        else:
+            # handle_error()  # parsing error or response error
+            """restart the loop with initial state"""
+            print("******* Errored response *******")
+            is_error = True
+            # continue
+    print("------",personality_id,"stopped ------")
+
