@@ -58,11 +58,12 @@ export const getAllTweets = async (req, res, next) => {
 };
 
 export const getUserTweets = async (req, res, next) => {
+  
   try {
-    const userTweets = await Tweet.find({ userId: req.params.id }).sort({
-      createAt: -1,
+    const userTweets = await Tweet.find({ alias: req.params.alias }).sort({
+      createdAt: -1,
     });
-
+    
     res.status(200).json(userTweets);
   } catch (err) {
     handleError(500, err);
@@ -72,7 +73,7 @@ export const getExploreTweets = async (req, res, next) => {
   try {
     const getExploreTweets = await Tweet.find({
       likes: { $exists: true },
-    }).sort({ likes: -1 });
+    }).sort({  createdAt: -1, });
     // const getExploreTweets = await Tweet.find()
 
     res.status(200).json(getExploreTweets);

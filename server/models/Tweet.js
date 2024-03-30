@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const TweetSchema = new mongoose.Schema(
   {
-    userId: {
+    alias: {
       type: String,
       required: true,
     },

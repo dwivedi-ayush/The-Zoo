@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home/Home";
 import Profile from "./pages/Profile/Profile";
+import AgentProfile from "./pages/AgentProfile/AgentProfile";
 import Explore from "./pages/Explore/Explore";
 import Signin from "./pages/Signin/Signin";
 import Navbar from "./components/Navbar/Navbar";
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/profile/:id",
         element: <Profile />,
+      },
+      {
+        path: "/agentprofile/:alias",
+        element: <AgentProfile />,
       },
       {
         path: "/explore",

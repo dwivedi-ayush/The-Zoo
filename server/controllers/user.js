@@ -12,9 +12,9 @@ export const getAllUsers = async (req, res, next) => {
 };
 export const getUser = async (req, res, next) => {
   try {
-    console.log("***********")
-    const user = await User.findById(req.params.id);
-    console.log("------------")
+    
+    const user = await User.findById(req.params._id);
+    
     res.status(200).json(user);
   } catch (err) {
     next(err);

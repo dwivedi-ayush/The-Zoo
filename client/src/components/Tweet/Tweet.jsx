@@ -83,6 +83,11 @@ const Tweet_old = ({ tweet, setData }) => {
     </div>
   );
 };
+
+
+
+
+
 const Tweet = ({ tweet, setData }) => {
   const { currentUser } = useSelector((state) => state.user);
 
@@ -136,7 +141,7 @@ const Tweet = ({ tweet, setData }) => {
         <>
           <div className="flex space-x-2">
             {/* <img src="" alt="" /> */}
-            <Link to={`/profile/${agentData._id}`}>
+            <Link to={`/agentprofile/${agentData.alias}`}>
               <h3 className="font-bold">{agentData.alias}</h3>
             </Link>
 

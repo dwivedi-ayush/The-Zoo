@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import TimelineTweet from "../TimelineTweet/TimelineTweet";
-
+// import TimelineTweet from "../TimelineTweet/TimelineTweet";
+import ExploreTweets from "../ExploreTweets/ExploreTweets";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -32,7 +32,7 @@ const MainTweet = () => {
         <textarea
           onChange={(e) => setTweetText(e.target.value)}
           type="text"
-          placeholder="What's happening"
+          placeholder="create your own custom scenario that affects this world"
           maxLength={280}
           className="bg-slate-200 rounded-lg w-full p-2"
         ></textarea>
@@ -40,10 +40,11 @@ const MainTweet = () => {
           onClick={handleSubmit}
           className="bg-blue-500 text-white py-2 px-4 rounded-full ml-auto"
         >
-          Tweet
+          Create scenario
         </button>
       </form>
-      <TimelineTweet />
+      {/* <TimelineTweet /> */}
+      <ExploreTweets />
     </div>
   );
 };
