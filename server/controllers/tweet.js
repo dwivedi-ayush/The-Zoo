@@ -73,6 +73,7 @@ export const getExploreTweets = async (req, res, next) => {
     const getExploreTweets = await Tweet.find({
       likes: { $exists: true },
     }).sort({ likes: -1 });
+    // const getExploreTweets = await Tweet.find()
 
     res.status(200).json(getExploreTweets);
   } catch (err) {
