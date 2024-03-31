@@ -60,11 +60,11 @@ const Profile = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-4">
-        <div className="px-6">
+      <div className="grid grid-cols-1 md:grid-cols-10">
+        <div className="col-span-2 px-1">
           <LeftSidebar />
         </div>
-        <div className="col-span-2 border-x-2 border-t-slate-800 px-6">
+        <div className="col-span-6 border-x-2 border-t-slate-800 px-1">
           <div className="flex justify-between items-center">
             <img
               src={userProfile?.profilePicture}
@@ -106,7 +106,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="px-6">
+        <div className="col-span-2 px-1">
           <RightSidebar />
         </div>
       </div>
