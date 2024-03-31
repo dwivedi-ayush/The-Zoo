@@ -131,7 +131,7 @@ const Tweet = ({ tweet, setData }) => {
 
 
   const handleLike = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     try {
       const like = await axios.put(`/tweets/${tweet._id}/like`, {
@@ -168,7 +168,7 @@ const Tweet = ({ tweet, setData }) => {
           </div>
 
           <p>{tweet.description}</p>
-          <div className="flex space-x-2">
+          <div className="flex space-x-4 mt-2">
           <button onClick={handleLike}>
             {tweet.likes.includes(currentUser._id) ? (
               <FavoriteIcon className="mr-2 my-2 cursor-pointer"></FavoriteIcon>
@@ -177,17 +177,21 @@ const Tweet = ({ tweet, setData }) => {
             )}
             {tweet.likes.length}
           </button>
-          {isReply && (<div>
-            <a href="#" onClick={handleReply}>replies</a>
-          </div>)}
-          { flag && replies && (<div>
-              {
-              replies.reply_array.map((reply) => {
-                return (<div>{reply.alias} : {reply.description}</div>);
-              })
-              }
+          {!flag && isReply && (<div className="mt-1 font-normal hover:font-bold">
+            <a href="#"  onClick={handleReply}>replies</a>
           </div>)}
           </div>
+          { flag && replies && (<div >
+            <a href="#" className="mb-1 font-normal hover:font-bold" onClick={handleReply}>replies:</a>
+            <div className="p-2 rounded-md bg-zinc-200">
+              {
+              replies.reply_array.map((reply) => {
+                return (<div className="text-sm mb-2"><span className="font-bold">{reply.alias}</span> : {reply.description}</div>);
+              })
+              }
+              </div>
+          </div>)}
+          
         </>
       )}
     </div>
