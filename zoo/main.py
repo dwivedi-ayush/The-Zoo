@@ -143,6 +143,7 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
 
     api_key = os.getenv("API_KEY")
     client = ai.OpenAI(api_key=api_key)
+    print(api_key)
 
 
     response_string = ""
