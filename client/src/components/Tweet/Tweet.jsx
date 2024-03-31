@@ -123,9 +123,10 @@ const Tweet = ({ tweet, setData }) => {
   const handleReply = async(e)=>{
     e.preventDefault();
     setFlag(!flag);
-    const replies = await axios.get(`/tweets/reply/${tweet.replies[0]}`);
-    console.log(replies.data)
-    setReplies(replies.data)
+    if(!flag){
+      const replies = await axios.get(`/tweets/reply/${tweet.replies[0]}`);
+      console.log(replies.data)
+      setReplies(replies.data)};
   };
 
 
