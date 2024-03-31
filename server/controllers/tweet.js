@@ -1,6 +1,7 @@
 import Tweet from "../models/Tweet.js";
 import { handleError } from "../error.js";
 import User from "../models/User.js";
+import Data from "../models/Replies.js"
 
 export const createTweet = async (req, res, next) => {
   const newTweet = new Tweet(req.body);
@@ -77,6 +78,16 @@ export const getExploreTweets = async (req, res, next) => {
     // const getExploreTweets = await Tweet.find()
 
     res.status(200).json(getExploreTweets);
+  } catch (err) {
+    handleError(500, err);
+  }
+};
+export const getTweetReplies = async (req, res, next) => {
+  try {
+    const getTweetReplies = await Data.findById(req.params.id);
+    // const getExploreTweets = await Tweet.find()
+
+    res.status(200).json(getTweetReplies);
   } catch (err) {
     handleError(500, err);
   }

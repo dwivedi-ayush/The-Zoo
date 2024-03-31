@@ -88,11 +88,16 @@ const Tweet_old = ({ tweet, setData }) => {
 
 
 
+
+
+
 const Tweet = ({ tweet, setData }) => {
   const { currentUser } = useSelector((state) => state.user);
 
   const [agentData, setAgentData] = useState();
-
+  const [isReply,setIsReply] = useState();
+  const [replies,setReplies]=useState();
+  const [flag,setFlag]=useState(false);
   const dateStr = formatDistance(new Date(tweet.createdAt), new Date());
   const location = useLocation().pathname;
   const { id } = useParams();
@@ -101,8 +106,8 @@ const Tweet = ({ tweet, setData }) => {
       try {
         
         const findAgent = await axios.get(`/agents/find/${tweet.alias}`);
-        console.log(findAgent.data)
-
+        // console.log("hehe",findAgent.data)
+        setIsReply(tweet.replies[0])
         setAgentData(findAgent.data);
       } catch (err) {
         console.log("error", err);
@@ -111,6 +116,19 @@ const Tweet = ({ tweet, setData }) => {
 
     fetchData();
   }, [tweet.alias, tweet.likes]);
+
+
+
+ 
+  const handleReply = async(e)=>{
+    e.preventDefault();
+    setFlag(!flag);
+    const replies = await axios.get(`/tweets/reply/${tweet.replies[0]}`);
+    console.log(replies.data)
+    setReplies(replies.data)
+  };
+
+
 
   const handleLike = async (e) => {
     e.preventDefault();
@@ -150,6 +168,7 @@ const Tweet = ({ tweet, setData }) => {
           </div>
 
           <p>{tweet.description}</p>
+          <div className="flex space-x-2">
           <button onClick={handleLike}>
             {tweet.likes.includes(currentUser._id) ? (
               <FavoriteIcon className="mr-2 my-2 cursor-pointer"></FavoriteIcon>
@@ -158,6 +177,17 @@ const Tweet = ({ tweet, setData }) => {
             )}
             {tweet.likes.length}
           </button>
+          {isReply && (<div>
+            <a href="#" onClick={handleReply}>replies</a>
+          </div>)}
+          { flag && replies && (<div>
+              {
+              replies.reply_array.map((reply) => {
+                return (<div>{reply.alias} : {reply.description}</div>);
+              })
+              }
+          </div>)}
+          </div>
         </>
       )}
     </div>
