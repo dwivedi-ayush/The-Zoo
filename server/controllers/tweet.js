@@ -18,8 +18,14 @@ export const createTweet = async (req, res, next) => {
 export const createScenario = async (req, res, next) => {
   const newScenario = new Scenario(req.body);
   try {
-    const savedScenario = await newScenario.save();
-    res.status(200).json(savedScenario);
+    // const savedScenario = await newScenario.save();
+    // res.status(200).json(savedScenario);
+    const fakeSuccessResponse = {
+      success: true,
+      message: 'Scenario created successfully.',
+      data: newScenario, 
+    };
+    res.status(200).json(fakeSuccessResponse);
   } catch (err) {
     handleError(500, err);
   }

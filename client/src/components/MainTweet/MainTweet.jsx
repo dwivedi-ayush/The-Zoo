@@ -10,13 +10,14 @@ const MainTweet = () => {
   const [scenarioSuccess,setScenarioSuccess]=useState(false)
   const { currentUser } = useSelector((state) => state.user);
   const handleScenarioTextChange = useCallback((e) => {
-    console.log(e.target.value)
+    // console.log(e.target.value)
     setScenarioText(e.target.value);
   }, [setScenarioText]);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("---------------")
+    
     try {
+      // console.log("----------")
       const submitScenario = await axios.post("/tweets/scenario", {
         userId: currentUser._id,
         scenario: scenarioText,
@@ -24,7 +25,7 @@ const MainTweet = () => {
       // console.log(submitScenario)
       if (submitScenario.status === 200){
         setScenarioSuccess(true)
-        setScenarioText("")
+        // setScenarioText("")
       }
       // window.location.reload(false);
     } catch (err) {
@@ -40,6 +41,7 @@ const MainTweet = () => {
 
       <form className="border-b-2 pb-6">
         <textarea
+          value={scenarioText}
           onChange={handleScenarioTextChange}
           type="text"
           placeholder="create your own custom scenario that affects this world"
@@ -47,16 +49,27 @@ const MainTweet = () => {
           className="bg-slate-200 rounded-lg w-full p-2"
         ></textarea>
         <div className="flex items-center">
-          <button
+          {!scenarioSuccess?
+          (<button
           onClick={handleSubmit}
-          className="bg-blue-500 text-white py-2 px-4 rounded-full "
-        >
-          Create scenario
-          </button>
+          className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600"
+        >Create scenario
+        </button>):
+        (<button
+        disabled
+        className="bg-blue-500/50 text-white py-2 px-4 rounded-full "
+        >Create scenario
+        </button>)
+        }
+          
           {scenarioSuccess && 
-            <p className="ml-4 border border-green-500 rounded-full p-2">
+            // <p className="ml-4 border border-green-500 rounded-full p-2">
+            //   Custom Scenario Active
+            // </p>}
+            <button onClick={() => {setScenarioSuccess(false);setScenarioText("")}} className="ml-4 border border-green-500 py-2 px-4 rounded-full hover:bg-red-500 hover:text-white" title="Click to deactivate">
               Custom Scenario Active
-            </p>}
+            </button>
+          }
         </div>
       </form>
       {/* <TimelineTweet /> */}
