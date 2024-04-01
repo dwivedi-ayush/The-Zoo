@@ -30,7 +30,7 @@ def save_reply(personality_id, tweet_id, description):
         )
         tweets_collection.update_one(
             {"_id": ObjectId(tweet_id)},
-            {"$set": {"replies": result.inserted_id}},
+            {"$set": {"replies": result.inserted_id,"updatedAt":datetime.now().isoformat()}},
         )
     else:
         # append the reply into the array Retrieved using the reply_id ( The reply string )
@@ -38,7 +38,7 @@ def save_reply(personality_id, tweet_id, description):
             {"_id": ObjectId(tweet_id)},
             {"$push": {"reply_array": new_reply}},
         )
-    print(result)
+    # print(result)
     if result.acknowledged:
         print("Reply saved successfully")
         # Update the replies field of the tweet schema and set it to the unique ID generated

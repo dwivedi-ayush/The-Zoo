@@ -51,7 +51,7 @@ def explore_tweets():
     # tweet_response = requests.get('http://localhost:3001/tweets')
     # reply_response = requests.get('http://localhost:3001/replies') # for now retireve all tweets, once we shift to mongo db it wont matter
     if tweet_response:
-        tweets = loads(dumps(tweet_response))
+        tweets = loads(dumps(tweet_response))  # use cursor properly if slow
     
         # replies=loads(dumps(reply_response))
         # print(replies)
@@ -63,13 +63,18 @@ def explore_tweets():
                 x['createdAt']), reverse=True)
             latest_tweets = sorted_tweets[:10]
             for tweet in latest_tweets:
+                
                 key=tweet['alias']+"-"+str(tweet['_id'])
                 descriptions[key] = {}
                 descriptions[key]["tweet"]=tweet['description']
+                descriptions[key]["replies"]={}
                 if tweet["replies"]:
                     query_filter = {"_id": (tweet["replies"])}
+                    
                     #  descriptions[key]["replies"]=replies[tweet["replies"]]
                     descriptions[key]["replies"]=loads(dumps(replies_collection.find(query_filter)))
+                # print(key,descriptions[key])
+                   
 
                 # print(tweet)
         else:
@@ -87,12 +92,14 @@ def explore_tweets():
     else:
         print(f"Request failed with status code {tweet_response.status_code}")
     indexed_descriptions=dict()
+    # print(descriptions)
     for i,key in enumerate(descriptions.keys()):
         indexed_descriptions[i]={}
         indexed_descriptions[i]["Author"]=key.split("-")[0]
         indexed_descriptions[i]["Tweet content"]=descriptions[key]["tweet"]
         indexed_descriptions[i]["replies"]={}
         # print(descriptions[key],"\n\n",descriptions[key]["replies"])
+        # print(key,descriptions[key])
         if descriptions[key]["replies"]:
             # print(descriptions[key]["replies"])
             for j,reply in enumerate(descriptions[key]["replies"][0]["reply_array"]):
@@ -105,5 +112,5 @@ def explore_tweets():
 
 
 # tweet_list = get_tweets("65b66c3f7d94dfa8ce1d4699")
-# explore_tweets()
+explore_tweets()
 

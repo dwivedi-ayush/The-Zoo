@@ -18,7 +18,7 @@ if __name__ == "__main__":
     agents= loads(dumps(agent_collection.find()))
     
     for agent in agents:
-        p = multiprocessing.Process(target=start, args=(stop_event,agent["alias"],True,2,1,)) # true means debug mode and finite loop
+        p = multiprocessing.Process(target=start, args=(stop_event,agent["alias"],True,10,1,)) # true means debug mode and finite loop
         p.start()
         processes.append(p)
         temp=agent["alias"]

@@ -116,7 +116,7 @@ def save_response(resp):
 #         return ""
 #     return openAI_summariser(log)
 
-personality_id="batman"
+# personality_id="batman"
 test_mode = True
 loop_limit = 5
 action_frequency = 1  # action every 5 seconds
@@ -143,7 +143,6 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
 
     api_key = os.getenv("API_KEY")
     client = ai.OpenAI(api_key=api_key)
-    print(api_key)
 
 
     response_string = ""
