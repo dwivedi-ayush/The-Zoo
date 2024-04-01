@@ -26,7 +26,7 @@ def save_reply(personality_id, tweet_id, description):
     if tweet["replies"]:
         # append the reply into the array Retrieved using the reply_id ( The reply string )
 
-        print("---a----",tweet["replies"],"-----")
+        # print("---a----",tweet["replies"],"-----")
         result = replies_collection.update_one(
             {"_id": tweet["replies"]},
             {"$push": {"reply_array": new_reply}},

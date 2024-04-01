@@ -209,7 +209,7 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
         random_activity=""
         activity_type=2
         indexed_tweet_dict=""
-        if random.randint(1,3)==4: # 1 in 3 chance of tweet else reply
+        if random.randint(1,3)==3: # 1 in 3 chance of tweet else reply
             print("GOING TO MAKE A NEW TWEET")
             activity_type=1
             if initial_loop or abs(int(current_time) - previous_activity_time) >= 1:
