@@ -97,16 +97,21 @@ def explore_tweets():
         indexed_descriptions[i]={}
         indexed_descriptions[i]["Author"]=key.split("-")[0]
         indexed_descriptions[i]["Tweet content"]=descriptions[key]["tweet"]
-        indexed_descriptions[i]["replies"]={}
+        indexed_descriptions[i]["replies"]=""
+        # temp={}
         # print(descriptions[key],"\n\n",descriptions[key]["replies"])
         # print(key,descriptions[key])
         if descriptions[key]["replies"]:
             # print(descriptions[key]["replies"])
             for j,reply in enumerate(descriptions[key]["replies"][0]["reply_array"]):
-                # print(j,reply)
-                indexed_descriptions[i]["replies"][j]={}
-                indexed_descriptions[i]["replies"][j]["Author"]=reply["alias"]
-                indexed_descriptions[i]["replies"][j]["reply content"]=reply["description"]
+                pass
+                # indexed_descriptions[i]["replies"]+="author:"+reply["alias"]+"-"+reply["description"]+"\n"
+                # # print(j,reply)
+                # temp[j]={}
+                # temp[j]["Author"]=reply["alias"]
+                # temp[j]["reply content"]=reply["description"]
+        # indexed_descriptions[i]["replies"]=str(temp)
+    # print(descriptions)
     # print(indexed_descriptions)
     return descriptions,indexed_descriptions
 

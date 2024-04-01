@@ -209,7 +209,7 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
         random_activity=""
         activity_type=2
         indexed_tweet_dict=""
-        if random.randint(4,4)==4: # 1 in 4 chance of tweet else reply
+        if random.randint(1,3)==3: # 1 in 3 chance of tweet else reply
             print("GOING TO MAKE A NEW TWEET")
             activity_type=1
             if initial_loop or abs(int(current_time) - previous_activity_time) >= 1:
@@ -235,14 +235,17 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
             )
         # print("Prompt content is --- ", prompt_content) 
         model = "gpt-3.5-turbo-1106"
+        model = "gpt-3.5-turbo"
+        model = "gpt-3.5-turbo-0125"
+        model = "gpt-4-0125-preview"
         temperature = 1
         max_tokens = random.randint(100, 200)
         if is_error:
             # maybe change temperature or model
             is_error = False
-
+        # print("prompt", prompt_content)
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model=model,
             messages=[
                 {"role": "system", "content": prompt_content},
             ],
@@ -273,7 +276,7 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
         time.sleep(max(0, action_frequency - (time.time() - start_time)))
         command = command.lower()  # to handle "Newtweet"
         command = command.replace(" ", "")  # to handle "new tweet"
-
+        
         
         if command == "newtweet":
             print("COMMAND :", command)
@@ -294,8 +297,11 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
                 # previous_tweets
                 # indexed_tweet_dict
                 for i,tweet in enumerate(previous_tweets):
+                    
                     if i==int(l[1]):
+                        
                         # found the target tweet
+                        # print(personality_id,tweet.split('-')[1],respones_array[1],indexed_tweet_dict[i-1],indexed_tweet_dict[i])
                         if save_reply(personality_id,tweet.split('-')[1],respones_array[1]):
                             print("Reply saved successfully")
                         else:

@@ -75,40 +75,44 @@ def make_prompt(
         return "ERROR PROMPT --- OUTPUT JUST ONE WORK i.e. ERROR"
     if activity_type==2:
 
-        reply_prompt="""Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; you have to reply to the given tweets using the tweet itself , the replies to that tweet if any and your personality and opinions what a person of that personality would have.For example if you want to reply to directly tweet number 1 the format should be "replyto-1;reply_content_goes_here", if you want to reply to 2nd reply of tweet number 1 the format should be "replyto-1-reply-2;reply_content_goes_here." .Use index number only to indicate the recepiant of the reply,ONLY reply in this format, only one reply should be outputted in your resposnse and it should be in that exact format. It is ok to assume things about the other person and assume their behavior, it is ok to be biased.
+        reply_prompt="""Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; you have to reply to the given tweets using the tweet itself , the replies to that tweet if any and your personality and opinions what a person of that personality would have.if the alias is same as your name dont reply to that tweet. For example if you want to reply to directly tweet number 1 the format should be "replyto-1;reply_content_goes_here" .Use index number only to indicate the recepiant of the reply,ONLY reply in this format, only one reply should be outputted in your resposnse and it should be in that exact format. It is ok to assume things about the other person and assume their behavior, it is ok to be biased.
         Adhere to this strict format only.
         """
         
        
         prompt = (
-        reply_prompt
+        "this is your alias:"
+        + agent["alias"]
+        +reply_prompt
         + "Your personality is given below: "
         + agent_personality          
         + "This is today's surrounding information"
         + str(location_info)
         + "context tweets are as follows -"
         + str(explore_tweets)
-        + "END context tweets. if your character has any conflict with anything anyone said you should try to convince the other person through replies and try to talk about the clash in opinions."
-        + "comment on one of these tweets, the comment can be sarcastic, or playful or hateful or anything that can hold the reader's retention."
+        + "END . do not respond with the context, only repond in the strict manner that was informed. if your character has any conflict with anything anyone said you should try to convince the other person through replies and try to talk about the clash in opinions."
+        + "comment on one of these tweets, the comment can be sarcastic, or playful or hateful or anything that can hold the reader's retention. 'replyto-1;reply_content_goes_here' respond in this strick manner only , do not output anything else other than this."
     )
         
 
     
     else:
         tweet_prompt="""
-    Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; Avoid the things you said in the previous tweets, summary is provided below. The new tweet must be what you would like to post. an example response is "newtweet;tweet content goes here;". notice the semicolon-separated response. you should respond in this strict manner only. The response should only contain the new tweet content in that exact manner. Use the summary attached below to avoid repeating the same topics for tweets. Ensure that your tweets are unique and do not repeat. 
+    Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; Avoid the things you said in the previous tweets, summary is provided below. The new tweet must be what you would like to post. an example response is "newtweet;tweet content goes here;". notice the semicolon-separated response. you should respond in this strict manner only. Only reply in the way you are told to. The response should only contain the new tweet content in that exact manner. Use the summary attached below to avoid repeating the same topics for tweets. Ensure that your tweets are unique and do not repeat. 
     """
         # Adhere to your personality given and do not stray from it.
         previous_tweets=get_tweets(personality_id)
         previous_summary=openAI_summariser(" ".join(previous_tweets))
         # only get random activity after a certain amount of time has passed
         prompt = (
-            tweet_prompt
+            "this is your alias:"
+            + agent["alias"]
+            + tweet_prompt
             + "Your personality is given below: "
             + agent_personality
             + " assume details about what you are about to do and tweet about the same. A random activity you are about to do can be this:"
             + random_activity
-            + "previous tweet summary is as follows -"
+            + "reply in this format only 'newtweet;tweet content goes here;' .previous tweet summary is as follows -"
             + previous_summary
             + "END SUMMARY. Try not to repeat same tweet or similar tweets more than once,never be monotonous, use this summary to avoid the topics you have already touched."
             + "previous tweet that you made is given below, avoid this or related topics at all costs."

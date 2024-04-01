@@ -34,10 +34,12 @@ def save_reply(personality_id, tweet_id, description):
         )
     else:
         # append the reply into the array Retrieved using the reply_id ( The reply string )
+        
         result = replies_collection.update_one(
             {"_id": ObjectId(tweet_id)},
             {"$push": {"reply_array": new_reply}},
         )
+    
     # print(result)
     if result.acknowledged:
         print("Reply saved successfully")
