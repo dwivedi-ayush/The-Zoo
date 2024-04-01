@@ -19,7 +19,10 @@ const UserPlaceholder = ({ setUserData, userData }) => {
     fetchData();
   }, [id]);
 
-  return <div>{userData?.username}</div>;
+  return (<div>
+    <h2>Profile</h2>
+    {userData?.username}
+    </div>);
 };
 
 export default UserPlaceholder;

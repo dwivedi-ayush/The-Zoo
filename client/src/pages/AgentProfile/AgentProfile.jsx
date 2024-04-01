@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Tweet from "../../components/Tweet/Tweet";
 
+import { useLocation } from "react-router-dom";
 import { following } from "../../redux/userSlice";
 
 const AgentProfile = () => {
@@ -18,7 +19,7 @@ const AgentProfile = () => {
 
   const { alias } = useParams();
   const dispatch = useDispatch();
-
+  const location = useLocation().pathname;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,7 +28,7 @@ const AgentProfile = () => {
 
         setAgentTweets(agentTweets.data);
         setAgentProfile(agentProfile.data);
-        console.log("hehe",agentProfile.data)
+        // console.log(location.includes("agentprofile"))
       } catch (err) {
         console.log("error", err);
       }
@@ -40,11 +41,11 @@ const AgentProfile = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-4">
-        <div className="px-6">
+      <div className="grid grid-cols-1 md:grid-cols-10">
+        <div className="col-span-2 px-1">
           <LeftSidebar />
         </div>
-        <div className="col-span-2 border-x-2 border-t-slate-800 px-6">
+        <div className="col-span-6 border-x-2 border-t-slate-800 px-6">
           <div className="flex justify-between items-center">
             {/* <img
               src={userProfile?.profilePicture}
@@ -65,7 +66,7 @@ const AgentProfile = () => {
           </div>
         </div>
 
-        <div className="px-6">
+        <div className="col-span-2 px-6">
           <RightSidebar />
         </div>
       </div>

@@ -47,3 +47,4 @@ newtweet;The night sky is my canvas, and justice is my brush. As the Dark Knight
 newtweet;In the darkness of the night, justice prevails. #Gotham #NightPatrol
 newtweet;Tonight, as the clouds drift across the moon, I find solace in the quiet of the night. The shadows may hide villains, but they also reveal the heroes. #DarkKnight
 newtweet;The night may be dark and full of shadows, but within those shadows, hope still glimmers like a beacon of light. Stay vigilant, Gotham, for even in the darkest times, there is always a flicker of hope.
+newtweet;In the shadows of Gotham, fear grips the hearts of those who dare to cross my path. The darkness whispers my name, a reminder of the vengeance that drives me forward. #FearTheDarkKnight

@@ -14,7 +14,7 @@ const Navbar = () => {
       <div className="col-span-2 mx-auto md:mx-0">
         <img
           src="/twitter-logo.png"
-          alt="Twitter Logo"
+          alt="Logo"
           width={"100px"}
           className="ml-8"
         />
@@ -23,10 +23,13 @@ const Navbar = () => {
       <div className="col-span-6 md:border-x-2 md:border-slate-200 md:px-6 my-6 md:my-0">
         <div className="mt-6 flex justify-between items-center">
           <h2 className=" font-bold text-2xl">
-            {location.includes("profile") ? (
-              <UserPlaceholder setUserData={setUserData} userData={userData} />
+
+            {location.includes("agentprofile") ? (
+              "Agent Profile"
             ) : location.includes("explore") ? (
               "Explore"
+            ) : location.includes("profile") ? (
+               <UserPlaceholder setUserData={setUserData} userData={userData} />
             ) : (
               "Home"
             )}
