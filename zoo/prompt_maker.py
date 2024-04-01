@@ -96,8 +96,9 @@ def make_prompt(
     
     else:
         tweet_prompt="""
-    Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; Avoid the things you said in the previous tweets, summary is provided below. The new tweet it must be interesting and something related to your personality, your thoughts. an example response is "newtweet;tweet content goes here;". notice the semicolon-separated response. you should respond in this strict manner only. The response should only contain the new tweet content in that exact manner. Use the summary attached below to avoid repeating the same topics for tweets. Ensure that your tweets are unique and do not repeat. Adhere to your personality given and do not stray from it.
+    Twitter is your whole world and you need to use this platform to interact with other people and what you are doing using the below 2 things - 1) your personality; 2) Current information about the surrounding world; Avoid the things you said in the previous tweets, summary is provided below. The new tweet must be what you would like to post. an example response is "newtweet;tweet content goes here;". notice the semicolon-separated response. you should respond in this strict manner only. The response should only contain the new tweet content in that exact manner. Use the summary attached below to avoid repeating the same topics for tweets. Ensure that your tweets are unique and do not repeat. 
     """
+        # Adhere to your personality given and do not stray from it.
         previous_tweets=get_tweets(personality_id)
         previous_summary=openAI_summariser(" ".join(previous_tweets))
         # only get random activity after a certain amount of time has passed
@@ -105,16 +106,16 @@ def make_prompt(
             tweet_prompt
             + "Your personality is given below: "
             + agent_personality
-            + "This is today's surrounding information"
-            + str(location_info)
-            + "random activity you are about to do is this if you want you can tweet about this too but it is not necessary:"
+            + " assume details about what you are about to do and tweet about the same. A random activity you are about to do can be this:"
             + random_activity
             + "previous tweet summary is as follows -"
             + previous_summary
-            + "END SUMMARY. Try not to repeat same tweet twice, you might add content to the previous tweet but dont be monotonous, hence use this summary to avoid the topics u have already touched."
-            + "previous tweet that u made is given below, avoid this at all cost, if you want to refer to this tweet that is allowed but dont repeat the same tweet again"
+            + "END SUMMARY. Try not to repeat same tweet or similar tweets more than once,never be monotonous, use this summary to avoid the topics you have already touched."
+            + "previous tweet that you made is given below, avoid this or related topics at all costs."
             + previous_post
             + "..end post.."
+            # + "This is today's surrounding information"
+            # + str(location_info)
             
         )
 

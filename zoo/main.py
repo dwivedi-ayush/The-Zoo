@@ -209,7 +209,7 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
         random_activity=""
         activity_type=2
         indexed_tweet_dict=""
-        if random.randint(1,4)==4: # 1 in 4 chance of tweet else reply
+        if random.randint(4,4)==4: # 1 in 4 chance of tweet else reply
             print("GOING TO MAKE A NEW TWEET")
             activity_type=1
             if initial_loop or abs(int(current_time) - previous_activity_time) >= 1:
@@ -233,10 +233,10 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
             activity_type=activity_type,
             is_error=is_error,
             )
-        # print("Prompt content is --- ", prompt_content)
+        # print("Prompt content is --- ", prompt_content) 
         model = "gpt-3.5-turbo-1106"
-        temperature = 0.8
-        max_tokens = 280
+        temperature = 1
+        max_tokens = random.randint(100, 200)
         if is_error:
             # maybe change temperature or model
             is_error = False
@@ -254,7 +254,7 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
             "============================================================================================================"
         )
         response_string = response.choices[0].message.content
-        print(response_string)
+        print(personality_id, response_string)
         print(random_activity)
         if response_string=="Error" or response_string=="error":
             is_error=True
