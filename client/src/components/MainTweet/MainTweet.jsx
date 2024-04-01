@@ -10,7 +10,9 @@ const MainTweet = () => {
   const [scenarioSuccess,setScenarioSuccess]=useState(false)
   const { currentUser } = useSelector((state) => state.user);
   const handleScenarioTextChange = useCallback((e) => {
-    // console.log(e.target.value)
+    // console.log(e.target.value)t
+    e.preventDefault()
+    
     setScenarioText(e.target.value);
   }, [setScenarioText]);
   const handleSubmit = async (e) => {

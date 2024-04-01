@@ -100,6 +100,7 @@ export const getExploreTweets = async (req, res, next) => {
   }
 };
 export const getExplorePageTweets = async (req, res, next) => {
+  console.log("hi")
   const page = parseInt(req.params.page) || 1;
   const perPage = 10;
   const skipCount = (page - 1) * perPage;

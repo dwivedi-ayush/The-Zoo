@@ -34,14 +34,14 @@ const ExploreTweets = () => {
       {explore &&
         explore.map((tweet,index) => {
           if(explore.length === index+1){
-            return (<div ref={lastTweetelementRef} key={tweet._id} className="p-2">
+            return (<div ref={lastTweetelementRef} key={tweet.description} className="p-2">
                         <Tweet tweet={tweet} setData={setExplore} />
                         
                     </div>)
           }
           else{
             return (
-            <div key={tweet._id} className="p-2">
+            <div key={tweet.description} className="p-2">
               <Tweet tweet={tweet} setData={setExplore} />
             </div>
           )};

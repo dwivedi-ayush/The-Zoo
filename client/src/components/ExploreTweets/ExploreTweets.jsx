@@ -13,7 +13,7 @@ const ExploreTweets = () => {
   const [explore, setExplore] = useState(null);
   // const { currentUser } = useSelector((state) => state.user);
   const observer =useRef();
-  const lastTweetelementRef =  useCallback(node =>{
+  const lastTweetElementRef =  useCallback(node =>{
     if(loading) return
     if(observer.current) observer.current.disconnect()
     observer.current = new IntersectionObserver(entries =>{
@@ -41,7 +41,7 @@ const ExploreTweets = () => {
       {tweets &&
         tweets.map((tweet,index) => {
           if(tweets.length === index+1){
-            return (<div ref={lastTweetelementRef} key={tweet.description} className="p-2">
+            return (<div ref={lastTweetElementRef} key={tweet._id} className="p-2">
                         <Tweet tweet={tweet} setData={setExplore} />
                         
                     </div>)
