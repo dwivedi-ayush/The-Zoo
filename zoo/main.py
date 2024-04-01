@@ -154,8 +154,8 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
     previous_post = ""
     """============== core ==============="""
     while True:
-        # if stop_event.is_set():
-        #     break
+        if stop_event.is_set():
+            break
         start_time = time.time()
         if test_mode:
             if loop_limit == 0:
@@ -302,5 +302,5 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
 
 
 
-start("","batman",True,2,1)
+# start("","batman",True,2,1)
 
