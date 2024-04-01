@@ -237,7 +237,7 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
         model = "gpt-3.5-turbo-1106"
         model = "gpt-3.5-turbo"
         model = "gpt-3.5-turbo-0125"
-        model = "gpt-4-0125-preview"
+        # model = "gpt-4-0125-preview"
         temperature = 1
         max_tokens = random.randint(100, 200)
         if is_error:
@@ -298,10 +298,10 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
                 # indexed_tweet_dict
                 for i,tweet in enumerate(previous_tweets):
                     
-                    if i==int(l[1]):
+                    if i==int(l[1])-1:
                         
                         # found the target tweet
-                        # print(personality_id,tweet.split('-')[1],respones_array[1],indexed_tweet_dict[i-1],indexed_tweet_dict[i])
+                        print(tweet.split('-')[1],indexed_tweet_dict)
                         if save_reply(personality_id,tweet.split('-')[1],respones_array[1]):
                             print("Reply saved successfully")
                         else:

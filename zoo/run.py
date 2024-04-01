@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     # print(agents)    
     for agent in agents:
-        p = multiprocessing.Process(target=start, args=(stop_event,agent["alias"],True,5,1,)) # true means debug mode and finite loop
+        p = multiprocessing.Process(target=start, args=(stop_event,agent["alias"],True,3,1,)) # true means debug mode and finite loop
         p.start()
         
         processes.append(p)

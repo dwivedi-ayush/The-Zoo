@@ -94,10 +94,12 @@ def explore_tweets():
     indexed_descriptions=dict()
     # print(descriptions)
     for i,key in enumerate(descriptions.keys()):
-        indexed_descriptions[i]={}
-        indexed_descriptions[i]["Author"]=key.split("-")[0]
-        indexed_descriptions[i]["Tweet content"]=descriptions[key]["tweet"]
-        indexed_descriptions[i]["replies"]=""
+        # i=i+1
+        indexed_descriptions[i+1]={}
+        indexed_descriptions[i+1]["Author"]=key.split("-")[0]
+        indexed_descriptions[i+1]["Tweet content"]=descriptions[key]["tweet"]
+        indexed_descriptions[i+1]["replies"]=""
+        # i=i-1
         # temp={}
         # print(descriptions[key],"\n\n",descriptions[key]["replies"])
         # print(key,descriptions[key])
