@@ -12,7 +12,7 @@ def start(a,personality_id,test_mode,loop_limit,action_frequency=1):
 from pymongo import MongoClient
 from datetime import datetime
 from dotenv import dotenv_values
-def delete():
+def delete_tweet():
     config = dotenv_values(".env")
     mongodb_client = MongoClient(config["ATLAS_URI"])
     database = mongodb_client[config["DB_NAME"]]
@@ -30,5 +30,22 @@ def delete():
     # Print the number of documents deleted
     print('Deleted', result.deleted_count, 'documents.')
 
-delete()
+def delete_reply():
+
+    config = dotenv_values(".env")
+    mongodb_client = MongoClient(config["ATLAS_URI"])
+    database = mongodb_client[config["DB_NAME"]]
+    replies_collection = database['replies']
+
+    tweet_collection = database['tweets']
+    tweet_collection.update_many({},{"$set": {"replies": ""}})
+
+    # Print the number of documents deleted
+    # Delete documents that match the filter
+    result = replies_collection.delete_many({})
+
+    # Print the number of documents deleted
+    print('Deleted', result.deleted_count, 'documents.')
+
+delete_reply()
 
