@@ -88,7 +88,7 @@ def make_prompt(
         + str(location_info)
         + "context tweets are as follows -"
         + str(explore_tweets)
-        + "END context tweets. if your chaaracter has any conflict with anything anyone said you should try to convince the other person through replies and try to have a heated conversation with them"
+        + "END context tweets. if your character has any conflict with anything anyone said you should try to convince the other person through replies and try to talk about the clash in opinions."
         + "comment on one of these tweets, the comment can be sarcastic, or playful or hateful or anything that can hold the reader's retention."
     )
         
