@@ -1,4 +1,5 @@
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv, find_dotenv,dotenv_values
+from pymongo import MongoClient
 import openai as ai
 import time
 import os
@@ -87,15 +88,36 @@ def get_random_activity(type_id=-1, accessibility=-1, participants=-1, price=-1)
     # print("random activity is : ", activity)
     return activity
 
+def get_smart_activitiy(client,alias):
+    config = dotenv_values(".env")
+    mongodb_client = MongoClient(config["ATLAS_URI"])
+    database = mongodb_client[config["DB_NAME"]]
+    agent_collection = database['agents']
+    agent = agent_collection.find_one({"alias": alias})
+    personality=agent["personality"]
+    prompt=f"give an activity that is suitable for {alias} and is logical for them to do. Their personality is {personality}. The activity can be mundane day to day work or a special one time thing. respond only with the activity and nothing else. example response is -- activity:*activity name and description* "
+    model = "gpt-3.5-turbo-1106"
+    temperature = 0.8
+    max_tokens = 280
+    response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": prompt},
+            ],
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+    return response.choices[0].message.content
 
-def save_response(resp):
-    try:
-        file_name = "./tweet_history/" + personality_id + ".txt"
-        f = open(file_name, "a+")  # open file in write mode
-        f.write(resp)
-        f.close()
-    except Exception as error:
-        print("Error Saving info :", error)
+
+# def save_response(resp):
+#     try:
+#         file_name = "./tweet_history/" + personality_id + ".txt"
+#         f = open(file_name, "a+")  # open file in write mode
+#         f.write(resp)
+#         f.close()
+#     except Exception as error:
+#         print("Error Saving info :", error)
 
 
 # def get_response_log():
@@ -191,9 +213,11 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
             print("GOING TO MAKE A NEW TWEET")
             activity_type=1
             if initial_loop or abs(int(current_time) - previous_activity_time) >= 1:
-                random_activity = get_random_activity(
-                    type_id=8
-                )  # 8 is busywork activity, can use random number or some heuristics
+                # random_activity = get_random_activity(
+                #     type_id=8
+                # )  # 8 is busywork activity, can use random number or some heuristics
+                random_activity=get_smart_activitiy(client,personality_id)
+                
                 previous_activity_time = int(current_time)
                 initial_loop = False
         else:
@@ -230,7 +254,7 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
             "============================================================================================================"
         )
         response_string = response.choices[0].message.content
-        print(response_string)
+        print(response_string,random_activity)
         if response_string=="Error" or response_string=="error":
             is_error=True
             print("Error has occured")
@@ -252,7 +276,7 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
         
         if command == "newtweet":
             print("COMMAND :", command)
-            save_response(response_string + "\n")  # save only new post
+            # save_response(response_string + "\n")  # save only new post
             previous_post = respones_array[1]
             if save_tweet(personality_id,respones_array[1]):
                 print("Tweet saved successfully")

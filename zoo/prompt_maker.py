@@ -107,15 +107,15 @@ def make_prompt(
             + agent_personality
             + "This is today's surrounding information"
             + str(location_info)
+            + "random activity you are about to do is this if you want you can tweet about this too but it is not necessary:"
+            + random_activity
             + "previous tweet summary is as follows -"
             + previous_summary
-            + "END SUMMARY."
+            + "END SUMMARY. Try not to repeat same tweet twice, you might add content to the previous tweet but dont be monotonous, hence use this summary to avoid the topics u have already touched."
             + "previous tweet that u made is given below, avoid this at all cost, if you want to refer to this tweet that is allowed but dont repeat the same tweet again"
             + previous_post
             + "..end post.."
-            + "random activity you are about to do is this if you want you can tweet about this too but it is not necessary:"
-            + random_activity
-            + ". It is not necessaey to tweet about this activity."
+            
         )
 
     # + "dont repeat previous tweet, use other aspects of the personalityor real world information to generate a new tweet or perform any other action accordingly, try to be creative."
