@@ -254,7 +254,8 @@ def start(stop_event,personality_id,test_mode,loop_limit,action_frequency=1):
             "============================================================================================================"
         )
         response_string = response.choices[0].message.content
-        print(response_string,random_activity)
+        print(response_string)
+        print(random_activity)
         if response_string=="Error" or response_string=="error":
             is_error=True
             print("Error has occured")
