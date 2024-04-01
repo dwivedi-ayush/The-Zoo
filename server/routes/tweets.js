@@ -2,6 +2,7 @@ import express from "express";
 import { verifyToken } from "../verifyToken.js";
 import {
   createTweet,
+  createScenario,
   deleteTweet,
   likeOrDislike,
   getAllTweets,
@@ -15,6 +16,7 @@ const router = express.Router();
 
 // Create a Tweet
 router.post("/", verifyToken, createTweet);
+router.post("/scenario", createScenario);
 
 // Delete a Tweet
 router.delete("/:id", verifyToken, deleteTweet);

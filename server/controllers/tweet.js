@@ -2,6 +2,8 @@ import Tweet from "../models/Tweet.js";
 import { handleError } from "../error.js";
 import User from "../models/User.js";
 import Data from "../models/Replies.js"
+import Scenario from "../models/Scenario.js";
+
 
 export const createTweet = async (req, res, next) => {
   const newTweet = new Tweet(req.body);
@@ -9,7 +11,16 @@ export const createTweet = async (req, res, next) => {
     const savedTweet = await newTweet.save();
     res.status(200).json(savedTweet);
   } catch (err) {
-    console.log("HELLLO");
+    // console.log("HELLLO");
+    handleError(500, err);
+  }
+};
+export const createScenario = async (req, res, next) => {
+  const newScenario = new Scenario(req.body);
+  try {
+    const savedScenario = await newScenario.save();
+    res.status(200).json(savedScenario);
+  } catch (err) {
     handleError(500, err);
   }
 };

@@ -41,7 +41,7 @@ const ExploreTweets = () => {
       {tweets &&
         tweets.map((tweet,index) => {
           if(tweets.length === index+1){
-            return (<div ref={lastTweetelementRef} key={tweet._id} className="p-2">
+            return (<div ref={lastTweetelementRef} key={tweet.description} className="p-2">
                         <Tweet tweet={tweet} setData={setExplore} />
                         
                     </div>)

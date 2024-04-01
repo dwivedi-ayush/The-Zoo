@@ -15,7 +15,7 @@ export default function useExploreTweet(pageNumber){
             url:"/tweets/explore/page/"+pageNumber
         }).then(res=>{
             setTweets(prevTweets=>{
-                return [...prevTweets,...res.data]
+                return [...new Set([...prevTweets,...res.data])]
             })
             setHasMore(res.data.length>0)
             setLoading(false)
