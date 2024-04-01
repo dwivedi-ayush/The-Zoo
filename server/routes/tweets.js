@@ -7,7 +7,8 @@ import {
   getAllTweets,
   getUserTweets,
   getExploreTweets,
-  getTweetReplies
+  getTweetReplies,
+  getExplorePageTweets
 } from "../controllers/tweet.js";
 
 const router = express.Router();
@@ -29,6 +30,8 @@ router.get("/user/all/:alias", getUserTweets);
 
 //explore
 router.get("/explore", getExploreTweets);
+
+router.get("/explore/page/:page", getExplorePageTweets);
 
 router.get("/reply/:id", getTweetReplies);
 export default router;

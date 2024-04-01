@@ -82,6 +82,23 @@ export const getExploreTweets = async (req, res, next) => {
     handleError(500, err);
   }
 };
+export const getExplorePageTweets = async (req, res, next) => {
+  const page = parseInt(req.params.page) || 1;
+  const perPage = 10;
+  const skipCount = (page - 1) * perPage;
+  try {
+    const getExploreTweets = await Tweet.find({
+      likes: { $exists: true },
+    }).sort({  createdAt: -1, })
+    .skip(skipCount) 
+    .limit(perPage); 
+    // const getExploreTweets = await Tweet.find()
+
+    res.status(200).json(getExploreTweets);
+  } catch (err) {
+    handleError(500, err);
+  }
+};
 export const getTweetReplies = async (req, res, next) => {
   try {
     const getTweetReplies = await Data.findById(req.params.id);

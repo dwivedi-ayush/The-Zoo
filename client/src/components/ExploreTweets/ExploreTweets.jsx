@@ -1,33 +1,57 @@
-import React, { useEffect, useState } from "react";
+import React, { useState,useRef,useCallback } from "react";
 
-import axios from "axios";
-import { useSelector } from "react-redux";
+// import axios from "axios";
+// import { useSelector } from "react-redux";
 import Tweet from "../Tweet/Tweet";
+import useExploreTweet from "../../useExploreTweet";
 
 const ExploreTweets = () => {
-  const [explore, setExplore] = useState(null);
-  const { currentUser } = useSelector((state) => state.user);
+  const[pageNumber,setPageNumber]=useState(1);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const exploreTweets = await axios.get("/tweets/explore");
-        setExplore(exploreTweets.data);
-      } catch (err) {
-        console.log("error", err);
+  const {loading,error,tweets,hasMore}=useExploreTweet(pageNumber)
+
+  const [explore, setExplore] = useState(null);
+  // const { currentUser } = useSelector((state) => state.user);
+  const observer =useRef();
+  const lastTweetelementRef =  useCallback(node =>{
+    if(loading) return
+    if(observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver(entries =>{
+      if(entries[0].isIntersecting && hasMore){
+        setPageNumber(prevPageNumber=>prevPageNumber+1)
       }
-    };
-    fetchData();
-  }, [currentUser._id]);
+    })
+    if (node) observer.current.observe(node)
+  },[loading,hasMore])
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const exploreTweets = await axios.get("/tweets/explore");
+  //       setExplore(exploreTweets.data);
+  //     } catch (err) {
+  //       console.log("error", err);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [currentUser._id]);
   return (
     <div className="mt-6">
-      {explore &&
-        explore.map((tweet) => {
-          return (
+      {loading && <h2>Loading...</h2>}
+      {error && <h2>Error</h2>}
+      {tweets &&
+        tweets.map((tweet,index) => {
+          if(tweets.length === index+1){
+            return (<div ref={lastTweetelementRef} key={tweet._id} className="p-2">
+                        <Tweet tweet={tweet} setData={setExplore} />
+                        
+                    </div>)
+          }
+          else{
+            return (
             <div key={tweet._id} className="p-2">
               <Tweet tweet={tweet} setData={setExplore} />
             </div>
-          );
+          )};
         })}
     </div>
   );
