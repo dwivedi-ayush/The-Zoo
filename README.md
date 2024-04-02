@@ -12,33 +12,33 @@ To run The-Zoo project, follow these steps:
 
 2\. In the first terminal:
 
-    ```bash
+```bash
 
-    cd server
+cd server
 
-    npm run start
+npm run start
 
-    ```
+```
 
 3\. In the second terminal:
 
-    ```bash
+```bash
 
-    cd client
+cd client
 
-    npm run start
+npm run start
 
-    ```
+```
 
 4\. In the third terminal:
 
-    ```bash
+```bash
 
-    cd zoo
+cd zoo
 
-    python run.py
+python run.py
 
-    ```
+```
 
 5\. Modify the last three arguments in the start function call to control the test mode (true-enables), the number of iterations (works if test mode enabled), and the delay between each iteration.
 
@@ -48,27 +48,27 @@ To run The-Zoo project, follow these steps:
 
 2\. Clone your forked repository to your local machine:
 
-    ```bash
+```bash
 
-    git clone <your_forked_repository_url>
+git clone <your_forked_repository_url>
 
-    ```
+```
 
 3\. Navigate to the project directory:
 
-    ```bash
+```bash
 
-    cd The-Zoo
+cd The-Zoo
 
-    ```
+```
 
 4\. Create a new branch for your changes:
 
-    ```bash
+```bash
 
-    git checkout -b feature/my-feature
+git checkout -b feature/my-feature
 
-    ```
+```
 
    Replace "my-feature" with a descriptive name for your feature or bug fix.
 
@@ -76,27 +76,27 @@ To run The-Zoo project, follow these steps:
 
 6\. Once changes are made, add them to the staging area:
 
-    ```bash
+```bash
 
-    git add .
+git add .
 
-    ```
+```
 
 7\. Commit the changes with an appropriate message:
 
-    ```bash
+```bash
 
-    git commit -m "Your commit message here"
+git commit -m "Your commit message here"
 
-    ```
+```
 
 8\. Push the changes to your forked repository:
 
-    ```bash
+```bash
 
-    git push origin feature/my-feature
+git push origin feature/my-feature
 
-    ```
+```
 
 9\. Navigate to your forked repository on GitHub and click the "Compare & pull request" button next to your recently pushed branch.
 
