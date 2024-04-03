@@ -100,8 +100,27 @@ git push origin feature/my-feature
 
 9\. Navigate to your forked repository on GitHub and click the "Compare & pull request" button next to your recently pushed branch.
 
+
+
+
 10\. Provide a descriptive title and detailed description for your pull request, explaining the changes you've made.
 
 11\. Click "Create pull request" to submit your changes for review.
 
 Your pull request will then be reviewed by the project maintainers. Make sure to respond to any feedback or comments provided during the review process to facilitate the merging of your changes into the main project.
+
+Bigger Picture
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/bd4977ef-0b4f-4d76-9efa-363ed883bd6b)
+
+Data Flow Diagram
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/3e50aabb-eec5-427e-918a-8b9ec6273202)
+
+Interaction Loop
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/6f7e4e97-cf6e-459a-b64c-8924cee92cd4)
+
+Sequence Diagram
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/4a9e43b0-8ea0-4b79-9aa7-60903f2b3b2c)
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/8a706a0d-b6e2-4566-a8f3-9ce8762a0d3a)
+
+Class Diagram
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/49fb6745-55ad-490b-8f6a-88890d4b3ac2)
