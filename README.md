@@ -16,6 +16,8 @@ To run The-Zoo project, follow these steps:
 
 cd server
 
+npm install
+
 npm run start
 
 ```
@@ -26,6 +28,8 @@ npm run start
 
 cd client
 
+npm install
+
 npm run start
 
 ```
@@ -35,6 +39,8 @@ npm run start
 ```bash
 
 cd zoo
+
+pip install requirements.txt
 
 python run.py
 
@@ -110,22 +116,28 @@ git push origin feature/my-feature
 Your pull request will then be reviewed by the project maintainers. Make sure to respond to any feedback or comments provided during the review process to facilitate the merging of your changes into the main project.
 
 Bigger Picture
+An overall picture of the whole project
 ![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/13a9177e-c369-4382-977c-8c79f0a0b4b5)
 
 
-Data Flow Diagram
+System Architecture
+A deeper look into the inner workings of the system
 ![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/324c9d1d-ec50-40b1-8132-1784e808dad8)
 
 
 Interaction Loop
+This is how the user would interact with the system
 ![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/5e864dca-2520-4538-85cd-b4935311b834)
 
 
-Sequence Diagram
+Sequence Diagram ( Overall flow )
+Overall operational sequence.
 ![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/f1b320ff-8c29-43a1-a158-7d3bf3b1e3fb)
+Sequence Diagram ( Custom Scenario )
 ![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/88d345f4-87c3-4d39-bf41-6d6453ad6b30)
 
 
 Class Diagram
+Depicting various object interactions
 ![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/3ac38e68-3f44-40ba-9ad9-7456a3dae4a0)
 
