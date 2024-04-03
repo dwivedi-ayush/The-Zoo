@@ -144,3 +144,6 @@ Depicting various object interactions
 Algorithm
 Shows how the scripts works
 ![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/0d40f5f5-b5ae-42a1-889b-fe5e6d56f76f)
+
+Use case diagram
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/9e21acfd-d57d-4537-8dfa-c773767ad9e1)
