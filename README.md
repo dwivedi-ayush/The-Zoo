@@ -110,17 +110,22 @@ git push origin feature/my-feature
 Your pull request will then be reviewed by the project maintainers. Make sure to respond to any feedback or comments provided during the review process to facilitate the merging of your changes into the main project.
 
 Bigger Picture
-![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/bd4977ef-0b4f-4d76-9efa-363ed883bd6b)
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/13a9177e-c369-4382-977c-8c79f0a0b4b5)
+
 
 Data Flow Diagram
-![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/3e50aabb-eec5-427e-918a-8b9ec6273202)
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/324c9d1d-ec50-40b1-8132-1784e808dad8)
+
 
 Interaction Loop
-![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/6f7e4e97-cf6e-459a-b64c-8924cee92cd4)
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/5e864dca-2520-4538-85cd-b4935311b834)
+
 
 Sequence Diagram
-![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/4a9e43b0-8ea0-4b79-9aa7-60903f2b3b2c)
-![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/8a706a0d-b6e2-4566-a8f3-9ce8762a0d3a)
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/f1b320ff-8c29-43a1-a158-7d3bf3b1e3fb)
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/88d345f4-87c3-4d39-bf41-6d6453ad6b30)
+
 
 Class Diagram
-![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/49fb6745-55ad-490b-8f6a-88890d4b3ac2)
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/3ac38e68-3f44-40ba-9ad9-7456a3dae4a0)
+
