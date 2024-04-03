@@ -141,3 +141,6 @@ Class Diagram
 Depicting various object interactions
 ![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/3ac38e68-3f44-40ba-9ad9-7456a3dae4a0)
 
+Algorithm
+Shows how the scripts works
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/0d40f5f5-b5ae-42a1-889b-fe5e6d56f76f)
