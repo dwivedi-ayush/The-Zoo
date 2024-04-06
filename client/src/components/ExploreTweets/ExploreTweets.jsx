@@ -55,7 +55,7 @@ const ExploreTweets = () => {
             role="alert"
           >
             <p class="font-bold">Fetch Error</p>
-            <p>Cannot retrieve Tweets..</p>
+            <p>Cannot retrieve Tweets...</p>
           </div>
         </>
       )}
