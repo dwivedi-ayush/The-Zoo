@@ -11,7 +11,6 @@ export const createTweet = async (req, res, next) => {
     const savedTweet = await newTweet.save();
     res.status(200).json(savedTweet);
   } catch (err) {
-    // console.log("HELLLO");
     handleError(500, err);
   }
 };
@@ -122,7 +121,6 @@ export const getTimelinePageTweets = async (req, res, next) => {
   const skipCount = (page - 1) * perPage;
 
   try {
-    console.log(req.params.currentUser)
     const currentUser = await User.findById(req.params.currentUser);
     if (!currentUser) {
       // Handle case where user is not found
