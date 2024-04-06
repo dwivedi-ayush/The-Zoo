@@ -20,7 +20,7 @@ const Tweet_old = ({ tweet, setData }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(tweet)
+        console.log(tweet);
         const findUser = await axios.get(`/users/find/${tweet.userId}`);
 
         setUserData(findUser.data);
@@ -84,30 +84,22 @@ const Tweet_old = ({ tweet, setData }) => {
   );
 };
 
-
-
-
-
-
-
-
 const Tweet = ({ tweet, setData }) => {
   const { currentUser } = useSelector((state) => state.user);
 
   const [agentData, setAgentData] = useState();
-  const [isReply,setIsReply] = useState();
-  const [replies,setReplies]=useState();
-  const [flag,setFlag]=useState(false);
+  const [isReply, setIsReply] = useState();
+  const [replies, setReplies] = useState();
+  const [flag, setFlag] = useState(false);
   const dateStr = formatDistance(new Date(tweet.createdAt), new Date());
   const location = useLocation().pathname;
   const { id } = useParams();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        
         const findAgent = await axios.get(`/agents/find/${tweet.alias}`);
         // console.log("hehe",findAgent.data)
-        setIsReply(tweet.replies[0])
+        setIsReply(tweet.replies[0]);
         setAgentData(findAgent.data);
       } catch (err) {
         console.log("error", err);
@@ -117,19 +109,15 @@ const Tweet = ({ tweet, setData }) => {
     fetchData();
   }, [tweet.alias, tweet.likes]);
 
-
-
- 
-  const handleReply = async(e)=>{
+  const handleReply = async (e) => {
     e.preventDefault();
     setFlag(!flag);
-    if(!flag){
+    if (!flag) {
       const replies = await axios.get(`/tweets/reply/${tweet.replies[0]}`);
-      console.log(replies.data)
-      setReplies(replies.data)};
+      console.log(replies.data);
+      setReplies(replies.data);
+    }
   };
-
-
 
   const handleLike = async (e) => {
     // e.preventDefault();
@@ -170,29 +158,43 @@ const Tweet = ({ tweet, setData }) => {
 
           <p>{tweet.description}</p>
           <div className="flex space-x-4 mt-2">
-          <button onClick={handleLike}>
-            {tweet.likes.includes(currentUser._id) ? (
-              <FavoriteIcon className="mr-2 my-2 cursor-pointer"></FavoriteIcon>
-            ) : (
-              <FavoriteBorderIcon className="mr-2 my-2 cursor-pointer"></FavoriteBorderIcon>
-            )}
-            {tweet.likes.length}
-          </button>
-          {!flag && isReply && (<div className="mt-1 font-normal hover:font-bold">
-            <a href="#"  onClick={handleReply}>replies</a>
-          </div>)}
-          </div>
-          { flag && replies && (<div >
-            <a href="#" className="mb-1 font-normal hover:font-bold" onClick={handleReply}>replies:</a>
-            <div className="p-2 rounded-md bg-zinc-200">
-              {
-              replies.reply_array.map((reply) => {
-                return (<div className="text-sm mb-2"><span className="font-bold">{reply.alias}</span> : {reply.description}</div>);
-              })
-              }
+            <button onClick={handleLike}>
+              {tweet.likes.includes(currentUser._id) ? (
+                <FavoriteIcon className="mr-2 my-2 cursor-pointer"></FavoriteIcon>
+              ) : (
+                <FavoriteBorderIcon className="mr-2 my-2 cursor-pointer"></FavoriteBorderIcon>
+              )}
+              {tweet.likes.length}
+            </button>
+            {!flag && isReply && (
+              <div className="mt-1 font-normal hover:font-bold">
+                <a href="#" onClick={handleReply}>
+                  replies
+                </a>
               </div>
-          </div>)}
-          
+            )}
+          </div>
+          {flag && replies && (
+            <div>
+              <a
+                href="#"
+                className="mb-1 font-normal hover:font-bold"
+                onClick={handleReply}
+              >
+                replies:
+              </a>
+              <div className="p-2 rounded-md bg-zinc-200">
+                {replies.reply_array.map((reply) => {
+                  return (
+                    <div className="text-sm mb-2">
+                      <span className="font-bold">{reply.alias}</span> :{" "}
+                      {reply.description}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
