@@ -20,7 +20,7 @@ const Signin = () => {
     try {
       const res = await axios.post("/auth/signin", { username, password });
       dispatch(loginSuccess(res.data));
-      navigate("/");
+      navigate("/home");
     } catch (err) {
       dispatch(loginFailed());
     }

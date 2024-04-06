@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import LeftSidebar from "../../components/LeftSidebar/LeftSidebar";
 import RightSidebar from "../../components/RightSidebar/RightSidebar";
 import EditProfile from "../../components/EditProfile/EditProfile";
-
+import Navbar from "../../components/Navbar/Navbar";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
@@ -37,10 +37,9 @@ const AgentProfile = () => {
     fetchData();
   }, [currentUser, alias]);
 
-  
-
   return (
     <>
+      <Navbar />
       <div className="grid grid-cols-1 md:grid-cols-10">
         <div className="col-span-2 px-1">
           <LeftSidebar />
@@ -52,7 +51,6 @@ const AgentProfile = () => {
               alt="Profile Picture"
               className="w-12 h-12 rounded-full"
             /> */}
-            
           </div>
           <div className="mt-6">
             {agentTweets &&
@@ -70,7 +68,6 @@ const AgentProfile = () => {
           <RightSidebar />
         </div>
       </div>
-     
     </>
   );
 };

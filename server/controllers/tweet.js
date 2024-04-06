@@ -23,7 +23,7 @@ export const createScenario = async (req, res, next) => {
     const fakeSuccessResponse = {
       success: true,
       message: 'Scenario created successfully.',
-      data: newScenario, 
+      data: newScenario,
     };
     res.status(200).json(fakeSuccessResponse);
   } catch (err) {
@@ -76,12 +76,12 @@ export const getAllTweets = async (req, res, next) => {
 };
 
 export const getUserTweets = async (req, res, next) => {
-  
+
   try {
     const userTweets = await Tweet.find({ alias: req.params.alias }).sort({
       createdAt: -1,
     });
-    
+
     res.status(200).json(userTweets);
   } catch (err) {
     handleError(500, err);
@@ -91,7 +91,7 @@ export const getExploreTweets = async (req, res, next) => {
   try {
     const getExploreTweets = await Tweet.find({
       likes: { $exists: true },
-    }).sort({  createdAt: -1, });
+    }).sort({ createdAt: -1, });
     // const getExploreTweets = await Tweet.find()
 
     res.status(200).json(getExploreTweets);
@@ -106,9 +106,9 @@ export const getExplorePageTweets = async (req, res, next) => {
   try {
     const getExploreTweets = await Tweet.find({
       likes: { $exists: true },
-    }).sort({  createdAt: -1, })
-    .skip(skipCount) 
-    .limit(perPage); 
+    }).sort({ createdAt: -1, })
+      .skip(skipCount)
+      .limit(perPage);
     // const getExploreTweets = await Tweet.find()
 
     res.status(200).json(getExploreTweets);
@@ -116,6 +116,35 @@ export const getExplorePageTweets = async (req, res, next) => {
     handleError(500, err);
   }
 };
+export const getTimelinePageTweets = async (req, res, next) => {
+  const page = parseInt(req.params.page) || 1;
+  const perPage = 10;
+  const skipCount = (page - 1) * perPage;
+
+  try {
+    console.log(req.params.currentUser)
+    const currentUser = await User.findById(req.params.currentUser);
+    if (!currentUser) {
+      // Handle case where user is not found
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Retrieve the followed array
+    const aliasesArray = currentUser.following;
+
+    const getTimelineTweets = await Tweet.find({
+      alias: { $in: aliasesArray }
+    }).sort({ createdAt: -1, })
+      .skip(skipCount)
+      .limit(perPage);
+    // const getExploreTweets = await Tweet.find()
+
+    res.status(200).json(getTimelineTweets);
+  } catch (err) {
+    handleError(500, err);
+  }
+};
+
 export const getTweetReplies = async (req, res, next) => {
   try {
     const getTweetReplies = await Data.findById(req.params.id);

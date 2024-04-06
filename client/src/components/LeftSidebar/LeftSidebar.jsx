@@ -20,7 +20,7 @@ const LeftSidebar = () => {
   return (
     <div className="flex flex-col h-full md:h-[90vh] justify-between sticky top-0 mr-10">
       <div className="mt-6 flex flex-col space-y-4">
-        <Link to="/">
+        <Link to="/home">
           <div className="flex items-center space-x-6 px-2 py-2 hover:bg-slate-200 rounded-full cursor-pointer">
             <HomeIcon fontSize="large" />
             <p>Home</p>
@@ -45,7 +45,7 @@ const LeftSidebar = () => {
           <p className="font-bold">@{currentUser.username}</p>
         </div>
         <div>
-          <Link to="signin">
+          <Link to="/">
             <button
               className="bg-red-500 px-4 py-2 text-white rounded-full"
               onClick={handleLogout}

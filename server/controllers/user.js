@@ -12,9 +12,8 @@ export const getAllUsers = async (req, res, next) => {
 };
 export const getUser = async (req, res, next) => {
   try {
-    
-    const user = await User.findById(req.params._id);
-    
+    const user = await User.findById(req.params.id);
+
     res.status(200).json(user);
   } catch (err) {
     next(err);
@@ -57,17 +56,13 @@ export const deleteUser = async (req, res, next) => {
 
 export const follow = async (req, res, next) => {
   try {
-    //user
-    const user = await User.findById(req.params.id);
-    //current user
-    const currentUser = await User.findById(req.body.id);
 
-    if (!user.followers.includes(req.body.id)) {
-      await user.updateOne({
-        $push: { followers: req.body.id },
+    const currentUser = await User.findById(req.params.id);
+
+    if (!currentUser.following.includes(req.params.alias)) {
+      await currentUser.updateOne({
+        $push: { following: req.params.alias },
       });
-
-      await currentUser.updateOne({ $push: { following: req.params.id } });
     } else {
       res.status(403).json("you already follow this user");
     }
@@ -78,21 +73,17 @@ export const follow = async (req, res, next) => {
 };
 export const unFollow = async (req, res, next) => {
   try {
-    //user
-    const user = await User.findById(req.params.id);
-    //current user
-    const currentUser = await User.findById(req.body.id);
 
-    if (currentUser.following.includes(req.params.id)) {
-      await user.updateOne({
-        $pull: { followers: req.body.id },
+    const currentUser = await User.findById(req.params.id);
+
+    if (currentUser.following.includes(req.params.alias)) {
+      await currentUser.updateOne({
+        $pull: { following: req.params.alias },
       });
-
-      await currentUser.updateOne({ $pull: { following: req.params.id } });
     } else {
-      res.status(403).json("you are not following this user");
+      res.status(403).json("you dont follow this user");
     }
-    res.status(200).json("unfollowing the user");
+    res.status(200).json("Unfollowed the user");
   } catch (err) {
     next(err);
   }

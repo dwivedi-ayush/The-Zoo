@@ -23,13 +23,12 @@ const Navbar = () => {
       <div className="col-span-6 md:border-x-2 md:border-slate-200 md:px-6 my-6 md:my-0">
         <div className="mt-6 flex justify-between items-center">
           <h2 className=" font-bold text-2xl">
-
             {location.includes("agentprofile") ? (
               "Agent Profile"
             ) : location.includes("explore") ? (
               "Explore"
             ) : location.includes("profile") ? (
-               <UserPlaceholder setUserData={setUserData} userData={userData} />
+              <UserPlaceholder setUserData={setUserData} userData={userData} />
             ) : (
               "Home"
             )}

@@ -6,13 +6,13 @@ import Profile from "./pages/Profile/Profile";
 import AgentProfile from "./pages/AgentProfile/AgentProfile";
 import Explore from "./pages/Explore/Explore";
 import Signin from "./pages/Signin/Signin";
-import Navbar from "./components/Navbar/Navbar";
+// import Navbar from "./components/Navbar/Navbar";
 import Error from "./pages/Error/Error";
 
 const Layout = () => {
   return (
     <div className="md:w-8/12 mx-auto">
-      <Navbar />
+
       <Outlet></Outlet>
     </div>
   );
@@ -25,7 +25,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: "/",
+        path: "/home",
         element: <Home />,
       },
       {
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
         element: <Explore />,
       },
       {
-        path: "/signin",
+        path: "/",
         element: <Signin />,
       },
       {

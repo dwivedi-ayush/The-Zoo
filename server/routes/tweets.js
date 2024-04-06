@@ -9,7 +9,8 @@ import {
   getUserTweets,
   getExploreTweets,
   getTweetReplies,
-  getExplorePageTweets
+  getExplorePageTweets,
+  getTimelinePageTweets
 } from "../controllers/tweet.js";
 
 const router = express.Router();
@@ -34,6 +35,8 @@ router.get("/user/all/:alias", getUserTweets);
 router.get("/explore", getExploreTweets);
 
 router.get("/explore/page/:page", getExplorePageTweets);
+
+router.get("/timeline/user/:currentUser/page/:page", getTimelinePageTweets);
 
 router.get("/reply/:id", getTweetReplies);
 export default router;

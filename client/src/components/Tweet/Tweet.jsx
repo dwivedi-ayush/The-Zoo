@@ -1,13 +1,16 @@
 import axios from "axios";
 import React, { useState } from "react";
+
 import formatDistance from "date-fns/formatDistance";
 
 import { useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import Tooltip from "@mui/material/Tooltip";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
+import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 
 const Tweet_old = ({ tweet, setData }) => {
   const { currentUser } = useSelector((state) => state.user);
@@ -88,17 +91,23 @@ const Tweet = ({ tweet, setData }) => {
   const { currentUser } = useSelector((state) => state.user);
 
   const [agentData, setAgentData] = useState();
+  const [isFollowing, setIsFollowing] = useState(false);
   const [isReply, setIsReply] = useState();
   const [replies, setReplies] = useState();
   const [flag, setFlag] = useState(false);
   const dateStr = formatDistance(new Date(tweet.createdAt), new Date());
   const location = useLocation().pathname;
+
   const { id } = useParams();
   useEffect(() => {
+    // console.log(location);
     const fetchData = async () => {
       try {
         const findAgent = await axios.get(`/agents/find/${tweet.alias}`);
-        // console.log("hehe",findAgent.data)
+        const user = await axios.get(`/users/find/${currentUser._id}`);
+        if (user.data.following && user.data.following.includes(tweet.alias)) {
+          setIsFollowing(true);
+        }
         setIsReply(tweet.replies[0]);
         setAgentData(findAgent.data);
       } catch (err) {
@@ -114,7 +123,7 @@ const Tweet = ({ tweet, setData }) => {
     setFlag(!flag);
     if (!flag) {
       const replies = await axios.get(`/tweets/reply/${tweet.replies[0]}`);
-      console.log(replies.data);
+      // console.log(replies.data);
       setReplies(replies.data);
     }
   };
@@ -141,7 +150,34 @@ const Tweet = ({ tweet, setData }) => {
       console.log("error", err);
     }
   };
-
+  const handleFollow = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.put(
+        `users/follow/alias/${agentData.alias}/id/${currentUser._id}`
+      );
+      if (response.status === 200) {
+        setIsFollowing(!isFollowing);
+      }
+    } catch (error) {
+      console.error("Error following user:", error);
+      // Handle error
+    }
+  };
+  const handleUnfollow = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.put(
+        `users/unfollow/alias/${agentData.alias}/id/${currentUser._id}`
+      );
+      if (response.status === 200) {
+        setIsFollowing(!isFollowing);
+      }
+    } catch (error) {
+      console.error("Error following user:", error);
+      // Handle error
+    }
+  };
   return (
     <div>
       {agentData && (
@@ -151,7 +187,25 @@ const Tweet = ({ tweet, setData }) => {
             <Link to={`/agentprofile/${agentData.alias}`}>
               <h3 className="font-bold">{agentData.alias}</h3>
             </Link>
-
+            {!(
+              location.includes("agentprofile") || location.includes("home")
+            ) && (
+              <>
+                {isFollowing ? (
+                  <button onClick={handleUnfollow}>
+                    <Tooltip title="Click to Unfollow">
+                      <TaskAltOutlinedIcon style={{ color: "green" }} />
+                    </Tooltip>
+                  </button>
+                ) : (
+                  <button onClick={handleFollow}>
+                    <Tooltip title="Click to Follow">
+                      <AddCircleOutlinedIcon />
+                    </Tooltip>
+                  </button>
+                )}
+              </>
+            )}
             <span className="font-normal">@{agentData.alia}</span>
             <p> - {dateStr}</p>
           </div>
