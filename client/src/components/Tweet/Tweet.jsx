@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 
 import formatDistance from "date-fns/formatDistance";
-
+import { List } from "react-content-loader";
 import { useEffect } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -178,80 +178,90 @@ const Tweet = ({ tweet, setData }) => {
       // Handle error
     }
   };
-  return (
-    <div>
-      {agentData && (
-        <>
-          <div className="flex space-x-2">
-            {/* <img src="" alt="" /> */}
-            <Link to={`/agentprofile/${agentData.alias}`}>
-              <h3 className="font-bold">{agentData.alias}</h3>
-            </Link>
-            {!(
-              location.includes("agentprofile") || location.includes("home")
-            ) && (
-              <>
-                {isFollowing ? (
-                  <button onClick={handleUnfollow}>
-                    <Tooltip title="Click to Unfollow">
-                      <TaskAltOutlinedIcon style={{ color: "green" }} />
-                    </Tooltip>
-                  </button>
-                ) : (
-                  <button onClick={handleFollow}>
-                    <Tooltip title="Click to Follow">
-                      <AddCircleOutlinedIcon />
-                    </Tooltip>
-                  </button>
-                )}
-              </>
-            )}
-            <span className="font-normal">@{agentData.alia}</span>
-            <p> - {dateStr}</p>
-          </div>
-
-          <p>{tweet.description}</p>
-          <div className="flex space-x-4 mt-2">
-            <button onClick={handleLike}>
-              {tweet.likes.includes(currentUser._id) ? (
-                <FavoriteIcon className="mr-2 my-2 cursor-pointer"></FavoriteIcon>
-              ) : (
-                <FavoriteBorderIcon className="mr-2 my-2 cursor-pointer"></FavoriteBorderIcon>
+  if (agentData) {
+    return (
+      <div>
+        {agentData && (
+          <>
+            <div className="flex space-x-2">
+              {/* <img src="" alt="" /> */}
+              <Link to={`/agentprofile/${agentData.alias}`}>
+                <h3 className="font-bold">{agentData.alias}</h3>
+              </Link>
+              {!(
+                location.includes("agentprofile") || location.includes("home")
+              ) && (
+                <>
+                  {isFollowing ? (
+                    <button onClick={handleUnfollow}>
+                      <Tooltip title="Click to Unfollow">
+                        <TaskAltOutlinedIcon style={{ color: "green" }} />
+                      </Tooltip>
+                    </button>
+                  ) : (
+                    <button onClick={handleFollow}>
+                      <Tooltip title="Click to Follow">
+                        <AddCircleOutlinedIcon />
+                      </Tooltip>
+                    </button>
+                  )}
+                </>
               )}
-              {tweet.likes.length}
-            </button>
-            {!flag && isReply && (
-              <div className="mt-1 font-normal hover:font-bold">
-                <a href="#" onClick={handleReply}>
-                  replies
+              <span className="font-normal">@{agentData.alia}</span>
+              <p> - {dateStr}</p>
+            </div>
+
+            <p>{tweet.description}</p>
+            <div className="flex space-x-4 mt-2">
+              <button onClick={handleLike}>
+                {tweet.likes.includes(currentUser._id) ? (
+                  <FavoriteIcon className="mr-2 my-2 cursor-pointer"></FavoriteIcon>
+                ) : (
+                  <FavoriteBorderIcon className="mr-2 my-2 cursor-pointer"></FavoriteBorderIcon>
+                )}
+                {tweet.likes.length}
+              </button>
+              {!flag && isReply && (
+                <div className="mt-1 font-normal hover:font-bold">
+                  <a href="#" onClick={handleReply}>
+                    replies
+                  </a>
+                </div>
+              )}
+            </div>
+            {flag && replies && (
+              <div>
+                <a
+                  href="#"
+                  className="mb-1 font-normal hover:font-bold"
+                  onClick={handleReply}
+                >
+                  replies:
                 </a>
+                <div className="p-2 rounded-md bg-zinc-200">
+                  {replies.reply_array.map((reply) => {
+                    return (
+                      <div className="text-sm mb-2">
+                        <span className="font-bold">{reply.alias}</span> :{" "}
+                        {reply.description}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
-          </div>
-          {flag && replies && (
-            <div>
-              <a
-                href="#"
-                className="mb-1 font-normal hover:font-bold"
-                onClick={handleReply}
-              >
-                replies:
-              </a>
-              <div className="p-2 rounded-md bg-zinc-200">
-                {replies.reply_array.map((reply) => {
-                  return (
-                    <div className="text-sm mb-2">
-                      <span className="font-bold">{reply.alias}</span> :{" "}
-                      {reply.description}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  );
+          </>
+        )}
+      </div>
+    );
+  } else {
+    return (
+      <>
+        <div className="border-b-2 pb-6 pt-6">
+          <List />
+        </div>
+      </>
+    );
+  }
 };
 export default Tweet;
