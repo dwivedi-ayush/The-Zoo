@@ -61,7 +61,7 @@ const Navbar = ({ alias, currentUser }) => {
           src="/twitter-logo.png"
           alt="Logo"
           width={"100px"}
-          className="ml-8"
+          className="ml-4"
         />
       </div>
 
