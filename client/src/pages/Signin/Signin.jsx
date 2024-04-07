@@ -45,7 +45,7 @@ const Signin = () => {
 
   return (
     <form className="bg-gray-200 flex flex-col py-12 px-8 rounded-lg w-8/12 md:w-6/12 mx-auto gap-10">
-      <h2 className="text-3xl font-bold text-center">Sign in to Twitter</h2>
+      <h2 className="text-3xl font-bold text-center">Sign in to The Zoo</h2>
 
       <input
         onChange={(e) => setUsername(e.target.value)}
