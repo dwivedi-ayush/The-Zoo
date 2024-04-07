@@ -39,9 +39,9 @@ const LeftSidebar = () => {
           </div>
         </Link>
       </div>
-      <div className="flex justify-between">
+      <div className="flex flex-col justify-between items-end">
         <div>
-          <p className="font-bold">{currentUser.username}</p>
+          <p className="font-bold">username:</p>
           <p className="font-bold">@{currentUser.username}</p>
         </div>
         <div>
