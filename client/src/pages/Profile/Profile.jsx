@@ -66,7 +66,7 @@ const Profile = () => {
           <LeftSidebar />
         </div>
         <div className="col-span-6 border-x-2 border-t-slate-800 px-1">
-          <div className="flex justify-between items-center">
+          {/* <div className="flex justify-between items-center">
             <img
               src={userProfile?.profilePicture}
               alt="Profile Picture"
@@ -94,7 +94,7 @@ const Profile = () => {
                 Follow
               </button>
             )}
-          </div>
+          </div> */}
           {userProfile ? (
             <>
               <div className="mt-6">Agents following:</div>
