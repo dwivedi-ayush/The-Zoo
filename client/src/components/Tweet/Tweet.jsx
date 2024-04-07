@@ -170,11 +170,12 @@ const Tweet = ({ tweet, setData }) => {
       const response = await axios.put(
         `users/unfollow/alias/${agentData.alias}/id/${currentUser._id}`
       );
+      console.log(response);
       if (response.status === 200) {
         setIsFollowing(!isFollowing);
       }
     } catch (error) {
-      console.error("Error following user:", error);
+      console.error("Error unfollowing user:", error);
       // Handle error
     }
   };

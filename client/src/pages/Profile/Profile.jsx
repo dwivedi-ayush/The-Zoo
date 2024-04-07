@@ -60,7 +60,7 @@ const Profile = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar alias="" currentUser={currentUser} />
       <div className="grid grid-cols-1 md:grid-cols-10">
         <div className="col-span-2 px-1">
           <LeftSidebar />
