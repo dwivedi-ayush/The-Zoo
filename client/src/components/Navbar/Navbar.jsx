@@ -29,7 +29,7 @@ const Navbar = ({ alias, currentUser }) => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `users/follow/alias/${alias}/id/${currentUser._id}`
+        `http://localhost:8000/api/users/follow/alias/${alias}/id/${currentUser._id}`
       );
       if (response.status === 200) {
         setIsFollowing(!isFollowing);
@@ -45,7 +45,7 @@ const Navbar = ({ alias, currentUser }) => {
       const response = await axios.put(
         `http://localhost:8000/api/users/unfollow/alias/${alias}/id/${currentUser._id}`
       );
-      console.log(response);
+
       if (response.status === 200) {
         setIsFollowing(!isFollowing);
       }
