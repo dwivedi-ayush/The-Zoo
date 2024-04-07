@@ -7,13 +7,13 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Tweet from "../../components/Tweet/Tweet";
-
+import { BulletList } from "react-content-loader";
 import { following } from "../../redux/userSlice";
 
 const Profile = () => {
   const [open, setOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
-  const [userTweets, setUserTweets] = useState(null);
+  // const [userTweets, setUserTweets] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
 
   const { id } = useParams();
@@ -22,10 +22,10 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userTweets = await axios.get(`/tweets/user/all/${id}`);
-        const userProfile = await axios.get(`/users/find/${id}`);
+        // const userTweets = await axios.get(`/tweets/user/all/${id}`);
+        const userProfile = await axios.get(`/users/find/${currentUser._id}`);
 
-        setUserTweets(userTweets.data);
+        // setUserTweets(userTweets.data);
         setUserProfile(userProfile.data);
       } catch (err) {
         console.log("error", err);
@@ -95,18 +95,23 @@ const Profile = () => {
               </button>
             )}
           </div>
-          <div className="mt-6">
-            {userTweets &&
-              userTweets.map((tweet) => {
-                return (
-                  <div className="p-2" key={tweet._id}>
-                    <Tweet tweet={tweet} setData={setUserTweets} />
-                  </div>
-                );
-              })}
-          </div>
+          {userProfile ? (
+            <>
+              <div className="mt-6">Agents following:</div>
+              {userProfile.following.length > 0 ? (
+                <ul className="list-disc list-inside">
+                  {userProfile.following.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500 mt-2">No agents followed.</p>
+              )}
+            </>
+          ) : (
+            <BulletList />
+          )}
         </div>
-
         <div className="col-span-2 px-1">
           <RightSidebar />
         </div>

@@ -73,7 +73,7 @@ const Navbar = ({ alias, currentUser }) => {
             ) : location.includes("explore") ? (
               "Explore"
             ) : location.includes("profile") ? (
-              <UserPlaceholder setUserData={setUserData} userData={userData} />
+              <UserPlaceholder currentUser={currentUser} />
             ) : (
               "Home"
             )}
