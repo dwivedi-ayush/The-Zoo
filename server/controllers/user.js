@@ -20,8 +20,11 @@ export const createUser = async (req, res, next) => {
     const savedUser = await newUser.save();
     savedScenarioGroup.scenarioIds.push(savedUser._id);
     await savedScenarioGroup.save();
-    res.status(201).json(saveUser);
+    res.status(201).json(savedUser);
   } catch (err) {
+    if (savedScenarioGroup) {
+      await ScenarioGroup.findByIdAndDelete(savedScenarioGroup._id);
+    }
     next(err);
   }
 };
