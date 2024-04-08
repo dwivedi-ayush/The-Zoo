@@ -6,11 +6,12 @@ import Agent from "../models/Agent.js";
 import AgentGroup from "../models/AgentGroup.js"
 
 export const createUser = async (req, res, next) => {
+  let savedScenarioGroup = false;
   try {
     const defaultScenarioGroup = new ScenarioGroup({
       title: "Default Scenario Group",
     });
-    const savedScenarioGroup = await defaultScenarioGroup.save();
+    savedScenarioGroup = await defaultScenarioGroup.save();
     const newUser = new User({
       username: req.body.username,
       email: req.body.email,
@@ -18,7 +19,7 @@ export const createUser = async (req, res, next) => {
       scenarioGroupIds: [savedScenarioGroup._id],
     });
     const savedUser = await newUser.save();
-    savedScenarioGroup.scenarioIds.push(savedUser._id);
+    savedScenarioGroup.userIds = savedUser._id;
     await savedScenarioGroup.save();
     res.status(201).json(savedUser);
   } catch (err) {
