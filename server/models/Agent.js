@@ -6,7 +6,13 @@ const AgentSchema = new mongoose.Schema(
       type: String,
     },
     personality: {
-        type:String
+      type: String
+    },
+    userId: {
+      type: String
+    },
+    agentGroupId: {
+      type: String
     }
   },
   { timestamps: true }

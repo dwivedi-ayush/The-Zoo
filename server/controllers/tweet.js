@@ -1,8 +1,7 @@
 import Tweet from "../models/Tweet.js";
 import { handleError } from "../error.js";
 import User from "../models/User.js";
-import Data from "../models/Replies.js"
-import Scenario from "../models/Scenario.js";
+import AgentGroup from "../models/AgentGroup.js"
 
 
 export const createTweet = async (req, res, next) => {
@@ -14,25 +13,11 @@ export const createTweet = async (req, res, next) => {
     handleError(500, err);
   }
 };
-export const createScenario = async (req, res, next) => {
-  const newScenario = new Scenario(req.body);
-  try {
-    // const savedScenario = await newScenario.save();
-    // res.status(200).json(savedScenario);
-    const fakeSuccessResponse = {
-      success: true,
-      message: 'Scenario created successfully.',
-      data: newScenario,
-    };
-    res.status(200).json(fakeSuccessResponse);
-  } catch (err) {
-    handleError(500, err);
-  }
-};
+
 export const deleteTweet = async (req, res, next) => {
   try {
     const tweet = await Tweet.findById(req.params.id);
-    if (tweet.userId === req.body.id) {
+    if (tweet.agentId === req.body.id) {
       await tweet.deleteOne();
       res.status(200).json("tweet has been deleted");
     } else {
@@ -57,40 +42,32 @@ export const likeOrDislike = async (req, res, next) => {
     handleError(500, err);
   }
 };
-
-export const getAllTweets = async (req, res, next) => {
+export const getAgentTweets = async (req, res, next) => {
+  const page = parseInt(req.params.page) || 1;
+  const perPage = 10;
+  const skipCount = (page - 1) * perPage;
   try {
-    const currentUser = await User.findById(req.params.id);
-    const userTweets = await Tweet.find({ userId: currentUser._id });
-    const followersTweets = await Promise.all(
-      currentUser.following.map((followerId) => {
-        return Tweet.find({ userId: followerId });
-      })
-    );
+    const getAgentTweets = await Tweet.find({
+      agentId: req.params.agentId,
+      scenarioGroupId: req.params.scenarioGroupId
+    }).sort({ createdAt: -1, })
+      .skip(skipCount)
+      .limit(perPage);
+    // const getExploreTweets = await Tweet.find()
 
-    res.status(200).json(userTweets.concat(...followersTweets));
-  } catch (err) {
-    handleError(500, err);
-  }
-};
-
-export const getUserTweets = async (req, res, next) => {
-
-  try {
-    const userTweets = await Tweet.find({ alias: req.params.alias }).sort({
-      createdAt: -1,
-    });
-
-    res.status(200).json(userTweets);
+    res.status(200).json(getAgentTweets);
   } catch (err) {
     handleError(500, err);
   }
 };
 export const getExploreTweets = async (req, res, next) => {
   try {
+    const agents = await AgentGroup.findById(req.params.agentGroupId);
+    const agentArray = agents.agentIds;
     const getExploreTweets = await Tweet.find({
-      likes: { $exists: true },
-    }).sort({ createdAt: -1, });
+      agentId: { $in: agentArray },
+      scenarioGroupId: req.params.scenarioGroupId
+    }).sort({ createdAt: -1, })
     // const getExploreTweets = await Tweet.find()
 
     res.status(200).json(getExploreTweets);
@@ -103,8 +80,11 @@ export const getExplorePageTweets = async (req, res, next) => {
   const perPage = 10;
   const skipCount = (page - 1) * perPage;
   try {
+    const agents = await AgentGroup.findById(req.params.agentGroupId);
+    const agentArray = agents.agentIds;
     const getExploreTweets = await Tweet.find({
-      likes: { $exists: true },
+      agentId: { $in: agentArray },
+      scenarioGroupId: req.params.scenarioGroupId
     }).sort({ createdAt: -1, })
       .skip(skipCount)
       .limit(perPage);
@@ -121,6 +101,8 @@ export const getTimelinePageTweets = async (req, res, next) => {
   const skipCount = (page - 1) * perPage;
 
   try {
+    const agents = await AgentGroup.findById(req.params.agentGroupId);
+    const agentArray = agents.agentIds;
     const currentUser = await User.findById(req.params.currentUser);
     if (!currentUser) {
       // Handle case where user is not found
@@ -128,10 +110,14 @@ export const getTimelinePageTweets = async (req, res, next) => {
     }
 
     // Retrieve the followed array
-    const aliasesArray = currentUser.following;
+    const followingArray = currentUser.following;
 
     const getTimelineTweets = await Tweet.find({
-      alias: { $in: aliasesArray }
+      $and: [
+        { agentId: { $in: followingArray } }, // Tweets from agents the user is following
+        { agentId: { $in: agentArray } }      // Tweets from the user's own agents
+      ],
+      scenarioGroupId: req.params.scenarioGroupId
     }).sort({ createdAt: -1, })
       .skip(skipCount)
       .limit(perPage);
@@ -145,10 +131,10 @@ export const getTimelinePageTweets = async (req, res, next) => {
 
 export const getTweetReplies = async (req, res, next) => {
   try {
-    const getTweetReplies = await Data.findById(req.params.id);
+    const getTweet = await Data.findById(req.params.id);
     // const getExploreTweets = await Tweet.find()
 
-    res.status(200).json(getTweetReplies);
+    res.status(200).json(getTweet.replies);
   } catch (err) {
     handleError(500, err);
   }

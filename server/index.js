@@ -7,7 +7,7 @@ import cors from 'cors';
 import userRoutes from "./routes/users.js";
 import authRoutes from "./routes/auths.js";
 import tweetRoutes from "./routes/tweets.js";
-import agentRoutes from "./routes/agent.js";
+import agentRoutes from "./routes/agents.js";
 
 const app = express();
 dotenv.config();

@@ -1,6 +1,9 @@
 import { handleError } from "../error.js";
 import User from "../models/User.js";
-import Tweet from "../models/Tweet.js";
+import Scenario from "../models/Scenario.js";
+import ScenarioGroup from '../models/ScenarioGroup.js'
+import Agent from "../models/Agent.js";
+import AgentGroup from "../models/AgentGroup.js"
 
 export const getAllUsers = async (req, res, next) => {
   try {
@@ -39,11 +42,15 @@ export const update = async (req, res, next) => {
     return next(createError(403, "You can update only your account"));
   }
 };
+
 export const deleteUser = async (req, res, next) => {
   if (req.params.id === req.user.id) {
     try {
       await User.findByIdAndDelete(req.params.id);
-      await Tweet.remove({ userId: req.params.id });
+      await Scenario.remove({ userId: req.params.id });
+      await ScenarioGroup.remove({ userId: req.params.id });
+      await AgentGroup.remove({ userId: req.params.id });
+      await Agent.remove({ userId: req.params.id });
 
       res.status(200).json("User delete");
     } catch (err) {
@@ -59,12 +66,12 @@ export const follow = async (req, res, next) => {
 
     const currentUser = await User.findById(req.params.id);
 
-    if (!currentUser.following.includes(req.params.alias)) {
+    if (!currentUser.following.includes(req.params.agentId)) {
       await currentUser.updateOne({
-        $push: { following: req.params.alias },
+        $push: { following: req.params.agentId },
       });
     } else {
-      res.status(403).json("you already follow this user");
+      res.status(403).json("you already follow this agent");
     }
     res.status(200).json("following the user");
   } catch (err) {
@@ -76,12 +83,12 @@ export const unFollow = async (req, res, next) => {
 
     const currentUser = await User.findById(req.params.id);
 
-    if (currentUser.following.includes(req.params.alias)) {
+    if (currentUser.following.includes(req.params.agentId)) {
       await currentUser.updateOne({
-        $pull: { following: req.params.alias },
+        $pull: { following: req.params.agentId },
       });
     } else {
-      res.status(403).json("you dont follow this user");
+      res.status(403).json("you dont follow this agent");
     }
     res.status(200).json("Unfollowed the user");
   } catch (err) {

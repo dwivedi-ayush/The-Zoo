@@ -2,11 +2,9 @@ import express from "express";
 import { verifyToken } from "../verifyToken.js";
 import {
   createTweet,
-  createScenario,
   deleteTweet,
+  getAgentTweets,
   likeOrDislike,
-  getAllTweets,
-  getUserTweets,
   getExploreTweets,
   getTweetReplies,
   getExplorePageTweets,
@@ -15,28 +13,14 @@ import {
 
 const router = express.Router();
 
-// Create a Tweet
-router.post("/", verifyToken, createTweet);
-router.post("/scenario", createScenario);
 
-// Delete a Tweet
-router.delete("/:id", verifyToken, deleteTweet);
+router.put("/v2", createTweet);
+router.delete("/v2/:id", deleteTweet);
+router.put("/v2/:id/like", likeOrDislike);
+router.get("/v2/agent/:id/scenarioGroup/:scenarioGroupId/page/:page", getAgentTweets);
+router.get("/v2/explore/scenarioGroup/:scenarioGroupId", getExploreTweets);
+router.get("/v2/explore/scenarioGroup/:scenarioGroupId/page/:page", getExplorePageTweets);
+router.get("/v2/timeline/user/:currentUser/scenarioGroup/:scenarioGroupId/page/:page", getTimelinePageTweets);
+router.get("/v2/reply/:id", getTweetReplies);
 
-// Like or Dislike a Tweet
-router.put("/:id/like", likeOrDislike);
-
-// get all timeline tweets
-router.get("/timeline/:id", getAllTweets);
-
-// get user Tweets only
-router.get("/user/all/:alias", getUserTweets);
-
-//explore
-router.get("/explore", getExploreTweets);
-
-router.get("/explore/page/:page", getExplorePageTweets);
-
-router.get("/timeline/user/:currentUser/page/:page", getTimelinePageTweets);
-
-router.get("/reply/:id", getTweetReplies);
 export default router;

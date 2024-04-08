@@ -4,14 +4,21 @@ const ScenarioSchema = new mongoose.Schema(
   {
     userId: {
       type: String,
-      required: true,
+
     },
-    scenario: {
+    title: {
       type: String,
-      required: true,
+
+    },
+    description: {
+      type: String,
+
       max: 280,
     },
-    
+    scenarioGroupId: {
+      type: String
+    }
+
   },
   { timestamps: true }
 );
