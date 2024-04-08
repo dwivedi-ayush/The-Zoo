@@ -19,7 +19,7 @@ export const createUser = async (req, res, next) => {
       scenarioGroupIds: [savedScenarioGroup._id],
     });
     const savedUser = await newUser.save();
-    savedScenarioGroup.userIds = savedUser._id;
+    savedScenarioGroup.userId = savedUser._id;
     await savedScenarioGroup.save();
     res.status(201).json(savedUser);
   } catch (err) {
@@ -47,24 +47,22 @@ export const getUser = async (req, res, next) => {
   }
 };
 export const update = async (req, res, next) => {
-  if (req.params.id === req.user.id) {
-    try {
-      const updatedUser = await User.findByIdAndUpdate(
-        req.params.id,
-        {
-          $set: req.body,
-        },
-        {
-          new: true,
-        }
-      );
-      res.status(200).json(updatedUser);
-    } catch (err) {
-      next(err);
-    }
-  } else {
-    return next(createError(403, "You can update only your account"));
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: req.body,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    next(err);
   }
+
 };
 
 export const deleteUser = async (req, res, next) => {
