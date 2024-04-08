@@ -37,8 +37,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/tweets", tweetRoutes);
 app.use("/api/agents", agentRoutes);
-app.use("/api/agentGroups", agentGroupRoutes);
 app.use("/api/scenarios", scenarioRoutes);
+app.use("/api/agentGroups", agentGroupRoutes);
 app.use("/api/scenarioGroups", scenarioGroupRoutes);
 
 app.listen(8000, () => {

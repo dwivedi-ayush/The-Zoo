@@ -5,6 +5,26 @@ import ScenarioGroup from '../models/ScenarioGroup.js'
 import Agent from "../models/Agent.js";
 import AgentGroup from "../models/AgentGroup.js"
 
+export const createUser = async (req, res, next) => {
+  try {
+    const defaultScenarioGroup = new ScenarioGroup({
+      title: "Default Scenario Group",
+    });
+    const savedScenarioGroup = await defaultScenarioGroup.save();
+    const newUser = new User({
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+      scenarioGroupIds: [savedScenarioGroup._id],
+    });
+    const savedUser = await newUser.save();
+    savedScenarioGroup.scenarioIds.push(savedUser._id);
+    await savedScenarioGroup.save();
+    res.status(201).json(saveUser);
+  } catch (err) {
+    next(err);
+  }
+};
 export const getAllUsers = async (req, res, next) => {
   try {
     const users = await User.find();
