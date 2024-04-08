@@ -21,15 +21,7 @@ export const getScenarioGroupById = async (req, res, next) => {
     }
 };
 
-// Update operation
-export const updateScenarioGroup = async (req, res, next) => {
-    try {
-        const updatedScenarioGroup = await ScenarioGroup.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.status(200).json(updatedScenarioGroup);
-    } catch (err) {
-        next(err);
-    }
-};
+
 
 // Delete operation
 export const deleteScenarioGroup = async (req, res, next) => {

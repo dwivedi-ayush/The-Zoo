@@ -8,6 +8,10 @@ import userRoutes from "./routes/users.js";
 import authRoutes from "./routes/auths.js";
 import tweetRoutes from "./routes/tweets.js";
 import agentRoutes from "./routes/agents.js";
+import agentGroupRoutes from "./routes/agentGroups.js";
+import scenarioGroupRoutes from "./routes/scenarioGroups.js";
+import scenarioRoutes from "./routes/scenarios.js";
+
 
 const app = express();
 dotenv.config();
@@ -26,10 +30,16 @@ const connect = () => {
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
+
+
+
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/tweets", tweetRoutes);
 app.use("/api/agents", agentRoutes);
+app.use("/api/agentGroups", agentGroupRoutes);
+app.use("/api/scenarios", scenarioRoutes);
+app.use("/api/scenarioGroups", scenarioGroupRoutes);
 
 app.listen(8000, () => {
   connect();

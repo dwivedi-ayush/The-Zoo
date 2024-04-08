@@ -1,4 +1,4 @@
-import AgentGroup from '../models/AgentGroup';
+import AgentGroup from '../models/AgentGroup.js';
 
 
 export const createAgentGroup = async (req, res, next) => {

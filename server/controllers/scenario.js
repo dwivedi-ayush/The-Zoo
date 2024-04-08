@@ -1,4 +1,4 @@
-import Scenario from '../models/Scenario';
+import Scenario from '../models/Scenario.js';
 
 export const createScenario = async (req, res, next) => {
     try {
