@@ -6,7 +6,14 @@ from bson.json_util import dumps
 from bson.json_util import loads
 
 
-if __name__ == "__main__":
+def run(
+    scenario_group_id,
+    agent_group_id,
+    test_mode,
+    loop_limit,
+    action_frequency,
+    reply_probablity,
+):
 
     stop_event = multiprocessing.Event()
     processes = []
@@ -14,13 +21,29 @@ if __name__ == "__main__":
     config = dotenv_values(".env")
     mongodb_client = MongoClient(config["ATLAS_URI"])
     database = mongodb_client[config["DB_NAME"]]
-    agent_collection = database['agents']
-    agents = loads(dumps(agent_collection.find()))
+    agent_collection = database["agents"]
+    agent_group_collection = database["agent_group_id"]
+    agent_group = agent_group_collection.find({"_id": agent_group_id})
+    agent_ids = agent_group.get("agentIds", [])
+    agents = loads(dumps(agent_collection.find({"_id": {"$in": agent_ids}})))
 
-    # print(agents)
+    print(agents)
+
     for agent in agents:
-        p = multiprocessing.Process(target=start, args=(
-            stop_event, agent["alias"], True, 3, 1,))  # true means debug mode and finite loop
+        p = multiprocessing.Process(
+            target=start,
+            args=(
+                stop_event,
+                agent["alias"],
+                agent["agentId"],
+                scenario_group_id,
+                agent_group_id,
+                test_mode,
+                loop_limit,
+                action_frequency,
+                reply_probablity,
+            ),
+        )  # true means debug mode and finite loop
         p.start()
         processes.append(p)
 

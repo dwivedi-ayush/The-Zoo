@@ -161,10 +161,20 @@ action_frequency = 1  # action every 5 seconds
 # loop_limit = args.loop_limit
 
 
-def start(stop_event, personality_id, test_mode, loop_limit, action_frequency=1):
+def start(
+    stop_event,
+    agent_alias,
+    agent_id,
+    scenario_group_id,
+    agent_group_id,
+    test_mode,
+    loop_limit,
+    action_frequency=1,
+    reply_probability=0.3,
+):
 
     load_dotenv(find_dotenv())
-
+    random.seed(time.time())
     api_key = os.getenv("API_KEY")
     client = ai.OpenAI(api_key=api_key)
 
@@ -208,24 +218,26 @@ def start(stop_event, personality_id, test_mode, loop_limit, action_frequency=1)
         random_activity = ""
         activity_type = 2
         indexed_tweet_dict = ""
-        if random.randint(1, 3) == 3:  # 1 in 3 chance of tweet else reply
+        if random.random() >= reply_probability:
             print("GOING TO MAKE A NEW TWEET")
             activity_type = 1
             if initial_loop or abs(int(current_time) - previous_activity_time) >= 1:
                 # random_activity = get_random_activity(
                 #     type_id=8
                 # )  # 8 is busywork activity, can use random number or some heuristics
-                random_activity = get_smart_activitiy(client, personality_id)
-
+                random_activity = get_smart_activitiy(client, agent_alias)
                 previous_activity_time = int(current_time)
                 initial_loop = False
         else:
             print("GOING TO REPLY")
-            previous_tweets, indexed_tweet_dict = explore_tweets()
+            previous_tweets, indexed_tweet_dict = explore_tweets(
+                agent_id, agent_group_id, scenario_group_id
+            )
             # for now the dictionary will only be 2 nested -- main tweet and its replies
 
         prompt_content = make_prompt(
-            personality_id=personality_id,
+            agent_alias=agent_alias,
+            scenario_group_id=scenario_group_id,
             explore_tweets=indexed_tweet_dict,
             previous_post=previous_post,
             random_activity=random_activity,
@@ -256,7 +268,7 @@ def start(stop_event, personality_id, test_mode, loop_limit, action_frequency=1)
             "============================================================================================================"
         )
         response_string = response.choices[0].message.content
-        print(personality_id, response_string)
+        print(agent_alias, response_string)
         print(random_activity)
         if response_string == "Error" or response_string == "error":
             is_error = True
@@ -280,7 +292,7 @@ def start(stop_event, personality_id, test_mode, loop_limit, action_frequency=1)
             print("COMMAND :", command)
             # save_response(response_string + "\n")  # save only new post
             previous_post = respones_array[1]
-            if save_tweet(personality_id, respones_array[1]):
+            if save_tweet(agent_alias, agent_id, scenario_group_id, respones_array[1]):
                 print("Tweet saved successfully")
             else:
                 print("DB Error")
@@ -302,28 +314,33 @@ def start(stop_event, personality_id, test_mode, loop_limit, action_frequency=1)
                         # found the target tweet
                         # print(tweet.split('-')[1],indexed_tweet_dict)
                         if save_reply(
-                            personality_id, tweet.split("-")[1], respones_array[1]
+                            agent_alias,
+                            agent_id,
+                            scenario_group_id,
+                            tweet.split("-")[1],
+                            respones_array[1],
                         ):
                             print("Reply saved successfully")
                         else:
                             print("DB Error")
                         break
-            elif len(l) == 4:
-                for i, tweet in enumerate(previous_tweets):
-                    if i == int(l[1]):
-                        for j, reply in enumerate(previous_tweets["replies"]):
-                            if j == j[3]:
-                                # found the target reply
-                                if save_reply(
-                                    personality_id,
-                                    tweet.split("-")[1],
-                                    respones_array[1],
-                                ):
-                                    print("Reply saved successfully")
-                                else:
-                                    print("DB Error")
-                            break
-                        break
+            # elif len(l) == 4:
+            #     for i, tweet in enumerate(previous_tweets):
+            #         if i == int(l[1]):
+            #             for j, reply in enumerate(previous_tweets["replies"]):
+            #                 if j == j[3]:
+            #                     # found the target reply
+            #                     if save_reply(
+            #                         agent_alias,
+            #                         agent_id,
+            #                         tweet.split("-")[1],
+            #                         respones_array[1],
+            #                     ):
+            #                         print("Reply saved successfully")
+            #                     else:
+            #                         print("DB Error")
+            #                 break
+            #             break
         # elif command == "reply":
         #     recipient = respones_array[2]  # in case of reply
         #     # handle_reply()
@@ -333,7 +350,7 @@ def start(stop_event, personality_id, test_mode, loop_limit, action_frequency=1)
             print("******* Errored response *******")
             is_error = True
             # continue
-    print("------", personality_id, "stopped ------")
+    print("------", agent_alias, "stopped ------")
 
 
 # start("","batman",True,2,1)

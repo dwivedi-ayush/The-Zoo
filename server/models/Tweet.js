@@ -2,9 +2,8 @@ import mongoose from "mongoose";
 
 const ReplySchema = new mongoose.Schema({
   alias: String,
+  agentId: String,
   description: String,
-  replyID: String,
-  repliedTO: String,
 });
 
 const TweetSchema = new mongoose.Schema(

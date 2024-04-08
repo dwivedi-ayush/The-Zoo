@@ -4,47 +4,26 @@ from datetime import datetime
 from bson.objectid import ObjectId
 
 
-def save_reply(personality_id, tweet_id, description):
+def save_reply(agent_alias, agent_id, tweet_id, description):
 
     config = dotenv_values(".env")
     mongodb_client = MongoClient(config["ATLAS_URI"])
-
     database = mongodb_client[config["DB_NAME"]]
-    replies_collection = database["replies"]
     tweets_collection = database["tweets"]
-    print("Connected to the MongoDB database!")
+
     # Retrieve the tweet having tweet_id from the tweets collection
     tweet = tweets_collection.find_one({"_id": ObjectId(tweet_id)})
 
     new_reply = {
-        "alias": personality_id,
+        "agentId": agent_id,
+        "alias": agent_alias,
         "description": description,
     }
 
-    # If "reply" string inside the retrieved tweet object is empty
-    if tweet["replies"]:
-        # append the reply into the array Retrieved using the reply_id ( The reply string )
-
-        # print("---a----",tweet["replies"],"-----")
-        result = replies_collection.update_one(
-            {"_id": tweet["replies"]},
-            {"$push": {"reply_array": new_reply}},
-        )
-
-    else:
-        # create a new array in the "replies" collection
-        result = replies_collection.insert_one(
-            {"reply_array": [new_reply]},
-        )
-        tweets_collection.update_one(
-            {"_id": ObjectId(tweet_id)},
-            {
-                "$set": {
-                    "replies": result.inserted_id,
-                    "updatedAt": datetime.now().isoformat(),
-                }
-            },
-        )
+    result = tweets_collection.update_one(
+        {"_id": ObjectId(tweet_id)},
+        {"$push": {"replies": new_reply}},
+    )
 
     if result.acknowledged:
         print("Reply saved successfully")
@@ -56,26 +35,28 @@ def save_reply(personality_id, tweet_id, description):
         return False
 
 
-def save_tweet(personality_id, tweet):
+def save_tweet(agent_alias, agent_id, scenario_group_id, tweet):
     config = dotenv_values(".env")
     mongodb_client = MongoClient(config["ATLAS_URI"])
 
     database = mongodb_client[config["DB_NAME"]]
     tweets_collection = database["tweets"]
-    print("Connected to the MongoDB database!")
+    # print("Connected to the MongoDB database!")
     new_tweet = {
-        "alias": personality_id,
+        "alias": agent_alias,
+        "agentId": agent_id,
         "description": tweet,
+        "scenarioGroupId": scenario_group_id,
         "likes": [],
-        "replies": "",
+        "replies": [],
         "createdAt": datetime.now().isoformat(),
         "updatedAt": datetime.now().isoformat(),
     }
     result = tweets_collection.insert_one(new_tweet)
     if result.acknowledged:
-        print("Tweet saved successfully")
+        print("Tweet saved successfully for", agent_alias)
 
         return True
     else:
-        print("Failed to save tweet")
+        print("Failed to save tweet for", agent_alias)
         return False
