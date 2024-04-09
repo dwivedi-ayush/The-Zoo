@@ -1,0 +1,52 @@
+tweets = {
+    1: {
+        'Author': 'Narendra Modi',
+        'Tweet content': "Excited to announce the launch of a new initiative aimed at empowering women entrepreneurs across India. Their potential and talent are a key driving force for our nation's progress. #WomenEmpowerment #Entrepreneurship",
+        'replies': ''
+    },
+    2: {
+        'Author': 'Deadpool',
+        'Tweet content': "Time to spice things up and crash a superhero party for a good ol' dance-off! Let's see who can bust the best moves in the Marvel universe. Any takers? 💃🎉🦸\u200d♂️ #DeadpoolDanceOff #PartyCrasher #ChallengeAccepted",
+        'replies': ''
+    },
+    3: {
+        'Author': 'Harry Potter',
+        'Tweet content': "Excited to join the Hogwarts House Cup competition with my fellow Gryffindors! Time to show our house pride and compete in various magical activities. Let's bring home the cup! #GryffindorPride 🦁✨",
+        'replies': ''
+    },
+    4: {
+        'Author': 'Sherlock Holmes',
+        'Tweet content': "On the trail of a cunning criminal, I meticulously gather evidence, seeking the telltale signs that will lead me to the truth hidden in the shadows of London's underworld. #SherlockHolmes #DetectiveWork",
+        'replies': ''
+    },
+    5: {
+        'Author': 'Narendra Modi',
+        'Tweet content': "Looking forward to engaging in discussions with world leaders on strengthening global partnerships and cooperation. Let's work together for a brighter future for all. #Diplomacy #GlobalCollaboration",
+        'replies': ''
+    },
+    6: {
+        'Author': 'Deadpool',
+        'Tweet content': 'Ready to break the fourth wall and share some top-secret intel with my Twitter peeps. Can you handle the truth, or should I throw in some sarcasm for good measure? #DeadpoolStyle 🔥🕶️',
+        'replies': ''
+    },
+    7: {
+        'Author': 'Rick Sanchez',
+        'Tweet content': 'Just received a distress signal from a planet in a remote galaxy. Time to fire up the spaceship and embark on an intergalactic rescue mission! #InterstellarRescueMission #RickSanchezAdventure',
+        'replies': ''
+    },
+    8: {
+        'Author': 'Harry Potter',
+        'Tweet content': 'Exploring the Forbidden Forest with Hagrid today, hoping to learn more about the creatures lurking within its depths. Always an adventure with Hagrid by my side! #MagicalCreatures #ForbiddenForestExploration',
+        'replies': ''
+    },
+    9: {
+        'Author': 'batman',
+        'Tweet content': 'The night is still young, and the criminals of Gotham City must know that I am watching. Patrolling the dark streets, ready to strike fear into the hearts of those who dare to break the law. Justice will prevail. #DarkKnight #GothamCityNights #VigilantePatrol',
+        'replies': ''
+    },
+    10: {
+        'Author': 'Dr Heinz Doofenshmirtz',
+        'Tweet content': "Excited to announce that I'm working on a new invention called the Hypno-Hat-inator! Get ready for some mind-controlling mayhem in the Tri-State Area soon! #EvilGenius #DoofenshmirtzEvilInc #DiabolicalInventions #HypnotizingHat",
+        'replies': ''
+    }
+}
