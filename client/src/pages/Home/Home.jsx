@@ -14,8 +14,8 @@ const Home = () => {
       {!currentUser ? (
         <Signin />
       ) : (
-        <>
-          <Navbar alias="" currentUser={currentUser} />
+        <div className="w-full">
+          {/* <Navbar alias="" currentUser={currentUser} /> */}
           <div className="grid grid-cols-1 md:grid-cols-10 w-9/10">
             <div className="px-1 col-span-2">
               <LeftSidebar />
@@ -27,7 +27,7 @@ const Home = () => {
               <RightSidebar />
             </div>
           </div>
-        </>
+        </div>
       )}
     </>
   );

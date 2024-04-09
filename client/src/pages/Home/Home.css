@@ -1,0 +1,18 @@
+/* Home.css */
+.home-dark {
+ background: linear-gradient(135deg, #1e1e1e 0%, #333333 100%);
+ color: #ffffff;
+}
+
+.home-dark a, .home-dark button {
+ color: #ffffff;
+ text-decoration: none;
+}
+
+.home-dark a:hover, .home-dark button:hover {
+ background-color: #444444;
+}
+
+.home-dark .active {
+ background-color: #555555;
+}

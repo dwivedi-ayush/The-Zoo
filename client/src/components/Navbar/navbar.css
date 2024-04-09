@@ -1,0 +1,17 @@
+.navbar-dark {
+ background: linear-gradient(135deg, #1e1e1e 0%, #333333 100%);
+ color: #ffffff;
+}
+
+.navbar-dark a {
+ color: #ffffff;
+ text-decoration: none;
+}
+
+.navbar-dark a:hover {
+ background-color: #444444;
+}
+
+.navbar-dark .active {
+ background-color: #555555;
+}

@@ -8,13 +8,17 @@ import Explore from "./pages/Explore/Explore";
 import Signin from "./pages/Signin/Signin";
 // import Navbar from "./components/Navbar/Navbar";
 import Error from "./pages/Error/Error";
+import TestPage from "./pages/TestPage";
+import Navbar from "./components/Navbar/Navbar";
 
 const Layout = () => {
   return (
-    <div className="md:w-8/12 mx-auto">
-
-      <Outlet></Outlet>
-    </div>
+    <>
+    <Navbar />
+      <div className="w-full px-12 py-4">
+        <Outlet></Outlet>
+      </div>
+    </>
   );
 };
 
@@ -33,7 +37,7 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "/agentprofile/:alias",
+        path: "/agentprofile",
         element: <AgentProfile />,
       },
       {
@@ -42,11 +46,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/",
-        element: <Signin />,
+        element: <Home />,
       },
       {
         path: "/signout",
         element: <Signin />,
+      },
+      {
+        path: "/test",
+        element: <TestPage />,
       },
     ],
   },
@@ -54,7 +62,8 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div>
+    // <TestPage></TestPage>
+    <div className="w-full">
       <RouterProvider router={router}></RouterProvider>
     </div>
   );
