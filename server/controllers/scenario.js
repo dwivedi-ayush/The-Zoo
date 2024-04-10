@@ -19,6 +19,14 @@ export const getScenario = async (req, res, next) => {
         next(err);
     }
 };
+export const getScenariosByGroup = async (req, res, next) => {
+    try {
+        const scenario = await Scenario.find({ scenarioGroupId: req.params.scenariogroupgid });
+        res.status(200).json(scenario);
+    } catch (err) {
+        next(err);
+    }
+};
 
 
 export const deleteScenario = async (req, res, next) => {
@@ -47,13 +55,13 @@ export const rollbackTillScenario = async (req, res, next) => {
         const session = await mongoose.startSession();
         session.startTransaction();
 
-        await Scenario.deleteMany({ _id: { $in: scenariosToDelete.map(scenario => scenario._id) } }, { session });
-        await Scenario.findByIdAndDelete(targetScenario._id, { session });
+        await Scenario.deleteMany({ _id: { $in: scenariosToDelete.map(scenario => scenario._id) } }).session(session);;
+        await Scenario.findByIdAndDelete(targetScenario._id).session(session);;
 
         await Tweet.deleteMany({
             agentId: targetScenario.agentId,
             createdAt: { $gt: targetScenario.createdAt }
-        }, { session });
+        }).session(session);;
 
         await session.commitTransaction();
         session.endSession();

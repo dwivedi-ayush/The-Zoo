@@ -7,8 +7,8 @@ import {
 
 const router = express.Router();
 
-router.post("/v2/scenariogroups", createScenarioGroup);
-router.get("/v2/scenariogroups/:id", getScenarioGroupById);
-router.delete("/v2/scenariogroups/:id", deleteScenarioGroup);
+router.put("/v2", createScenarioGroup);
+router.get("/v2/:id", getScenarioGroupById);
+router.delete("/v2/:id", deleteScenarioGroup);
 
 export default router;

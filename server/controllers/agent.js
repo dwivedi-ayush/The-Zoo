@@ -20,6 +20,15 @@ export const getGlobalAgents = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getAgentsByGroup = async (req, res, next) => {
+  try {
+    const agents = await Agent.find({ agentGroupId: req.params.agentgroupid });
+    res.status(200).json(agents);
+  } catch (err) {
+    next(err);
+  }
+};
 export const getAgentById = async (req, res, next) => {
   try {
     const agent = await Agent.findOne({ _id: req.params.id });

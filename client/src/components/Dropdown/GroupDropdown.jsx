@@ -2,50 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-const GroupInput = ({ handleGroupInput }) => {
-  const [isAddingGroup, setIsAddingGroup] = useState(false);
-  const [newGroup, setNewGroup] = useState("");
 
-  const handleAddGroup = () => {
-    handleGroupInput(newGroup);
-    setNewGroup("");
-    setIsAddingGroup(false);
-  };
-
-  return (
-    <div>
-      {isAddingGroup ? (
-        <div className="flex items-center">
-          <input
-            type="text"
-            value={newGroup}
-            onChange={(e) => setNewGroup(e.target.value)}
-            placeholder="Enter group name"
-            className="border border-gray-300 shadow-sm rounded-md pl-1 py-1 m-1 text-sm"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleAddGroup();
-              }
-            }}
-          />
-          <button
-            onClick={() => setIsAddingGroup(false)}
-            className="cursor-default flex justify-between hover:bg-gray-100 text-sm m-1 text-gray-700"
-          >
-            x
-          </button>
-        </div>
-      ) : (
-        <button
-          onClick={() => setIsAddingGroup(true)}
-          className="cursor-default flex justify-between hover:bg-gray-100 px-4 py-2 text-sm text-gray-700"
-        >
-          +
-        </button>
-      )}
-    </div>
-  );
-};
 // const GroupMemberInput = ({ handleGroupMemberInput }) => {
 //   const [isAddingMember, setIsAddingMember] = useState(false);
 //   const [newMember, setNewMember] = useState("");
@@ -97,25 +54,89 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [groupMembers, setGroupMembers] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
-  const handleGroupInput = (newGroup) => {
-    // Add the new member to the list of groups
-    setGroups([...groups, newGroup]);
+  const [isAddingGroup, setIsAddingGroup] = useState(false);
+  const [newGroup, setNewGroup] = useState("");
+
+  const handleAddGroup = () => {
+    if (type === "agent") {
+      const saveAgentGroup = async () => {
+        try {
+          const agentGroupBody = {
+            groupName: newGroup,
+            userId: currentUser._id,
+          };
+          const res = await axios.put(`agentGroups/v2/`, agentGroupBody);
+
+          setGroups([
+            ...groups,
+            { name: res.data.groupName, id: res.data._id },
+          ]);
+          if (res.status !== 201) {
+            throw new Error(
+              `Agent group creation request failed with status: ${res.status}`
+            );
+          }
+        } catch (err) {
+          console.log("error", err);
+        }
+      };
+      saveAgentGroup();
+    } else if (type === "scenario") {
+      const saveScenarioGroup = async () => {
+        try {
+          const scenarioGroupBody = {
+            title: newGroup,
+            userId: currentUser._id,
+          };
+          const res = await axios.put(`scenarioGroup/v2/`, scenarioGroupBody);
+
+          setGroups([...groups, { name: res.data.title, id: res.data._id }]);
+          if (res.status !== 201) {
+            throw new Error(
+              `Scenario group creation request failed with status: ${res.status}`
+            );
+          }
+        } catch (err) {
+          console.log("error", err);
+        }
+      };
+      saveScenarioGroup();
+    }
+
+    setNewGroup("");
+
+    setIsAddingGroup(false);
   };
+
   const handleGroupMemberInput = (newMember) => {
     // Add the new member to the list of groups
     setGroupMembers([...groupMembers, newMember]);
   };
 
   useEffect(() => {
+    if (type === "scenario" && groups.length > 0) {
+      const scenarioGroup = groups.find(
+        (group) => group.name === "Default Scenario Group"
+      );
+      if (scenarioGroup) {
+        setSelectedGroup({
+          name: "Default Scenario Group",
+          id: scenarioGroup.id,
+        });
+      }
+    }
+  }, [type, groups]);
+
+  // onload use effect
+  useEffect(() => {
     if (type === "agent") {
-      setGroups(["Global Agent Group"]);
-      setSelectedGroup("Global Agent Group");
+      // setGroups([{ name: "Global Agent Group", id: "" }]);
+      setSelectedGroup({ name: "Global Agent Group", id: "" });
 
       const fetchData = async () => {
         try {
-          const golbalAgents = await axios.get(
-            `http://localhost:8000/api/agents/v2/getglobal`
-          );
+          const user = await axios.get(`users/v2/find/${currentUser._id}`);
+          const golbalAgents = await axios.get(`agents/v2/getglobal`);
 
           setGroupMembers([
             ...golbalAgents.data.map((item) => {
@@ -123,39 +144,71 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
             }),
           ]);
 
-          const user = await axios.get(`/v2/users/${currentUser._id}`);
-          const agentGroupNames = await Promise.all(
-            user.data.agentGroupIds.map(
-              async (id) =>
-                (
-                  await axios.get(`/v2/agentgroup/${id}`)
-                ).data.groupName
-            )
+          // const user = await axios.get(`users/v2/find/${currentUser._id}`);
+          const agentGroupNamesWithIds = await Promise.all(
+            user.data.agentGroupIds.map(async (id) => {
+              const { data } = await axios.get(`agentgroups/v2/${id}`);
+
+              return { name: data.groupName, id: id };
+            })
           );
-          setGroups([...groups, ...agentGroupNames]);
+
+          setGroups([
+            { name: "Global Agent Group", id: "" },
+            ...groups.slice(1),
+            ...agentGroupNamesWithIds,
+          ]);
         } catch (err) {
           console.log("error", err);
         }
       };
       fetchData();
     } else if (type === "scenario") {
-      setGroups(["Default Scenario Group"]);
-      setSelectedGroup("Default Scenario Group");
+      const fetchData = async () => {
+        try {
+          // const user = await axios.get(`users/v2/find/${currentUser._id}`);
+          // setGroups([{ name: "Global Scenario Group", id:  }]);
+          // setSelectedGroup({ name: "Global Scenario Group", id: "" });
+          const user = await axios.get(`users/v2/find/${currentUser._id}`);
+          const scenarioGroupNamesWithIds = await Promise.all(
+            user.data.scenarioGroupIds.map(async (id) => {
+              const { data } = await axios.get(`scenariogroups/v2/${id}`);
+              return { name: data.title, id: id };
+            })
+          );
+
+          setGroups([...groups, ...scenarioGroupNamesWithIds]);
+        } catch (err) {
+          console.log("error", err);
+        }
+      };
+      fetchData();
     }
     // setGroups()
     // setGroupMembers(["member1", "member2", "member3"]);
   }, []);
 
-  const handleDelete = (index) => {
+  const handleDelete = async (index) => {
     if (allowDelete && index !== 0) {
-      setGroups(groups.filter((_, i) => i !== index));
+      try {
+        if (type === "agent") {
+          await axios.delete(`agentGroups/v2/${groups[index].id}`);
+        } else if (type === "scenario") {
+          await axios.delete(`scenarioGroups/v2/${groups[index].id}`);
+        }
+
+        setGroups(groups.filter((_, i) => i !== index));
+      } catch (error) {
+        console.error("Error deleting group:", error);
+        // Handle error as needed
+      }
     }
   };
   const handleMemberDelete = (index) => {
     if (
       allowDelete &&
       type === "agent" &&
-      selectedGroup !== "Global Agent Group"
+      selectedGroup.name !== "Global Agent Group"
     ) {
       setGroupMembers(groupMembers.filter((_, i) => i !== index));
     }
@@ -167,6 +220,28 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
 
   const handleGroupSelect = (group) => {
     setSelectedGroup(group);
+    const fetchGroupMembers = async () => {
+      if (type === "agent") {
+        const agents = await axios.get(`agents/v2/getbygroup/${group.id}`);
+
+        setGroupMembers([
+          ...agents.data.map((item) => {
+            return item.alias;
+          }),
+        ]);
+      } else if (type === "scenario") {
+        const scenarios = await axios.get(
+          `scenarios/v2/getbygroup/${group.id}`
+        );
+
+        setGroupMembers([
+          ...scenarios.data.map((item) => {
+            return item.title;
+          }),
+        ]);
+      }
+    };
+    fetchGroupMembers();
     setIsOpen(false);
   };
 
@@ -180,7 +255,7 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
         aria-haspopup="true"
         onClick={toggleDropdown}
       >
-        {selectedGroup}
+        {selectedGroup && <>{selectedGroup.name}</>}
         {isOpen ? (
           <svg
             className="-mr-1 ml-2 h-5 w-5 transform rotate-180 transition-transform duration-300"
@@ -222,12 +297,12 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
           <div className="py-1" role="none">
             {groups.map((group, index) => (
               <div
-                key={index}
+                key={index + type}
                 className="cursor-default flex justify-between hover:bg-gray-100 px-4 py-2 text-sm text-gray-700"
                 role="menuitem"
                 onClick={() => handleGroupSelect(group)}
               >
-                <span>{group}</span>
+                <span>{group.name}</span>
                 <button
                   type="button"
                   className={`text-gray-400 hover:text-gray-600 focus:outline-none ${
@@ -256,7 +331,39 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
                 </button>
               </div>
             ))}
-            <GroupInput handleGroupInput={handleGroupInput} />
+            <div>
+              <div>
+                {isAddingGroup ? (
+                  <div className="flex items-center">
+                    <input
+                      type="text"
+                      value={newGroup}
+                      onChange={(e) => setNewGroup(e.target.value)}
+                      placeholder="Enter group name"
+                      className="border border-gray-300 shadow-sm rounded-md pl-1 py-1 m-1 text-sm"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleAddGroup();
+                        }
+                      }}
+                    />
+                    <button
+                      onClick={() => setIsAddingGroup(false)}
+                      className="cursor-default flex justify-between hover:bg-gray-100 text-sm m-1 text-gray-700"
+                    >
+                      x
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setIsAddingGroup(true)}
+                    className="cursor-default flex justify-between hover:bg-gray-100 px-4 py-2 text-sm text-gray-700"
+                  >
+                    +
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       ) : (
@@ -270,7 +377,9 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
                 <button
                   type="button"
                   className={`text-gray-400 hover:text-gray-600 focus:outline-none ${
-                    type === "agent" && selectedGroup !== "Global Agent Group"
+                    selectedGroup &&
+                    type === "agent" &&
+                    selectedGroup.name !== "Global Agent Group"
                       ? "cursor-default"
                       : "cursor-not-allowed opacity-50"
                   }`}
@@ -296,13 +405,15 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
               </div>
             );
           })}
-          {type === "agent" && selectedGroup !== "Global Agent Group" && (
-            <div>
-              <Link className="text-sm text-gray-700" to="/agentform">
-                + create new Agent
-              </Link>
-            </div>
-          )}
+          {selectedGroup &&
+            type === "agent" &&
+            selectedGroup.name !== "Global Agent Group" && (
+              <div>
+                <Link className="text-sm text-gray-700" to="/agentform">
+                  + create new Agent
+                </Link>
+              </div>
+            )}
         </>
       )}
     </div>

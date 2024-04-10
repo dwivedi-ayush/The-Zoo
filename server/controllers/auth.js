@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import ScenarioGroup from "../models/ScenarioGroup.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { handleError } from "../error.js";
@@ -7,9 +8,28 @@ export const signup = async (req, res, next) => {
   try {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
-    const newUser = new User({ ...req.body, password: hash });
-
-    await newUser.save();
+    let savedScenarioGroup = false;
+    try {
+      const defaultScenarioGroup = new ScenarioGroup({
+        title: "Default Scenario Group",
+      });
+      savedScenarioGroup = await defaultScenarioGroup.save();
+      const newUser = new User({
+        username: req.body.username,
+        email: req.body.email,
+        password: hash,
+        scenarioGroupIds: [savedScenarioGroup._id],
+      });
+      const savedUser = await newUser.save();
+      savedScenarioGroup.userId = savedUser._id;
+      await savedScenarioGroup.save();
+      res.status(201).json(savedUser);
+    } catch (err) {
+      if (savedScenarioGroup) {
+        await ScenarioGroup.findByIdAndDelete(savedScenarioGroup._id);
+      }
+      next(err);
+    }
 
     const token = jwt.sign({ id: newUser._id }, process.env.JWT);
 

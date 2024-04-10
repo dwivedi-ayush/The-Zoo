@@ -7,8 +7,8 @@ import {
 
 const router = express.Router();
 
-router.put("/v2/agentgroups", createAgentGroup);
-router.get("/v2/agentgroups/:id", getAgentGroupById);
-router.delete("/v2/agentgroups/:id", deleteAgentGroup);
+router.put("/v2", createAgentGroup);
+router.get("/v2/:id", getAgentGroupById);
+router.delete("/v2/:id", deleteAgentGroup);
 
 export default router;

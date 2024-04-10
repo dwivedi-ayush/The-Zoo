@@ -18,7 +18,7 @@ const Signin = () => {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const res = await axios.post("/auth/signin", { username, password });
+      const res = await axios.post("/auth/v2/signin", { username, password });
       dispatch(loginSuccess(res.data));
       navigate("/home");
     } catch (err) {
@@ -31,7 +31,7 @@ const Signin = () => {
     dispatch(loginStart());
 
     try {
-      const res = await axios.post("/auth/signup", {
+      const res = await axios.post("/auth/v2/signup", {
         username,
         email,
         password,
