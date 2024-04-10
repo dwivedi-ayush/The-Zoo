@@ -14,7 +14,7 @@ import Navbar from "./components/Navbar/Navbar";
 const Layout = () => {
   return (
     <>
-    <Navbar />
+      <Navbar />
       <div className="w-full px-12 py-4">
         <Outlet></Outlet>
       </div>
@@ -46,7 +46,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/",
-        element: <Home />,
+        element: <Signin />,
       },
       {
         path: "/signout",
