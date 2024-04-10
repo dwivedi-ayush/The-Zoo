@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+const GroupInput = ({ handleGroupInput }) => {
+  const [isAddingGroup, setIsAddingGroup] = useState(false);
+  const [newGroup, setNewGroup] = useState("");
 
-const GroupMemberInput = ({ onAddGroupMember }) => {
-  const [isAddingMember, setIsAddingMember] = useState(false);
-  const [newMember, setNewMember] = useState("");
-
-  const handleAddMember = () => {
-    onAddGroupMember(newMember);
-    setNewMember("");
-    setIsAddingMember(false);
+  const handleAddGroup = () => {
+    handleGroupInput(newGroup);
+    setNewGroup("");
+    setIsAddingGroup(false);
   };
 
   return (
     <div>
-      {isAddingMember ? (
+      {isAddingGroup ? (
         <div className="flex items-center">
           <input
             type="text"
-            value={newMember}
-            onChange={(e) => setNewMember(e.target.value)}
+            value={newGroup}
+            onChange={(e) => setNewGroup(e.target.value)}
             placeholder="Enter group name"
             className="border border-gray-300 shadow-sm rounded-md pl-1 py-1 m-1 text-sm"
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleAddMember();
+                handleAddGroup();
               }
             }}
           />
           <button
-            onClick={() => setIsAddingMember(false)}
+            onClick={() => setIsAddingGroup(false)}
             className="cursor-default flex justify-between hover:bg-gray-100 text-sm m-1 text-gray-700"
           >
             x
@@ -35,7 +35,7 @@ const GroupMemberInput = ({ onAddGroupMember }) => {
         </div>
       ) : (
         <button
-          onClick={() => setIsAddingMember(true)}
+          onClick={() => setIsAddingGroup(true)}
           className="cursor-default flex justify-between hover:bg-gray-100 px-4 py-2 text-sm text-gray-700"
         >
           +
@@ -44,24 +44,79 @@ const GroupMemberInput = ({ onAddGroupMember }) => {
     </div>
   );
 };
+// const GroupMemberInput = ({ handleGroupMemberInput }) => {
+//   const [isAddingMember, setIsAddingMember] = useState(false);
+//   const [newMember, setNewMember] = useState("");
+
+//   const handleAddGroup = () => {
+//     handleGroupMemberInput(newMember);
+//     setNewMember("");
+//     setIsAddingMember(false);
+//   };
+
+//   return (
+//     <div>
+//       {isAddingMember ? (
+//         <div className="flex items-center">
+//           <input
+//             type="text"
+//             value={newMember}
+//             onChange={(e) => setNewMember(e.target.value)}
+//             placeholder="Enter group name"
+//             className="border border-gray-300 shadow-sm rounded-md pl-1 py-1 m-1 text-sm"
+//             onKeyDown={(e) => {
+//               if (e.key === "Enter") {
+//                 handleAddGroup();
+//               }
+//             }}
+//           />
+//           <button
+//             onClick={() => setIsAddingMember(false)}
+//             className="cursor-default flex justify-between hover:bg-gray-100 text-sm m-1 text-gray-700"
+//           >
+//             x
+//           </button>
+//         </div>
+//       ) : (
+//         <button
+//           onClick={() => setIsAddingMember(true)}
+//           className="cursor-default flex justify-between hover:bg-gray-100 px-4 py-2 text-sm text-gray-700"
+//         >
+//           +
+//         </button>
+//       )}
+//     </div>
+//   );
+// };
 
 const GroupDropdown = ({ allowDelete = true }) => {
   const [groups, setGroups] = useState(["Default Group"]);
   const [selectedGroup, setSelectedGroup] = useState("Default Group");
   const [isOpen, setIsOpen] = useState(false);
   const [groupMembers, setGroupMembers] = useState([]);
-  const handleAddGroupMember = (member) => {
+
+  const handleGroupInput = (newGroup) => {
     // Add the new member to the list of groups
-    setGroups([...groups, member]);
+    setGroups([...groups, newGroup]);
+  };
+  const handleGroupMemberInput = (newMember) => {
+    // Add the new member to the list of groups
+    setGroupMembers([...groupMembers, newMember]);
   };
 
   useEffect(() => {
     // setGroups()
     setGroupMembers(["member1", "member2", "member3"]);
   }, []);
+
   const handleDelete = (index) => {
     if (allowDelete && index !== 0) {
       setGroups(groups.filter((_, i) => i !== index));
+    }
+  };
+  const handleMemberDelete = (index) => {
+    if (allowDelete && selectedGroup !== "Default Group") {
+      setGroupMembers(groupMembers.filter((_, i) => i !== index));
     }
   };
 
@@ -160,18 +215,51 @@ const GroupDropdown = ({ allowDelete = true }) => {
                 </button>
               </div>
             ))}
-            <GroupMemberInput onAddGroupMember={handleAddGroupMember} />
+            <GroupInput handleGroupInput={handleGroupInput} />
           </div>
         </div>
       ) : (
         <>
-          {groupMembers.map((item) => {
+          {groupMembers.map((item, index) => {
             return (
-              <div className="cursor-default flex justify-between hover:bg-gray-100 px-4 py-2 text-sm text-gray-700">
-                {item}
+              <div className="cursor-default flex justify-between border-b-2 text-sm text-gray-700">
+                <div className="cursor-default  py-2 text-sm text-gray-700">
+                  {item}
+                </div>
+                <button
+                  type="button"
+                  className={`text-gray-400 hover:text-gray-600 focus:outline-none ${
+                    selectedGroup !== "Default Group"
+                      ? "cursor-default"
+                      : "cursor-not-allowed opacity-50"
+                  }`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMemberDelete(index);
+                  }}
+                >
+                  <svg
+                    className="h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
               </div>
             );
           })}
+          <div>
+            <Link className="text-sm text-gray-700" to="/agentform">
+              + create new Agent
+            </Link>
+          </div>
         </>
       )}
     </div>
