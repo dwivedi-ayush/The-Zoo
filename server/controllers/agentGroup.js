@@ -37,7 +37,7 @@ export const deleteAgentGroup = async (req, res, next) => {
         // Delete the agent group
 
         const currentUser = await User.findById(userId);
-        console.log(currentUser, req.params.id)
+        // console.log(currentUser, req.params.id)
         if (!currentUser) {
             console.log('User not found');
             return; // Exit function or handle appropriately
@@ -46,7 +46,7 @@ export const deleteAgentGroup = async (req, res, next) => {
         const result = await currentUser.updateOne(
             { $pull: { agentGroupIds: mongoose.Types.ObjectId(req.params.id) } }
         );
-        console.log(result);
+        // console.log(result);
         if (result.nModified === 0) {
             console.log('ID not found in agentGroupIds array');
             return; // Exit function or handle appropriately
