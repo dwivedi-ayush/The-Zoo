@@ -5,6 +5,7 @@ import RightSidebar from "../../components/RightSidebar/RightSidebar";
 import Signin from "../Signin/Signin";
 import Navbar from "../../components/Navbar/Navbar";
 import { useSelector } from "react-redux";
+import GroupDropdown from "../../components/Dropdown/GroupDropdown";
 
 const Home = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -18,13 +19,13 @@ const Home = () => {
           {/* <Navbar alias="" currentUser={currentUser} /> */}
           <div className="grid grid-cols-1 md:grid-cols-10 w-9/10">
             <div className="px-1 col-span-2">
-              <LeftSidebar />
+              <GroupDropdown type={"agent"} />
             </div>
             <div className="col-span-6 border-x-2 border-t-slate-800 px-6">
               <MainTweet />
             </div>
             <div className="col-span-2 pl-6">
-              <RightSidebar />
+              <GroupDropdown type={"scenario"} />
             </div>
           </div>
         </div>

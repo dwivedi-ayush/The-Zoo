@@ -117,7 +117,7 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
     <>
-      <nav className="flex items-center justify-between w-full p-4 bg-transparent rounded-md">
+      <nav className="flex items-center justify-between w-full px-4 bg-transparent rounded-md">
         <div className="flex items-center">
           <Link to="/Home">
             <img

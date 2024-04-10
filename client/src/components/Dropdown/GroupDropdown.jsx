@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 const GroupInput = ({ handleGroupInput }) => {
   const [isAddingGroup, setIsAddingGroup] = useState(false);
@@ -89,12 +91,12 @@ const GroupInput = ({ handleGroupInput }) => {
 //   );
 // };
 
-const GroupDropdown = ({ allowDelete = true }) => {
-  const [groups, setGroups] = useState(["Default Group"]);
-  const [selectedGroup, setSelectedGroup] = useState("Default Group");
+const GroupDropdown = ({ allowDelete = true, type }) => {
+  const [groups, setGroups] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [groupMembers, setGroupMembers] = useState([]);
-
+  const { currentUser } = useSelector((state) => state.user);
   const handleGroupInput = (newGroup) => {
     // Add the new member to the list of groups
     setGroups([...groups, newGroup]);
@@ -105,8 +107,31 @@ const GroupDropdown = ({ allowDelete = true }) => {
   };
 
   useEffect(() => {
+    if (type === "agent") {
+      setGroups(["Global Agent Group"]);
+      setSelectedGroup("Global Agent Group");
+
+      // const fetchData = async () => {
+      //   try {
+      //     const user = await axios.get(`/v2/users/${currentUser._id}`);
+      //     const agentGroupNames = await Promise.all(
+      //       user.data.agentGroupIds.map(
+      //         async (id) =>
+      //           (
+      //             await axios.get(`/v2/agentgroup/${id}`)
+      //           ).data.groupName
+      //       )
+      //     );
+
+      //     setGroups([...groups, ...agentGroupNames]);
+      //   } catch (err) {
+      //     console.log("error", err);
+      //   }
+      // };
+      // fetchData();
+    }
     // setGroups()
-    setGroupMembers(["member1", "member2", "member3"]);
+    // setGroupMembers(["member1", "member2", "member3"]);
   }, []);
 
   const handleDelete = (index) => {
@@ -255,11 +280,13 @@ const GroupDropdown = ({ allowDelete = true }) => {
               </div>
             );
           })}
-          <div>
-            <Link className="text-sm text-gray-700" to="/agentform">
-              + create new Agent
-            </Link>
-          </div>
+          {type === "agent" && (
+            <div>
+              <Link className="text-sm text-gray-700" to="/agentform">
+                + create new Agent
+              </Link>
+            </div>
+          )}
         </>
       )}
     </div>
