@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from "react";
 import { List } from "react-content-loader";
-// import axios from "axios";
+import axios from "axios";
 // import { useSelector } from "react-redux";
 import Tweet from "../Tweet/Tweet";
 import useExploreTweet from "../../useExploreTweet";

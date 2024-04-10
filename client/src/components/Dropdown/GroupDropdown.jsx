@@ -111,24 +111,36 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
       setGroups(["Global Agent Group"]);
       setSelectedGroup("Global Agent Group");
 
-      // const fetchData = async () => {
-      //   try {
-      //     const user = await axios.get(`/v2/users/${currentUser._id}`);
-      //     const agentGroupNames = await Promise.all(
-      //       user.data.agentGroupIds.map(
-      //         async (id) =>
-      //           (
-      //             await axios.get(`/v2/agentgroup/${id}`)
-      //           ).data.groupName
-      //       )
-      //     );
+      const fetchData = async () => {
+        try {
+          const golbalAgents = await axios.get(
+            `http://localhost:8000/api/agents/v2/getglobal`
+          );
 
-      //     setGroups([...groups, ...agentGroupNames]);
-      //   } catch (err) {
-      //     console.log("error", err);
-      //   }
-      // };
-      // fetchData();
+          setGroupMembers([
+            ...golbalAgents.data.map((item) => {
+              return item.alias;
+            }),
+          ]);
+
+          const user = await axios.get(`/v2/users/${currentUser._id}`);
+          const agentGroupNames = await Promise.all(
+            user.data.agentGroupIds.map(
+              async (id) =>
+                (
+                  await axios.get(`/v2/agentgroup/${id}`)
+                ).data.groupName
+            )
+          );
+          setGroups([...groups, ...agentGroupNames]);
+        } catch (err) {
+          console.log("error", err);
+        }
+      };
+      fetchData();
+    } else if (type === "scenario") {
+      setGroups(["Default Scenario Group"]);
+      setSelectedGroup("Default Scenario Group");
     }
     // setGroups()
     // setGroupMembers(["member1", "member2", "member3"]);
@@ -140,7 +152,11 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
     }
   };
   const handleMemberDelete = (index) => {
-    if (allowDelete && selectedGroup !== "Default Group") {
+    if (
+      allowDelete &&
+      type === "agent" &&
+      selectedGroup !== "Global Agent Group"
+    ) {
       setGroupMembers(groupMembers.filter((_, i) => i !== index));
     }
   };
@@ -254,7 +270,7 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
                 <button
                   type="button"
                   className={`text-gray-400 hover:text-gray-600 focus:outline-none ${
-                    selectedGroup !== "Default Group"
+                    type === "agent" && selectedGroup !== "Global Agent Group"
                       ? "cursor-default"
                       : "cursor-not-allowed opacity-50"
                   }`}
@@ -280,7 +296,7 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
               </div>
             );
           })}
-          {type === "agent" && (
+          {type === "agent" && selectedGroup !== "Global Agent Group" && (
             <div>
               <Link className="text-sm text-gray-700" to="/agentform">
                 + create new Agent

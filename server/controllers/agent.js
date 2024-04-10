@@ -12,6 +12,14 @@ export const createAgent = async (req, res, next) => {
   }
 };
 
+export const getGlobalAgents = async (req, res, next) => {
+  try {
+    const agents = await Agent.find({ agentGroupId: "" });
+    res.status(200).json(agents);
+  } catch (err) {
+    next(err);
+  }
+};
 export const getAgentById = async (req, res, next) => {
   try {
     const agent = await Agent.findOne({ _id: req.params.id });
