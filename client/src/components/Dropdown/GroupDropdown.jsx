@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-
+import { useSelector, useDispatch } from "react-redux";
+import { selectAgentGroup } from "../../redux/agentGroupSlice";
 // const GroupMemberInput = ({ handleGroupMemberInput }) => {
 //   const [isAddingMember, setIsAddingMember] = useState(false);
 //   const [newMember, setNewMember] = useState("");
@@ -56,7 +57,10 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
   const { currentUser } = useSelector((state) => state.user);
   const [isAddingGroup, setIsAddingGroup] = useState(false);
   const [newGroup, setNewGroup] = useState("");
-
+  const currentAgentGroup = useSelector(
+    (state) => state.agentGroup.currentAgentGroup
+  );
+  const dispatch = useDispatch();
   const handleAddGroup = () => {
     if (type === "agent") {
       const saveAgentGroup = async () => {
@@ -132,7 +136,7 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
     if (type === "agent") {
       // setGroups([{ name: "Global Agent Group", id: "" }]);
       setSelectedGroup({ name: "Global Agent Group", id: "" });
-
+      dispatch(selectAgentGroup({ name: "Global Agent Group", id: "" }));
       const fetchData = async () => {
         try {
           const user = await axios.get(`users/v2/find/${currentUser._id}`);
@@ -223,7 +227,7 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
     const fetchGroupMembers = async () => {
       if (type === "agent") {
         const agents = await axios.get(`agents/v2/getbygroup/${group.id}`);
-
+        dispatch(selectAgentGroup(group));
         setGroupMembers([
           ...agents.data.map((item) => {
             return item.alias;

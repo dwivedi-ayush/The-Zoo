@@ -13,6 +13,9 @@ const TimelineTweet = () => {
     currentUser._id,
     pageNumber
   );
+  const currentAgentGroup = useSelector(
+    (state) => state.agentGroup.currentAgentGroup
+  );
 
   const observer = useRef();
   const lastTweetElementRef = useCallback(
@@ -32,6 +35,7 @@ const TimelineTweet = () => {
   // console.log("Timeline", timeLine);s
   return (
     <div className="mt-6">
+      <>{currentAgentGroup.name}</>
       {!error &&
         loading &&
         items.map(() => (
