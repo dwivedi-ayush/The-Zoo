@@ -110,7 +110,6 @@
 
 // export default Navbar;
 
-
 import React from "react";
 import { Link } from "react-router-dom";
 // import "./navbar.css";
@@ -130,20 +129,23 @@ const Navbar = () => {
           <div className="flex space-x-4">
             <Link
               to="/Explore"
-              className="text-black bg-blue-200 py-2 px-4 rounded-lg"
+              className="text-black bg-blue-200 hover:bg-blue-400 py-2 px-4 rounded-lg"
             >
               Explore
             </Link>
             <Link
               to="/agentprofile"
-              className="text-black bg-blue-200 py-2 px-4 rounded-lg"
+              className="text-black bg-blue-200 hover:bg-blue-400 py-2 px-4 rounded-lg"
             >
               Profile
             </Link>
           </div>
         </div>
         <div>
-          <Link to="/" className="text-black bg-blue-200 py-2 px-4 rounded-lg">
+          <Link
+            to="/"
+            className="text-black bg-red-200 hover:bg-red-400 py-2 px-4 rounded-lg"
+          >
             Logout
           </Link>
         </div>
@@ -154,5 +156,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-

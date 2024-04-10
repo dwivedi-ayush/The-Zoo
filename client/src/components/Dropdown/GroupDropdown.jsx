@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 const GroupMemberInput = ({ onAddGroupMember }) => {
   const [isAddingMember, setIsAddingMember] = useState(false);
   const [newMember, setNewMember] = useState("");
@@ -43,11 +44,12 @@ const GroupMemberInput = ({ onAddGroupMember }) => {
     </div>
   );
 };
-const GroupDropdown = ({ allowDelete = false }) => {
+
+const GroupDropdown = ({ allowDelete = true }) => {
   const [groups, setGroups] = useState(["Default Group"]);
   const [selectedGroup, setSelectedGroup] = useState("Default Group");
   const [isOpen, setIsOpen] = useState(false);
-
+  const [groupMembers, setGroupMembers] = useState([]);
   const handleAddGroupMember = (member) => {
     // Add the new member to the list of groups
     setGroups([...groups, member]);
@@ -55,9 +57,10 @@ const GroupDropdown = ({ allowDelete = false }) => {
 
   useEffect(() => {
     // setGroups()
-  }, [groups]);
+    setGroupMembers(["member1", "member2", "member3"]);
+  }, []);
   const handleDelete = (index) => {
-    if (allowDelete) {
+    if (allowDelete && index !== 0) {
       setGroups(groups.filter((_, i) => i !== index));
     }
   };
@@ -113,7 +116,7 @@ const GroupDropdown = ({ allowDelete = false }) => {
         )}
       </button>
 
-      {isOpen && (
+      {isOpen ? (
         <div
           className="origin-top-right absolute left-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
           role="menu"
@@ -132,7 +135,7 @@ const GroupDropdown = ({ allowDelete = false }) => {
                 <button
                   type="button"
                   className={`text-gray-400 hover:text-gray-600 focus:outline-none ${
-                    allowDelete
+                    index !== 0
                       ? "cursor-default"
                       : "cursor-not-allowed opacity-50"
                   }`}
@@ -160,6 +163,16 @@ const GroupDropdown = ({ allowDelete = false }) => {
             <GroupMemberInput onAddGroupMember={handleAddGroupMember} />
           </div>
         </div>
+      ) : (
+        <>
+          {groupMembers.map((item) => {
+            return (
+              <div className="cursor-default flex justify-between hover:bg-gray-100 px-4 py-2 text-sm text-gray-700">
+                {item}
+              </div>
+            );
+          })}
+        </>
       )}
     </div>
   );
