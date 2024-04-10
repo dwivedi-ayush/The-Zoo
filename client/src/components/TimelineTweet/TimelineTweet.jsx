@@ -16,6 +16,9 @@ const TimelineTweet = () => {
   const currentAgentGroup = useSelector(
     (state) => state.agentGroup.currentAgentGroup
   );
+  const currentScenarioGroup = useSelector(
+    (state) => state.scenarioGroup.currentScenarioGroup
+  );
 
   const observer = useRef();
   const lastTweetElementRef = useCallback(
@@ -35,7 +38,7 @@ const TimelineTweet = () => {
   // console.log("Timeline", timeLine);s
   return (
     <div className="mt-6">
-      <>{currentAgentGroup.name}</>
+      <>{currentAgentGroup.name + " " + currentScenarioGroup.name}</>
       {!error &&
         loading &&
         items.map(() => (

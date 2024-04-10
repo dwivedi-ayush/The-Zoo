@@ -1,6 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
 import agentGroupReducer from "./agentGroupSlice";
+import scenarioGroupReducer from "./scenarioGroupSlice";
 import {
   persistStore,
   persistReducer,
@@ -19,7 +20,7 @@ const persistConfig = {
   storage,
 };
 
-const rootReducer = combineReducers({ user: userReducer, agentGroup: agentGroupReducer });
+const rootReducer = combineReducers({ user: userReducer, agentGroup: agentGroupReducer, scenarioGroup: scenarioGroupReducer });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

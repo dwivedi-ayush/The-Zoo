@@ -4,6 +4,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { selectAgentGroup } from "../../redux/agentGroupSlice";
+import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
+
 // const GroupMemberInput = ({ handleGroupMemberInput }) => {
 //   const [isAddingMember, setIsAddingMember] = useState(false);
 //   const [newMember, setNewMember] = useState("");
@@ -57,9 +59,12 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
   const { currentUser } = useSelector((state) => state.user);
   const [isAddingGroup, setIsAddingGroup] = useState(false);
   const [newGroup, setNewGroup] = useState("");
-  const currentAgentGroup = useSelector(
-    (state) => state.agentGroup.currentAgentGroup
-  );
+  // const currentAgentGroup = useSelector(
+  //   (state) => state.agentGroup.currentAgentGroup
+  // );
+  // const currentScenarioGroup = useSelector(
+  //   (state) => state.scenarioGroup.currentScenarioGroup
+  // );
   const dispatch = useDispatch();
   const handleAddGroup = () => {
     if (type === "agent") {
@@ -116,20 +121,34 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
     // Add the new member to the list of groups
     setGroupMembers([...groupMembers, newMember]);
   };
-
-  useEffect(() => {
-    if (type === "scenario" && groups.length > 0) {
-      const scenarioGroup = groups.find(
-        (group) => group.name === "Default Scenario Group"
-      );
-      if (scenarioGroup) {
-        setSelectedGroup({
-          name: "Default Scenario Group",
-          id: scenarioGroup.id,
-        });
-      }
-    }
-  }, [type, groups]);
+  // const fun = async (id) => {
+  //   dispatch(
+  //     selectScenarioGroup({
+  //       name: "Default Scenario Group",
+  //       id: id,
+  //     })
+  //   );
+  // };
+  // useEffect(() => {
+  //   if (type === "scenario" && groups.length > 0) {
+  //     const scenarioGroup = groups.find(
+  //       (group) => group.name === "Default Scenario Group"
+  //     );
+  //     if (scenarioGroup) {
+  //       setSelectedGroup({
+  //         name: "Default Scenario Group",
+  //         id: scenarioGroup.id,
+  //       });
+  //       fun(scenarioGroup.id);
+  //       dispatch(
+  //         selectScenarioGroup({
+  //           name: "Default Scenario Group",
+  //           id: scenarioGroup.id,
+  //         })
+  //       );
+  //     }
+  //   }
+  // }, [type, groups, dispatch]);
 
   // onload use effect
   useEffect(() => {
@@ -180,7 +199,21 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
               return { name: data.title, id: id };
             })
           );
-
+          const scenarioGroup = scenarioGroupNamesWithIds.find(
+            (group) => group.name === "Default Scenario Group"
+          );
+          if (scenarioGroup) {
+            setSelectedGroup({
+              name: "Default Scenario Group",
+              id: scenarioGroup.id,
+            });
+            dispatch(
+              selectScenarioGroup({
+                name: "Default Scenario Group",
+                id: scenarioGroup.id,
+              })
+            );
+          }
           setGroups([...groups, ...scenarioGroupNamesWithIds]);
         } catch (err) {
           console.log("error", err);
@@ -197,8 +230,24 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
       try {
         if (type === "agent") {
           await axios.delete(`agentGroups/v2/${groups[index].id}`);
+          dispatch(selectAgentGroup({ name: "Global Agent Group", id: "" }));
         } else if (type === "scenario") {
           await axios.delete(`scenarioGroups/v2/${groups[index].id}`);
+          const scenarioGroup = groups.find(
+            (group) => group.name === "Default Scenario Group"
+          );
+          if (scenarioGroup) {
+            setSelectedGroup({
+              name: "Default Scenario Group",
+              id: scenarioGroup.id,
+            });
+            dispatch(
+              selectScenarioGroup({
+                name: "Default Scenario Group",
+                id: scenarioGroup.id,
+              })
+            );
+          }
         }
 
         setGroups(groups.filter((_, i) => i !== index));
@@ -237,7 +286,7 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
         const scenarios = await axios.get(
           `scenarios/v2/getbygroup/${group.id}`
         );
-
+        dispatch(selectScenarioGroup(group));
         setGroupMembers([
           ...scenarios.data.map((item) => {
             return item.title;
