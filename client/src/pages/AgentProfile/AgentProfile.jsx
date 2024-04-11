@@ -1,73 +1,64 @@
 import React, { useState, useEffect } from "react";
-import LeftSidebar from "../../components/LeftSidebar/LeftSidebar";
-import RightSidebar from "../../components/RightSidebar/RightSidebar";
-import EditProfile from "../../components/EditProfile/EditProfile";
-import Navbar from "../../components/Navbar/Navbar";
-import { useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import Tweet from "../../components/Tweet/Tweet";
+import DetailsCard from "../../components/Card/DetailsCard";
+import GroupDropdown from "../../components/Dropdown/GroupDropdown";
+import { useSelector, useDispatch } from "react-redux";
+import { selectAgentGroup } from "../../redux/agentGroupSlice";
+import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
 
-import { useLocation } from "react-router-dom";
-import { following } from "../../redux/userSlice";
 
 const AgentProfile = () => {
-  const [open, setOpen] = useState(false);
+  const [agentGroupOptions, setAgentGroupOptions] = useState([]);
+  const [scenarioGroupOptions, setScenarioGroupOptions] = useState([]);
+  const [selectedAgentGroup, setSelectedAgentGroup] = useState("null");
+  const [selectedScenarioGroup, setSelectedScenarioGroup] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
-  const [agentTweets, setAgentTweets] = useState(null);
-  const [agentProfile, setAgentProfile] = useState(null);
-
-  const { alias } = useParams();
   const dispatch = useDispatch();
-  const location = useLocation().pathname;
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const agentTweets = await axios.get(`/tweets/user/all/${alias}`);
-        const agentProfile = await axios.get(`/agents/find/${alias}`);
-
-        setAgentTweets(agentTweets.data);
-        setAgentProfile(agentProfile.data);
-        // console.log(location.includes("agentprofile"))
-      } catch (err) {
-        console.log("error", err);
-      }
+    const fetchAgentGroupOptions = async () => {
+      // Get agent Groups
     };
+    const fetchScenarioGroupOptions = async () => {
+      // Get Scenario groups
+    };
+    fetchAgentGroupOptions();
+    fetchScenarioGroupOptions();
+  }, [currentUser._id, dispatch]);
 
-    fetchData();
-  }, [currentUser, alias]);
+  const handleAgentGroupSelect = (option) => {
+    setSelectedAgentGroup(option);
+    dispatch(selectAgentGroup(option));
+  };
+
+  const handleScenarioGroupSelect = (option) => {
+    setSelectedScenarioGroup(option);
+    dispatch(selectScenarioGroup(option));
+  };
 
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-10">
-        <div className="col-span-2 px-1">
-          <LeftSidebar />
-        </div>
-        <div className="col-span-6 border-x-2 border-t-slate-800 px-6">
-          <div className="flex justify-between items-center">
-            {/* <img
-              src={userProfile?.profilePicture}
-              alt="Profile Picture"
-              className="w-12 h-12 rounded-full"
-            /> */}
-          </div>
-          <div className="mt-6">
-            {agentTweets &&
-              agentTweets.map((tweet) => {
-                return (
-                  <div className="p-2" key={tweet._id}>
-                    <Tweet tweet={tweet} setData={setAgentTweets} />
-                  </div>
-                );
-              })}
-          </div>
-        </div>
-
-        <div className="col-span-2 px-6">
-          <RightSidebar />
-        </div>
+    <div className="flex h-screen w-auto">
+      <div className="flex-1 border-r border-black">
+        <GroupDropdown
+          options={agentGroupOptions}
+          selectedOption={selectedAgentGroup}
+          onSelectOption={handleAgentGroupSelect}
+        />
       </div>
-    </>
+      <div className="flex-1 border-r border-black">
+        {selectedAgentGroup && <DetailsCard />}
+      </div>
+      <div className="flex-1 border-r border-black">
+        {selectedScenarioGroup && <DetailsCard />}
+      </div>
+      <div className="flex-1 border-l border-black">
+        <GroupDropdown
+          options={scenarioGroupOptions}
+          selectedOption={selectedScenarioGroup}
+          onSelectOption={handleScenarioGroupSelect}
+        />
+      </div>
+    </div>
   );
 };
 

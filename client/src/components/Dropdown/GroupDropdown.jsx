@@ -1,55 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { selectAgentGroup } from "../../redux/agentGroupSlice";
 import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
-
-// const GroupMemberInput = ({ handleGroupMemberInput }) => {
-//   const [isAddingMember, setIsAddingMember] = useState(false);
-//   const [newMember, setNewMember] = useState("");
-
-//   const handleAddGroup = () => {
-//     handleGroupMemberInput(newMember);
-//     setNewMember("");
-//     setIsAddingMember(false);
-//   };
-
-//   return (
-//     <div>
-//       {isAddingMember ? (
-//         <div className="flex items-center">
-//           <input
-//             type="text"
-//             value={newMember}
-//             onChange={(e) => setNewMember(e.target.value)}
-//             placeholder="Enter group name"
-//             className="border border-gray-300 shadow-sm rounded-md pl-1 py-1 m-1 text-sm"
-//             onKeyDown={(e) => {
-//               if (e.key === "Enter") {
-//                 handleAddGroup();
-//               }
-//             }}
-//           />
-//           <button
-//             onClick={() => setIsAddingMember(false)}
-//             className="cursor-default flex justify-between hover:bg-gray-100 text-sm m-1 text-gray-700"
-//           >
-//             x
-//           </button>
-//         </div>
-//       ) : (
-//         <button
-//           onClick={() => setIsAddingMember(true)}
-//           className="cursor-default flex justify-between hover:bg-gray-100 px-4 py-2 text-sm text-gray-700"
-//         >
-//           +
-//         </button>
-//       )}
-//     </div>
-//   );
-// };
 
 const GroupDropdown = ({ allowDelete = true, type }) => {
   const [groups, setGroups] = useState([]);
@@ -59,12 +13,6 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
   const { currentUser } = useSelector((state) => state.user);
   const [isAddingGroup, setIsAddingGroup] = useState(false);
   const [newGroup, setNewGroup] = useState("");
-  // const currentAgentGroup = useSelector(
-  //   (state) => state.agentGroup.currentAgentGroup
-  // );
-  // const currentScenarioGroup = useSelector(
-  //   (state) => state.scenarioGroup.currentScenarioGroup
-  // );
   const dispatch = useDispatch();
   const handleAddGroup = () => {
     if (type === "agent") {
@@ -118,39 +66,8 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
   };
 
   const handleGroupMemberInput = (newMember) => {
-    // Add the new member to the list of groups
     setGroupMembers([...groupMembers, newMember]);
   };
-  // const fun = async (id) => {
-  //   dispatch(
-  //     selectScenarioGroup({
-  //       name: "Default Scenario Group",
-  //       id: id,
-  //     })
-  //   );
-  // };
-  // useEffect(() => {
-  //   if (type === "scenario" && groups.length > 0) {
-  //     const scenarioGroup = groups.find(
-  //       (group) => group.name === "Default Scenario Group"
-  //     );
-  //     if (scenarioGroup) {
-  //       setSelectedGroup({
-  //         name: "Default Scenario Group",
-  //         id: scenarioGroup.id,
-  //       });
-  //       fun(scenarioGroup.id);
-  //       dispatch(
-  //         selectScenarioGroup({
-  //           name: "Default Scenario Group",
-  //           id: scenarioGroup.id,
-  //         })
-  //       );
-  //     }
-  //   }
-  // }, [type, groups, dispatch]);
-
-  // onload use effect
   useEffect(() => {
     if (type === "agent") {
       // setGroups([{ name: "Global Agent Group", id: "" }]);
@@ -189,9 +106,6 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
     } else if (type === "scenario") {
       const fetchData = async () => {
         try {
-          // const user = await axios.get(`users/v2/find/${currentUser._id}`);
-          // setGroups([{ name: "Global Scenario Group", id:  }]);
-          // setSelectedGroup({ name: "Global Scenario Group", id: "" });
           const user = await axios.get(`users/v2/find/${currentUser._id}`);
           const scenarioGroupNamesWithIds = await Promise.all(
             user.data.scenarioGroupIds.map(async (id) => {
@@ -221,8 +135,6 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
       };
       fetchData();
     }
-    // setGroups()
-    // setGroupMembers(["member1", "member2", "member3"]);
   }, []);
 
   const handleDelete = async (index) => {
@@ -253,7 +165,6 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
         setGroups(groups.filter((_, i) => i !== index));
       } catch (error) {
         console.error("Error deleting group:", error);
-        // Handle error as needed
       }
     }
   };
