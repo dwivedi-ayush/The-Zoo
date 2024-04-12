@@ -10,6 +10,7 @@ import Signin from "./pages/Signin/Signin";
 import Error from "./pages/Error/Error";
 import TestPage from "./pages/TestPage";
 import Navbar from "./components/Navbar/Navbar";
+import AgentAdd from "./pages/AgentForm/AgentAdd";
 
 const Layout = () => {
   return (
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "/Home",
         element: <Home />,
+      },
+      {
+        path: "/agentadd",
+        element: <AgentAdd />,
       },
       {
         path: "/profile/:id",

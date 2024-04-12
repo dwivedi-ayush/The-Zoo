@@ -5,6 +5,7 @@ import GroupDropdown from "../../components/Dropdown/GroupDropdown";
 import { useSelector, useDispatch } from "react-redux";
 import { selectAgentGroup } from "../../redux/agentGroupSlice";
 import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
+import Signin from "../Signin/Signin";
 
 
 const AgentProfile = () => {
@@ -37,13 +38,14 @@ const AgentProfile = () => {
   };
 
   return (
+    <>
+    {
+      !currentUser ? (
+        <Signin />
+      ) : (    
     <div className="flex h-screen w-auto">
       <div className="flex-1 border-r border-black">
-        <GroupDropdown
-          options={agentGroupOptions}
-          selectedOption={selectedAgentGroup}
-          onSelectOption={handleAgentGroupSelect}
-        />
+        <GroupDropdown type={"agent"} />
       </div>
       <div className="flex-1 border-r border-black">
         {selectedAgentGroup && <DetailsCard />}
@@ -52,14 +54,13 @@ const AgentProfile = () => {
         {selectedScenarioGroup && <DetailsCard />}
       </div>
       <div className="flex-1 border-l border-black">
-        <GroupDropdown
-          options={scenarioGroupOptions}
-          selectedOption={selectedScenarioGroup}
-          onSelectOption={handleScenarioGroupSelect}
-        />
+        <GroupDropdown type={"scenario"} />
       </div>
     </div>
+  )
+}
+</>
   );
-};
+}
 
 export default AgentProfile;
