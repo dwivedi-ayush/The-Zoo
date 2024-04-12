@@ -14,6 +14,12 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
   const [isAddingGroup, setIsAddingGroup] = useState(false);
   const [newGroup, setNewGroup] = useState("");
   const dispatch = useDispatch();
+  const currentAgentGroup = useSelector(
+    (state) => state.agentGroup.currentAgentGroup
+  );
+  const currentScenarioGroup = useSelector(
+    (state) => state.scenarioGroup.currentScenarioGroup
+  );
   const handleAddGroup = () => {
     if (type === "agent") {
       const saveAgentGroup = async () => {
@@ -68,6 +74,53 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
   const handleGroupMemberInput = (newMember) => {
     setGroupMembers([...groupMembers, newMember]);
   };
+  useEffect(() => {
+    if (selectedGroup) {
+      if (type === "agent") {
+        setSelectedGroup(selectedGroup);
+        dispatch(selectAgentGroup(selectedGroup));
+        const fetchData = async () => {
+          try {
+            const user = await axios.get(`users/v2/find/${currentUser._id}`);
+
+            const agents =
+              selectedGroup.id === ""
+                ? await axios.get(`agents/v2/getglobal`)
+                : await axios.get(`agents/v2/getbygroup/${selectedGroup.id}`);
+            const AgentsNamesWithIds = await Promise.all(
+              agents.data.map(async (agent) => {
+                return { name: agent.alias, id: agent._id };
+              })
+            );
+            setGroupMembers(AgentsNamesWithIds);
+          } catch (err) {
+            console.log("error", err);
+          }
+        };
+        fetchData();
+      } else if (type === "scenario") {
+        const fetchData = async () => {
+          try {
+            // const user = await axios.get(`users/v2/find/${currentUser._id}`);
+            const scenarios = await axios.get(
+              `scenarios/v2/getbygroup/${selectedGroup.id}`
+            );
+
+            const scenarioTitlesWithIds = await Promise.all(
+              scenarios.data.map(async (scenario) => {
+                return { name: scenario.title, id: scenario._id };
+              })
+            );
+            setGroupMembers(scenarioTitlesWithIds);
+          } catch (err) {
+            console.log("error", err);
+          }
+        };
+        fetchData();
+      }
+    }
+  }, [selectedGroup]);
+
   useEffect(() => {
     if (type === "agent") {
       // setGroups([{ name: "Global Agent Group", id: "" }]);
@@ -186,23 +239,23 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
     setSelectedGroup(group);
     const fetchGroupMembers = async () => {
       if (type === "agent") {
-        const agents = await axios.get(`agents/v2/getbygroup/${group.id}`);
+        // const agents = await axios.get(`agents/v2/getbygroup/${group.id}`);
         dispatch(selectAgentGroup(group));
-        setGroupMembers([
-          ...agents.data.map((item) => {
-            return item.alias;
-          }),
-        ]);
+        // setGroupMembers([
+        //   ...agents.data.map((item) => {
+        //     return item.alias;
+        //   }),
+        // ]);
       } else if (type === "scenario") {
-        const scenarios = await axios.get(
-          `scenarios/v2/getbygroup/${group.id}`
-        );
+        // const scenarios = await axios.get(
+        //   `scenarios/v2/getbygroup/${group.id}`
+        // );
         dispatch(selectScenarioGroup(group));
-        setGroupMembers([
-          ...scenarios.data.map((item) => {
-            return item.title;
-          }),
-        ]);
+        // setGroupMembers([
+        //   ...scenarios.data.map((item) => {
+        //     return item.title;
+        //   }),
+        // ]);
       }
     };
     fetchGroupMembers();
@@ -336,7 +389,7 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
             return (
               <div className="cursor-default flex justify-between border-b-2 text-sm text-gray-700">
                 <div className="cursor-default  py-2 text-sm text-gray-700">
-                  {item}
+                  {item.name}
                 </div>
                 <button
                   type="button"

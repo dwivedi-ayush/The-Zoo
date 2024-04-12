@@ -197,28 +197,23 @@ const DetailsCard = ({ type, selectedGroup }) => {
     }
   }, []);
   useEffect(() => {
-    if (
-      currentGroup &&
-      currentGroup.id !== "" &&
-      currentGroup !== "Default scenario Group" &&
-      currentGroup !== "Global Agent Group"
-    ) {
+    if (currentGroup) {
       if (type === "agent") {
+        console.log(currentGroup, "hehe");
         setCurrentGroup(currentGroup);
         dispatch(selectAgentGroup(currentGroup));
         const fetchData = async () => {
           try {
             // const user = await axios.get(`users/v2/find/${currentUser._id}`);
-            const agents = await axios.get(
-              `agents/v2/getbygroup/${currentGroup.id}`
-            );
-
+            const agents =
+              currentGroup.id === ""
+                ? await axios.get(`agents/v2/getglobal`)
+                : await axios.get(`agents/v2/getbygroup/${currentGroup.id}`);
             const AgentsNamesWithIds = await Promise.all(
               agents.data.map(async (agent) => {
                 return { name: agent.alias, id: agent._id };
               })
             );
-            console.log(AgentsNamesWithIds, "hehe");
             setGroupMembers(AgentsNamesWithIds);
           } catch (err) {
             console.log("error", err);
@@ -247,6 +242,7 @@ const DetailsCard = ({ type, selectedGroup }) => {
       }
     }
   }, [currentGroup]);
+
   const handleDelete = (index) => {
     if (type === "agent" && currentGroup !== "Global Agent Group") {
       const updatedGroup = [...groupMembers];
