@@ -82,19 +82,20 @@
 
 // export default DetailsCard;
 
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { selectAgentGroup } from "../../redux/agentGroupSlice";
+import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
+import axios from "axios";
 
-
-
-
-import React, { useState } from "react";
-
-const DetailsCard = ( { detail } ) => {
-  const [details, setDetails] = useState([
-    "Agent/Scenario 1",
-    "Agent/Scenario 2",
-    "Agent/Scenario 3",
-    "Agent/Scenario 4",
-  ]);
+const DetailsCard = ({ type, selectedGroup }) => {
+  // const [details, setDetails] = useState([
+  //   "Agent/Scenario 1",
+  //   "Agent/Scenario 2",
+  //   "Agent/Scenario 3",
+  //   "Agent/Scenario 4",
+  // ]);
+  const { currentUser } = useSelector((state) => state.user);
   // let tempDetails = [
   //   "Agent/Scenario 1",
   //   "Agent/Scenario 2",
@@ -106,17 +107,158 @@ const DetailsCard = ( { detail } ) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
+  const [groups, setGroups] = useState([]);
+  const dispatch = useDispatch();
+  const [groupMembers, setGroupMembers] = useState([]);
+  const [currentGroup, setCurrentGroup] = useState("");
+  const currentAgentGroup = useSelector(
+    (state) => state.agentGroup.currentAgentGroup
+  );
+  const currentScenarioGroup = useSelector(
+    (state) => state.scenarioGroup.currentScenarioGroup
+  );
+  useEffect(() => {
+    if (type === "agent") {
+      setCurrentGroup(currentAgentGroup);
+    } else if (type === "scenario") {
+      setCurrentGroup(currentScenarioGroup);
+    }
+  }, [currentAgentGroup, currentScenarioGroup]);
+  useEffect(() => {
+    if (type === "agent") {
+      setGroups([{ name: "Global Agent Group", id: "" }]);
+      setCurrentGroup({ name: "Global Agent Group", id: "" });
+      dispatch(selectAgentGroup({ name: "Global Agent Group", id: "" }));
+      const fetchData = async () => {
+        try {
+          const user = await axios.get(`users/v2/find/${currentUser._id}`);
+          const golbalAgents = await axios.get(`agents/v2/getglobal`);
+          // setGroupMembers([
+          //   ...golbalAgents.data.map((item) => {
+          //     return item.alias;
+          //   }),
+          // ]);
+          const golbalAgentsNamesWithIds = await Promise.all(
+            golbalAgents.data.map(async (agent) => {
+              return { name: agent.alias, id: agent._id };
+            })
+          );
+          setGroupMembers(golbalAgentsNamesWithIds);
+          // const user = await axios.get(`users/v2/find/${currentUser._id}`);
+          const agentGroupNamesWithIds = await Promise.all(
+            user.data.agentGroupIds.map(async (id) => {
+              const { data } = await axios.get(`agentgroups/v2/${id}`);
 
+              return { name: data.groupName, id: id };
+            })
+          );
+
+          setGroups([
+            { name: "Global Agent Group", id: "" },
+            ...groups.slice(1),
+            ...agentGroupNamesWithIds,
+          ]);
+        } catch (err) {
+          console.log("error", err);
+        }
+      };
+      fetchData();
+    } else if (type === "scenario") {
+      const fetchData = async () => {
+        try {
+          const user = await axios.get(`users/v2/find/${currentUser._id}`);
+          const scenarioGroupNamesWithIds = await Promise.all(
+            user.data.scenarioGroupIds.map(async (id) => {
+              const { data } = await axios.get(`scenariogroups/v2/${id}`);
+              return { name: data.title, id: id };
+            })
+          );
+          const scenarioGroup = scenarioGroupNamesWithIds.find(
+            (group) => group.name === "Default Scenario Group"
+          );
+          if (scenarioGroup) {
+            setCurrentGroup({
+              name: "Default Scenario Group",
+              id: scenarioGroup.id,
+            });
+            dispatch(
+              selectScenarioGroup({
+                name: "Default Scenario Group",
+                id: scenarioGroup.id,
+              })
+            );
+          }
+          setGroups([...groups, ...scenarioGroupNamesWithIds]);
+        } catch (err) {
+          console.log("error", err);
+        }
+      };
+      fetchData();
+    }
+  }, []);
+  useEffect(() => {
+    if (
+      currentGroup &&
+      currentGroup.id !== "" &&
+      currentGroup !== "Default scenario Group" &&
+      currentGroup !== "Global Agent Group"
+    ) {
+      if (type === "agent") {
+        setCurrentGroup(currentGroup);
+        dispatch(selectAgentGroup(currentGroup));
+        const fetchData = async () => {
+          try {
+            // const user = await axios.get(`users/v2/find/${currentUser._id}`);
+            const agents = await axios.get(
+              `agents/v2/getbygroup/${currentGroup.id}`
+            );
+
+            const AgentsNamesWithIds = await Promise.all(
+              agents.data.map(async (agent) => {
+                return { name: agent.alias, id: agent._id };
+              })
+            );
+            console.log(AgentsNamesWithIds, "hehe");
+            setGroupMembers(AgentsNamesWithIds);
+          } catch (err) {
+            console.log("error", err);
+          }
+        };
+        fetchData();
+      } else if (type === "scenario") {
+        const fetchData = async () => {
+          try {
+            // const user = await axios.get(`users/v2/find/${currentUser._id}`);
+            const scenarios = await axios.get(
+              `scenarios/v2/getbygroup/${currentGroup.id}`
+            );
+
+            const scenarioTitlesWithIds = await Promise.all(
+              scenarios.data.map(async (scenario) => {
+                return { name: scenario.title, id: scenario._id };
+              })
+            );
+            setGroupMembers(scenarioTitlesWithIds);
+          } catch (err) {
+            console.log("error", err);
+          }
+        };
+        fetchData();
+      }
+    }
+  }, [currentGroup]);
   const handleDelete = (index) => {
-    const updatedDetails = [...details];
-    updatedDetails.splice(index, 1);
-    setDetails(updatedDetails);
+    if (type === "agent" && currentGroup !== "Global Agent Group") {
+      const updatedGroup = [...groupMembers];
+      updatedGroup.splice(index, 1);
+      setGroups(updatedGroup);
+    }
   };
 
-  const filteredDetails = details.filter((detail) =>
-    detail.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredGroups = groupMembers.filter((member) =>
+    member.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+  // console.log(type, currentGroup);
   return (
     <div
       className="bg-white shadow-md rounded-lg p-6 w-full sm:w-auto md:w-auto lg:w-auto m-3"
@@ -151,14 +293,20 @@ const DetailsCard = ( { detail } ) => {
         </div>
       </div>
       <ul className="space-y-2">
-        {filteredDetails.map((detail, index) => (
+        {filteredGroups.map((group, index) => (
           <li
             key={index}
             className="bg-gray-100 rounded-md px-4 py-2 flex justify-between items-center"
           >
-            {detail}
+            {group.name}
             <button
-              className="text-red-500 hover:text-red-600 focus:outline-none"
+              className={`text-red-500 hover:text-red-600 focus:outline-none ${
+                (type === "agent" &&
+                  currentGroup.name !== "Global Agent Group") ||
+                type === "scenario"
+                  ? "cursor-default"
+                  : "cursor-not-allowed opacity-50"
+              }`}
               onClick={() => handleDelete(index)}
             >
               <svg
