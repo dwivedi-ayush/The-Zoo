@@ -125,9 +125,9 @@ const Tweet = ({ tweet, setData }) => {
     e.preventDefault();
     setFlag(!flag);
     if (!flag) {
-      const replies = await axios.get(`/tweets/reply/${tweet.replies[0]}`);
+      // const replies = await axios.get(`/tweets/reply/${tweet.replies[0]}`);
       // console.log(replies.data);
-      setReplies(replies.data);
+      setReplies(tweet.replies);
     }
   };
 
@@ -157,7 +157,7 @@ const Tweet = ({ tweet, setData }) => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `users/follow/alias/${agentData.alias}/id/${currentUser._id}`
+        `users/v2/follow/agentId/${agentData._id}/id/${currentUser._id}`
       );
       if (response.status === 200) {
         setIsFollowing(!isFollowing);
@@ -171,9 +171,8 @@ const Tweet = ({ tweet, setData }) => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `users/unfollow/alias/${agentData.alias}/id/${currentUser._id}`
+        `users/v2/unfollow/agentId/${agentData._id}/id/${currentUser._id}`
       );
-      console.log(response);
       if (response.status === 200) {
         setIsFollowing(!isFollowing);
       }
@@ -243,7 +242,7 @@ const Tweet = ({ tweet, setData }) => {
                   replies:
                 </a>
                 <div className="p-2 rounded-md bg-zinc-200">
-                  {replies.reply_array.map((reply) => {
+                  {replies.map((reply) => {
                     return (
                       <div className="text-sm mb-2">
                         <span className="font-bold">{reply.alias}</span> :{" "}

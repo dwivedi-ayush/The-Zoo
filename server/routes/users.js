@@ -16,8 +16,8 @@ router.get("/v2", getAllUsers);
 router.put("/v2/:id", update);
 router.get("/v2/find/:id", getUser);
 router.delete("/v2/:id", deleteUser);
-router.put("/v2/follow/agentId/:agentID/id/:id", follow);
-router.put("/v2/unfollow/agentId/:agentID/id/:id", unFollow);
+router.put("/v2/follow/agentId/:agentId/id/:id", follow);
+router.put("/v2/unfollow/agentId/:agentId/id/:id", unFollow);
 
 
 export default router;

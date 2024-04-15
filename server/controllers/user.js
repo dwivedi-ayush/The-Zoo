@@ -4,7 +4,7 @@ import Scenario from "../models/Scenario.js";
 import ScenarioGroup from '../models/ScenarioGroup.js'
 import Agent from "../models/Agent.js";
 import AgentGroup from "../models/AgentGroup.js"
-
+import mongoose from "mongoose";
 export const createUser = async (req, res, next) => {
   let savedScenarioGroup = false;
   try {
@@ -87,9 +87,10 @@ export const follow = async (req, res, next) => {
     const currentUser = await User.findById(req.params.id);
 
     if (!currentUser.following.includes(req.params.agentId)) {
-      await currentUser.updateOne({
+      const result = await currentUser.updateOne({
         $push: { following: req.params.agentId },
       });
+
     } else {
       res.status(403).json("you already follow this agent");
     }
