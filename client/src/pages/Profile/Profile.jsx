@@ -16,7 +16,7 @@ const Profile = () => {
   const { currentUser } = useSelector((state) => state.user);
   // const [userTweets, setUserTweets] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
-
+  const [isSmall, setIsSmall] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
 
@@ -71,7 +71,11 @@ const Profile = () => {
             <div className="flex-1 mr-4">
               <div className="mb-4">
                 <h1 className="text-xl font-bold mb-2 ml-3">Agent Details</h1>
-                <DetailsCard type={"agent"} />
+                <DetailsCard
+                  type={"agent"}
+                  alreadySmall={true}
+                  // setIsSmall={setIsSmall}
+                />
               </div>
             </div>
             <div className="flex-1">
@@ -79,7 +83,11 @@ const Profile = () => {
                 <h1 className="text-xl font-bold mb-2 ml-3">
                   Scenario Details
                 </h1>
-                <DetailsCard type={"scenario"} />
+                <DetailsCard
+                  type={"scenario"}
+                  alreadySmall={true}
+                  // setIsSmall={setIsSmall}
+                />
               </div>
             </div>
           </div>

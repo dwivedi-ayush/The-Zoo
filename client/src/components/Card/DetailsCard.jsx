@@ -88,8 +88,9 @@ import { selectAgentGroup } from "../../redux/agentGroupSlice";
 import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
 import axios from "axios";
 import "./DetailsCard.css";
-const DetailsCard = ({ type }) => {
+const DetailsCard = ({ type, alreadySmall }) => {
   const { currentUser } = useSelector((state) => state.user);
+  const [isSmall, setIsSmall] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
@@ -103,6 +104,24 @@ const DetailsCard = ({ type }) => {
   const currentScenarioGroup = useSelector(
     (state) => state.scenarioGroup.currentScenarioGroup
   );
+  const [cardClass, setCardClass] = useState("card-normal");
+  // const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    setCardClass(isSmall ? "card-small" : "card-normal");
+  }, [isSmall]);
+  const handleClick = (event) => {
+    // console.log(isSmall);
+    setIsSmall(!isSmall); // Toggle the isSmall state
+    // const offsetX = event.clientX - position.x;
+    // const offsetY = event.clientY - position.y;
+
+    // // Update the card's position
+    // setPosition({
+    //   x: event.clientX - offsetX,
+    //   y: event.clientY - offsetY,
+    // });
+  };
   useEffect(() => {
     if (type === "agent") {
       setCurrentGroup(currentAgentGroup);
@@ -248,9 +267,14 @@ const DetailsCard = ({ type }) => {
   return (
     <div
       className={`bg-white rounded-lg p-6 w-full sm:w-auto md:w-auto lg:w-auto m-3 ${
-        type === "agent" ? "shadow-red" : "shadow-green"
-      }`}
-      style={{ left: position.x, top: position.y }}
+        type === "agent"
+          ? "shadow-red origin-top-left"
+          : "shadow-green origin-top-right"
+      }  transition ease-in-out delay-200 ${
+        isSmall && alreadySmall ? "scale-50" : ""
+      } `}
+      // style={{ left: position.x, top: position.y }}
+      onClick={handleClick}
     >
       <div className="flex flex-col md:flex-col sm:flex-col justify-between items-start md:items-center mb-4">
         <h2 className="text-gray-800 font-bold text-lg mb-2 md:mb-0">
