@@ -2,6 +2,7 @@ import Tweet from "../models/Tweet.js";
 import { handleError } from "../error.js";
 import User from "../models/User.js";
 import AgentGroup from "../models/AgentGroup.js"
+import Agent from "../models/Agent.js"
 
 
 export const createTweet = async (req, res, next) => {
@@ -76,20 +77,20 @@ export const getExploreTweets = async (req, res, next) => {
   }
 };
 export const getExplorePageTweets = async (req, res, next) => {
+
   const page = parseInt(req.params.page) || 1;
   const perPage = 10;
   const skipCount = (page - 1) * perPage;
   try {
-    const agents = await AgentGroup.findById(req.params.agentGroupId);
-    const agentArray = agents.agentIds;
+    // let agentArray;
+    const agents = req.params.agentGroupId === "0" ? await Agent.find({ "agentGroupId": "" }) : await AgentGroup.findById(req.params.agentGroupId);
+    const agentArray = req.params.agentGroupId === "0" ? agents.map(agent => agent._id) : agents.agentIds;
     const getExploreTweets = await Tweet.find({
-      agentId: { $in: agentArray },
-      scenarioGroupId: req.params.scenarioGroupId
+      scenarioGroupId: req.params.scenarioGroupId,
+      agentId: { $in: agentArray }
     }).sort({ createdAt: -1, })
       .skip(skipCount)
       .limit(perPage);
-    // const getExploreTweets = await Tweet.find()
-
     res.status(200).json(getExploreTweets);
   } catch (err) {
     handleError(500, err);
@@ -101,8 +102,16 @@ export const getTimelinePageTweets = async (req, res, next) => {
   const skipCount = (page - 1) * perPage;
 
   try {
-    const agents = await AgentGroup.findById(req.params.agentGroupId);
-    const agentArray = agents.agentIds;
+    const agents = req.params.agentGroupId === "0" ? await Agent.find({ "agentGroupId": "" }) : await AgentGroup.findById(req.params.agentGroupId);
+    const agentArray = req.params.agentGroupId === "0" ? agents.map(agent => agent._id) : agents.agentIds;
+    // if (req.params.agentGroupId === "0") {
+    //   const agents = await Agent.find({ "agentGroupId": "" });
+    //   agentArray = agents.map(agent => agent._id);
+
+    // } else {
+    //   const agents = await AgentGroup.findById(req.params.agentGroupId);
+    //   agentArray = agents.agentIds;
+    // }
     const currentUser = await User.findById(req.params.currentUser);
     if (!currentUser) {
       // Handle case where user is not found

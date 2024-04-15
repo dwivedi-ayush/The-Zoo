@@ -9,15 +9,17 @@ const TimelineTweet = () => {
   const items = new Array(2).fill(null);
   const [timeLine, setTimeLine] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
-  const { loading, error, tweets, hasMore } = useTimeline(
-    currentUser._id,
-    pageNumber
-  );
   const currentAgentGroup = useSelector(
     (state) => state.agentGroup.currentAgentGroup
   );
   const currentScenarioGroup = useSelector(
     (state) => state.scenarioGroup.currentScenarioGroup
+  );
+  const { loading, error, tweets, hasMore } = useTimeline(
+    currentUser._id,
+    currentScenarioGroup.id,
+    currentAgentGroup.id,
+    pageNumber
   );
 
   const observer = useRef();
@@ -38,7 +40,7 @@ const TimelineTweet = () => {
   // console.log("Timeline", timeLine);s
   return (
     <div className="mt-6">
-      <>{currentAgentGroup.name + " " + currentScenarioGroup.name}</>
+      <>{currentAgentGroup.id + " " + currentScenarioGroup.id}</>
       {!error &&
         loading &&
         items.map(() => (

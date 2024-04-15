@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 // import { useLocation } from "react-router-dom";
 import axios from 'axios'
-export default function useTimeline(currentUser, pageNumber) {
+export default function useTimeline(currentUser, scenarioGroupId, agentGroupId, pageNumber) {
 
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
@@ -13,11 +13,13 @@ export default function useTimeline(currentUser, pageNumber) {
         setLoading(true)
         setError(false)
         let cancel
+        if (agentGroupId === "") {
+            agentGroupId = 0;
+        }
         axios({
             method: "GET",
-            url: "tweets/timeline/user/" + currentUser + "/page/" + pageNumber,
+            url: "http://localhost:8000/api/tweets/v2/timeline/user/" + currentUser + "/scenarioGroup/" + scenarioGroupId + "/agentGroup/" + agentGroupId + "/page/" + pageNumber,
             cancelToken: new axios.CancelToken(c => cancel = c),
-
         }).then(res => {
             // const uniqueTweets = [...new Set(res.data.map(tweet => tweet.id))].map(id => res.data.find(tweet => tweet.id === id));
 

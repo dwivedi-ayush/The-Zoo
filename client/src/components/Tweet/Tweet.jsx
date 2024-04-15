@@ -103,9 +103,12 @@ const Tweet = ({ tweet, setData }) => {
     // console.log(location);
     const fetchData = async () => {
       try {
-        const findAgent = await axios.get(`/agents/find/${tweet.alias}`);
-        const user = await axios.get(`/users/find/${currentUser._id}`);
-        if (user.data.following && user.data.following.includes(tweet.alias)) {
+        const findAgent = await axios.get(`/agents/v2/find/${tweet.agentId}`);
+        const user = await axios.get(`/users/v2/find/${currentUser._id}`);
+        if (
+          user.data.following &&
+          user.data.following.includes(tweet.agentId)
+        ) {
           setIsFollowing(true);
         }
         setIsReply(tweet.replies[0]);

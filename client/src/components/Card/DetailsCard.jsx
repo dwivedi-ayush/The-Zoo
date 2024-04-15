@@ -152,7 +152,6 @@ const DetailsCard = ({ type, selectedGroup }) => {
               return { name: data.groupName, id: id };
             })
           );
-
           setGroups([
             { name: "Global Agent Group", id: "" },
             ...groups.slice(1),
@@ -196,6 +195,7 @@ const DetailsCard = ({ type, selectedGroup }) => {
       fetchData();
     }
   }, []);
+
   useEffect(() => {
     if (currentGroup) {
       if (type === "agent") {

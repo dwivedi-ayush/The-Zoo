@@ -13,7 +13,7 @@ const TweetSchema = new mongoose.Schema(
 
     },
     agentId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
 
     },
     scenarioGroupId: {
