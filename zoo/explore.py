@@ -31,15 +31,33 @@ def explore_tweets(current_agent_id, agent_group_id, scenario_group_id):
     database = mongodb_client[config["DB_NAME"]]
     tweet_collection = database["tweets"]
     agent_group_collection = database["agentGroups"]
+    agents_collection = database["agents"]
 
-    agent_group = agent_group_collection.find({"_id": agent_group_id})
-    tweet_response = ""
-    if agent_group:
+    # if (agent_group_id == ""):
+    #     agents = loads(dumps(agent_collection.find({"agentGroupId": ""})))
+    # else:
+    #     agent_group = agent_group_collection.find({"_id": agent_group_id})
+    #     agent_ids = agent_group.fetchall("agentIds", [])
+    #     agents = loads(
+    #         dumps(agent_collection.find({"_id": {"$in": agent_ids}})))
+
+    agent_ids = []
+    if agent_group_id == "":
+        agents = loads(dumps(agents_collection.find({"agentGroupId": ""})))
         agent_ids = [
-            agent_id
-            for agent_id in agent_group.get("agentIds", [])
-            if agent_id != current_agent_id
+            row["_id"] for row in agents
+            if row["_id"] != current_agent_id
         ]
+    else:
+        agent_group = agent_group_collection.find({"_id": agent_group_id})
+        agent_ids = [
+            row["agentIds"] for row in list(agent_group)
+            if row["agentIds"] != current_agent_id
+        ]
+
+    tweet_response = ""
+    if agent_ids:
+        # Query the tweet_collection using the filtered agent_ids
         tweet_response = (
             tweet_collection.find(
                 {"agentId": {"$in": agent_ids}, "scenarioGroupId": scenario_group_id}
@@ -90,8 +108,8 @@ def explore_tweets(current_agent_id, agent_group_id, scenario_group_id):
     return descriptions, indexed_descriptions
 
 
-# tweet_list = get_tweets("65b66c3f7d94dfa8ce1d4699")
-a, b = explore_tweets()
-print(a)
-print("------")
-print(b)
+# a, b = explore_tweets("66169ead208af682a327aa51",
+#                       "", "6616b49b256d7f7562551350")
+# print(a)
+# print("------")
+# print(b)

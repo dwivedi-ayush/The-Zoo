@@ -76,7 +76,8 @@ def make_prompt(
     mongodb_client = MongoClient(config["ATLAS_URI"])
     database = mongodb_client[config["DB_NAME"]]
     agents = database["agents"]
-    agent = agents.find_one({"agentId": agent_id})  # personalities[agent_alias]
+    print("THIS IS THE AGENT ID : ", agent_id)
+    agent = agents.find_one({"_id": agent_id})  # personalities[agent_alias]
     agent_personality = ""
     if agent:
         agent_personality = agent["personality"]

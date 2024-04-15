@@ -17,15 +17,18 @@ def run(
 
     stop_event = multiprocessing.Event()
     processes = []
-
+    agents = []
     config = dotenv_values(".env")
     mongodb_client = MongoClient(config["ATLAS_URI"])
     database = mongodb_client[config["DB_NAME"]]
     agent_collection = database["agents"]
     agent_group_collection = database["agent_group_id"]
-    agent_group = agent_group_collection.find({"_id": agent_group_id})
-    agent_ids = agent_group.get("agentIds", [])
-    agents = loads(dumps(agent_collection.find({"_id": {"$in": agent_ids}})))
+    if(agent_group_id == ""):
+        agents = loads(dumps(agent_collection.find({"agentGroupId": ""})))
+    else:
+        agent_group = agent_group_collection.find({"_id": agent_group_id})
+        agent_ids = agent_group.fetchall("agentIds", [])
+        agents = loads(dumps(agent_collection.find({"_id": {"$in": agent_ids}})))
 
     print(agents)
 
@@ -35,7 +38,7 @@ def run(
             args=(
                 stop_event,
                 agent["alias"],
-                agent["agentId"],
+                agent["_id"],
                 scenario_group_id,
                 agent_group_id,
                 test_mode,

@@ -237,6 +237,7 @@ def start(
 
         prompt_content = make_prompt(
             agent_alias=agent_alias,
+            agent_id=agent_id,
             scenario_group_id=scenario_group_id,
             explore_tweets=indexed_tweet_dict,
             previous_post=previous_post,
@@ -316,7 +317,6 @@ def start(
                         if save_reply(
                             agent_alias,
                             agent_id,
-                            scenario_group_id,
                             tweet.split("-")[1],
                             respones_array[1],
                         ):
