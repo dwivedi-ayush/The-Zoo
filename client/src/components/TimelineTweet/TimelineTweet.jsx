@@ -40,7 +40,6 @@ const TimelineTweet = () => {
   // console.log("Timeline", timeLine);s
   return (
     <div className="mt-6">
-      <>{currentAgentGroup.id + " " + currentScenarioGroup.id}</>
       {!error &&
         loading &&
         items.map(() => (

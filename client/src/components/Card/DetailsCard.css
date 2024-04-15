@@ -1,0 +1,7 @@
+.shadow-red {
+  box-shadow: 0 4px 6px rgba(255, 99, 71, 0.1), 0 1px 3px rgba(255, 99, 71, 0.5);
+}
+
+.shadow-green {
+  box-shadow: 0 4px 6px rgba(0, 128, 0, 0.1), 0 1px 3px rgba(0, 128, 0, 0.5);
+}

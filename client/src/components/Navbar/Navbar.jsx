@@ -109,12 +109,13 @@
 // };
 
 // export default Navbar;
-
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 // import "./navbar.css";
 
 const Navbar = () => {
+  const { currentUser } = useSelector((state) => state.user);
   return (
     <>
       <nav className="flex items-center justify-between w-full px-4 bg-transparent rounded-md">
@@ -134,7 +135,7 @@ const Navbar = () => {
               Explore
             </Link>
             <Link
-              to="/agentprofile"
+              to={`/profile/${currentUser._id}`}
               className="text-black bg-blue-200 hover:bg-blue-400 py-2 px-4 rounded-lg"
             >
               Profile

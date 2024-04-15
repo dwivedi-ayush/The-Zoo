@@ -87,23 +87,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectAgentGroup } from "../../redux/agentGroupSlice";
 import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
 import axios from "axios";
-
-const DetailsCard = ({ type, selectedGroup }) => {
-  // const [details, setDetails] = useState([
-  //   "Agent/Scenario 1",
-  //   "Agent/Scenario 2",
-  //   "Agent/Scenario 3",
-  //   "Agent/Scenario 4",
-  // ]);
+import "./DetailsCard.css";
+const DetailsCard = ({ type }) => {
   const { currentUser } = useSelector((state) => state.user);
-  // let tempDetails = [
-  //   "Agent/Scenario 1",
-  //   "Agent/Scenario 2",
-  //   "Agent/Scenario 3",
-  //   "Agent/Scenario 4",
-  // ];
-  // setDetails(detail);
-  // setDetails(tempDetails);
   const [searchTerm, setSearchTerm] = useState("");
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const [isDragging, setIsDragging] = useState(false);
@@ -199,7 +185,7 @@ const DetailsCard = ({ type, selectedGroup }) => {
   useEffect(() => {
     if (currentGroup) {
       if (type === "agent") {
-        console.log(currentGroup, "hehe");
+        // console.log(currentGroup, "hehe");
         setCurrentGroup(currentGroup);
         dispatch(selectAgentGroup(currentGroup));
         const fetchData = async () => {
@@ -207,8 +193,12 @@ const DetailsCard = ({ type, selectedGroup }) => {
             // const user = await axios.get(`users/v2/find/${currentUser._id}`);
             const agents =
               currentGroup.id === ""
-                ? await axios.get(`agents/v2/getglobal`)
-                : await axios.get(`agents/v2/getbygroup/${currentGroup.id}`);
+                ? await axios.get(
+                    `http://localhost:8000/api/agents/v2/getglobal`
+                  )
+                : await axios.get(
+                    `http://localhost:8000/api/agents/v2/getbygroup/${currentGroup.id}`
+                  );
             const AgentsNamesWithIds = await Promise.all(
               agents.data.map(async (agent) => {
                 return { name: agent.alias, id: agent._id };
@@ -225,7 +215,7 @@ const DetailsCard = ({ type, selectedGroup }) => {
           try {
             // const user = await axios.get(`users/v2/find/${currentUser._id}`);
             const scenarios = await axios.get(
-              `scenarios/v2/getbygroup/${currentGroup.id}`
+              `http://localhost:8000/api/scenarios/v2/getbygroup/${currentGroup.id}`
             );
 
             const scenarioTitlesWithIds = await Promise.all(
@@ -257,7 +247,9 @@ const DetailsCard = ({ type, selectedGroup }) => {
   // console.log(type, currentGroup);
   return (
     <div
-      className="bg-white shadow-md rounded-lg p-6 w-full sm:w-auto md:w-auto lg:w-auto m-3"
+      className={`bg-white rounded-lg p-6 w-full sm:w-auto md:w-auto lg:w-auto m-3 ${
+        type === "agent" ? "shadow-red" : "shadow-green"
+      }`}
       style={{ left: position.x, top: position.y }}
     >
       <div className="flex flex-col md:flex-col sm:flex-col justify-between items-start md:items-center mb-4">
