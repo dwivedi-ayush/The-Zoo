@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectAgentGroup } from "../../redux/agentGroupSlice";
 import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
 
-const GroupDropdown = ({ allowDelete = true, type }) => {
+const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState();
   const [isOpen, setIsOpen] = useState(false);
@@ -261,13 +261,15 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
     fetchGroupMembers();
     setIsOpen(false);
   };
+  const dropdownClasses = isGrey
+    ? "bg-gray-200 cursor-not-allowed"
+    : "bg-white cursor-pointer";
 
   return (
     <div className=" mt-10 ml-10 relative inline-block text-left">
       <button
         type="button"
-        className="inline-flex justify-center items-center rounded-md border border-gray-300 shadow-sm px-6 w-48 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-        id="options-menu"
+        className={`inline-flex justify-center items-center rounded-md border border-gray-300 shadow-sm px-6 w-48 py-2 text-sm font-medium ${dropdownClasses}`}
         aria-expanded={isOpen}
         aria-haspopup="true"
         onClick={toggleDropdown}
@@ -315,7 +317,9 @@ const GroupDropdown = ({ allowDelete = true, type }) => {
             {groups.map((group, index) => (
               <div
                 key={index + type}
-                className="cursor-default flex justify-between hover:bg-gray-100 px-4 py-2 text-sm text-gray-700"
+                className={`cursor-default flex justify-between hover:bg-gray-100 px-4 py-2 text-sm text-gray-700 ${
+                  isGrey ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 role="menuitem"
                 onClick={() => handleGroupSelect(group)}
               >

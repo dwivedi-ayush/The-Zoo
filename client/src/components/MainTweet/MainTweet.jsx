@@ -21,19 +21,20 @@ const MainTweet = () => {
     e.preventDefault();
 
     try {
-      // console.log("----------")
-      const submitScenario = await axios.post("/tweets/scenario", {
-        userId: currentUser._id,
-        scenario: scenarioText,
-      });
-      // console.log(submitScenario)
-      if (submitScenario.status === 200) {
+      const response = await axios.put(
+        "http://localhost:8000/api/scenarios/v2/scenarios",
+        {
+          scenario: scenarioText,
+        }
+      );
+
+      if (response.status === 200) {
         setScenarioSuccess(true);
-        // setScenarioText("")
+      } else {
+        console.log("Error: Request failed with status", response.status);
       }
-      // window.location.reload(false);
     } catch (err) {
-      console.log(err);
+      console.log("Error:", err);
     }
   };
 
