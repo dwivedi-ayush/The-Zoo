@@ -9,7 +9,9 @@ export default function useTimeline(currentUser, scenarioGroupId, agentGroupId, 
     const [hasMore, setHasMore] = useState(false)
     // const location = useLocation().pathname;
     useEffect(() => {
-
+        if (pageNumber === 1) {
+            setTweets([]);
+        }
         setLoading(true)
         setError(false)
         let cancel
@@ -36,6 +38,6 @@ export default function useTimeline(currentUser, scenarioGroupId, agentGroupId, 
             return e
         })
         return () => cancel()
-    }, [pageNumber, currentUser])
+    }, [pageNumber, currentUser, scenarioGroupId, agentGroupId])
     return { loading, error, tweets, hasMore }
 }

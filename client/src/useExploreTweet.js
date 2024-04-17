@@ -8,6 +8,9 @@ export default function useExploreTweet(scenarioGroupId, agentGroupId, pageNumbe
     const [hasMore, setHasMore] = useState(false)
     // const location = useLocation().pathname;
     useEffect(() => {
+        if (pageNumber === 1) {
+            setTweets([]);
+        }
         setLoading(true)
         setError(false)
         let cancel
@@ -34,6 +37,6 @@ export default function useExploreTweet(scenarioGroupId, agentGroupId, pageNumbe
             return e
         })
         return () => cancel()
-    }, [pageNumber])
+    }, [pageNumber, scenarioGroupId, agentGroupId])
     return { loading, error, tweets, hasMore }
 }
