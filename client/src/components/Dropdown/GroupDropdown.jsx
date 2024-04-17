@@ -4,8 +4,14 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { selectAgentGroup } from "../../redux/agentGroupSlice";
 import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
-
-const GroupDropdown = ({ allowDelete = true, type, isGrey = false, startingState }) => {
+import { useLocation } from "react-router-dom";
+const GroupDropdown = ({
+  allowDelete = true,
+  type,
+  isGrey = false,
+  startingState,
+}) => {
+  const location = useLocation().pathname;
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState();
   const [isOpen, setIsOpen] = useState(false);
@@ -55,7 +61,7 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false, startingState
             userId: currentUser._id,
           };
           const res = await axios.put(
-            `http://localhost:8000/api/scenarioGroup/v2/`,
+            `http://localhost:8000/api/scenarioGroups/v2/`,
             scenarioGroupBody
           );
 
@@ -88,15 +94,10 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false, startingState
         const fetchData = async () => {
           try {
             // const user = await axios.get(`users/v2/find/${currentUser._id}`);
-
-            const agents =
-              selectedGroup.id === ""
-                ? await axios.get(
-                    `http://localhost:8000/api/agents/v2/getglobal`
-                  )
-                : await axios.get(
-                    `http://localhost:8000/api/agents/v2/getbygroup/${selectedGroup.id}`
-                  );
+            // console.log(startingState.id, "hehe");
+            const agents = await axios.get(
+              `http://localhost:8000/api/agents/v2/getbygroup/${selectedGroup.id}`
+            );
             const AgentsNamesWithIds = await Promise.all(
               agents.data.map(async (agent) => {
                 return { name: agent.alias, id: agent._id };
@@ -132,6 +133,7 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false, startingState
   }, [selectedGroup]);
 
   useEffect(() => {
+    // console.log(location);
     if (type === "agent") {
       // setGroups([{ name: "Global Agent Group", id: "" }]);
       setSelectedGroup({ name: startingState.name, id: startingState.id });
@@ -143,16 +145,22 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false, startingState
           const user = await axios.get(
             `http://localhost:8000/api/users/v2/find/${currentUser._id}`
           );
-          // const getAgents = 
+          // const getAgents =
           const getAgents = await axios.get(
             `http://localhost:8000/api/agents/v2/getbygroup/${startingState.id}`
           );
 
-          setGroupMembers([
-            ...getAgents.data.map((item) => {
-              return item.alias;
-            }),
-          ]);
+          const AgentsNamesWithIds = await Promise.all(
+            getAgents.data.map(async (agent) => {
+              return { name: agent.alias, id: agent._id };
+            })
+          );
+          setGroupMembers(AgentsNamesWithIds);
+          // setGroupMembers([
+          //   ...getAgents.data.map((item) => {
+          //     return item.alias;
+          //   }),
+          // ]);
 
           // const user = await axios.get(`users/v2/find/${currentUser._id}`);
           const agentGroupNamesWithIds = await Promise.all(
@@ -189,21 +197,29 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false, startingState
               return { name: data.title, id: id };
             })
           );
-          const scenarioGroup = scenarioGroupNamesWithIds.find(
-            (group) => group.name === "Default Scenario Group"
+          setSelectedGroup({ name: startingState.name, id: startingState.id });
+          dispatch(
+            selectScenarioGroup({
+              name: startingState.name,
+              id: startingState.id,
+            })
           );
-          if (scenarioGroup) {
-            setSelectedGroup({
-              name: "Default Scenario Group",
-              id: scenarioGroup.id,
-            });
-            dispatch(
-              selectScenarioGroup({
-                name: "Default Scenario Group",
-                id: scenarioGroup.id,
-              })
-            );
-          }
+
+          // const scenarioGroup = scenarioGroupNamesWithIds.find(
+          //   (group) => group.name === "Default Scenario Group"
+          // );
+          // if (scenarioGroup) {
+          //   setSelectedGroup({
+          //     name: "Default Scenario Group",
+          //     id: scenarioGroup.id,
+          //   });
+          //   dispatch(
+          //     selectScenarioGroup({
+          //       name: "Default Scenario Group",
+          //       id: scenarioGroup.id,
+          //     })
+          //   );
+          // }
           setGroups([...groups, ...scenarioGroupNamesWithIds]);
         } catch (err) {
           console.log("error", err);
@@ -298,7 +314,7 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false, startingState
         aria-expanded={isOpen}
         aria-haspopup="true"
         onClick={toggleDropdown}
-        disabled = {isGrey}
+        disabled={isGrey}
       >
         {selectedGroup && <>{selectedGroup.name}</>}
         {isOpen ? (

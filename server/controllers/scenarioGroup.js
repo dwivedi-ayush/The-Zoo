@@ -25,7 +25,14 @@ export const getScenarioGroupById = async (req, res, next) => {
         next(err);
     }
 };
-
+export const getDefaultScenarioGroupByUserId = async (req, res, next) => {
+    try {
+        // console.log(req.params)
+        const user = await User.findById(req.params.userId);
+        // console.log(user)
+        res.status(200).json(user.scenarioGroupIds[0]);
+    } catch (err) { next(err); }
+};
 
 
 // Delete operation

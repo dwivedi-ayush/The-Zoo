@@ -136,8 +136,12 @@ const DetailsCard = ({ type, alreadySmall }) => {
       dispatch(selectAgentGroup({ name: "Global Agent Group", id: "" }));
       const fetchData = async () => {
         try {
-          const user = await axios.get(`users/v2/find/${currentUser._id}`);
-          const golbalAgents = await axios.get(`agents/v2/getglobal`);
+          const user = await axios.get(
+            `http://localhost:8000/api/users/v2/find/${currentUser._id}`
+          );
+          const golbalAgents = await axios.get(
+            `http://localhost:8000/api/agents/v2/getglobal`
+          );
           // setGroupMembers([
           //   ...golbalAgents.data.map((item) => {
           //     return item.alias;
@@ -152,7 +156,9 @@ const DetailsCard = ({ type, alreadySmall }) => {
           // const user = await axios.get(`users/v2/find/${currentUser._id}`);
           const agentGroupNamesWithIds = await Promise.all(
             user.data.agentGroupIds.map(async (id) => {
-              const { data } = await axios.get(`agentgroups/v2/${id}`);
+              const { data } = await axios.get(
+                `http://localhost:8000/api/agentgroups/v2/${id}`
+              );
 
               return { name: data.groupName, id: id };
             })
@@ -170,10 +176,14 @@ const DetailsCard = ({ type, alreadySmall }) => {
     } else if (type === "scenario") {
       const fetchData = async () => {
         try {
-          const user = await axios.get(`users/v2/find/${currentUser._id}`);
+          const user = await axios.get(
+            `http://localhost:8000/api/users/v2/find/${currentUser._id}`
+          );
           const scenarioGroupNamesWithIds = await Promise.all(
             user.data.scenarioGroupIds.map(async (id) => {
-              const { data } = await axios.get(`scenariogroups/v2/${id}`);
+              const { data } = await axios.get(
+                `http://localhost:8000/api/scenariogroups/v2/${id}`
+              );
               return { name: data.title, id: id };
             })
           );

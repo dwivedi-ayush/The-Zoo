@@ -11,6 +11,8 @@ import { BulletList } from "react-content-loader";
 import { following } from "../../redux/userSlice";
 import GroupDropdown from "../../components/Dropdown/GroupDropdown";
 import DetailsCard from "../../components/Card/DetailsCard";
+import { selectAgentGroup } from "../../redux/agentGroupSlice";
+import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
 const Profile = () => {
   const [open, setOpen] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
@@ -24,7 +26,9 @@ const Profile = () => {
     const fetchData = async () => {
       try {
         // const userTweets = await axios.get(`/tweets/user/all/${id}`);
-        const userProfile = await axios.get(`/users/find/${currentUser._id}`);
+        const userProfile = await axios.get(
+          `http://localhost:8000/api/users/v2/find/${currentUser._id}`
+        );
 
         // setUserTweets(userTweets.data);
         setUserProfile(userProfile.data);
@@ -39,18 +43,24 @@ const Profile = () => {
   const handleFollow = async () => {
     if (!currentUser.following.includes(id)) {
       try {
-        const follow = await axios.put(`/users/follow/${id}`, {
-          id: currentUser._id,
-        });
+        const follow = await axios.put(
+          `http://localhost:8000/api/users/v2/follow/${id}`,
+          {
+            id: currentUser._id,
+          }
+        );
         dispatch(following(id));
       } catch (err) {
         console.log("error", err);
       }
     } else {
       try {
-        const unfollow = await axios.put(`/users/unfollow/${id}`, {
-          id: currentUser._id,
-        });
+        const unfollow = await axios.put(
+          `http://localhost:8000/api/users/v2/unfollow/${id}`,
+          {
+            id: currentUser._id,
+          }
+        );
 
         dispatch(following(id));
       } catch (err) {
@@ -58,13 +68,36 @@ const Profile = () => {
       }
     }
   };
+  const [defaultScenarioId, setDefaultScenarioId] = useState("");
+  useEffect(() => {
+    const getData = async () => {
+      const defaultScenarioId = await axios.get(
+        `http://localhost:8000/api/scenarioGroups/v2/userId/${currentUser._id}`
+      );
+      setDefaultScenarioId(defaultScenarioId.data);
+
+      dispatch(selectAgentGroup({ name: "Global Agent Group", id: "0" }));
+      dispatch(
+        selectScenarioGroup({
+          name: "Default Scenario Group",
+          id: defaultScenarioId.data,
+        })
+      );
+    };
+    getData();
+  }, []);
   return (
     <div>
       <div className="w-full">
         {/* <Navbar alias="" currentUser={currentUser} /> */}
         <div className="grid grid-cols-1 md:grid-cols-10 w-9/10">
           <div className="px-1 col-span-2">
-            <GroupDropdown type={"agent"} />
+            {defaultScenarioId && (
+              <GroupDropdown
+                type={"agent"}
+                startingState={{ id: "0", name: "Global Agent Group" }}
+              />
+            )}
           </div>
 
           <div className="flex col-span-6 border-x-2 border-t-slate-800 px-6">
@@ -93,7 +126,15 @@ const Profile = () => {
           </div>
 
           <div className="col-span-2 pl-6">
-            <GroupDropdown type={"scenario"} />
+            {defaultScenarioId && (
+              <GroupDropdown
+                type={"scenario"}
+                startingState={{
+                  id: defaultScenarioId,
+                  name: "Default Scenario Group",
+                }}
+              />
+            )}
           </div>
         </div>
       </div>

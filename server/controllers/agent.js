@@ -23,13 +23,13 @@ export const getGlobalAgents = async (req, res, next) => {
 
 export const getAgentsByGroup = async (req, res, next) => {
   try {
-    if (!req.params.agentgroupid === "0") {
+    if (req.params.agentgroupid === "0") {
       const agents = await Agent.find({
         agentGroupId: "",
       });
       res.status(200).json(agents);
     }
-    else{
+    else {
       const agents = await Agent.find({
         agentGroupId: req.params.agentgroupid,
       });
