@@ -8,7 +8,6 @@ import Explore from "./pages/Explore/Explore";
 import Signin from "./pages/Signin/Signin";
 // import Navbar from "./components/Navbar/Navbar";
 import Error from "./pages/Error/Error";
-import TestPage from "./pages/TestPage";
 import Navbar from "./components/Navbar/Navbar";
 import AgentAdd from "./pages/AgentForm/AgentAdd";
 
@@ -46,7 +45,7 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "/agentprofile",
+        path: "/agentprofile/:id",
         element: <AgentProfile />,
       },
       {
@@ -57,10 +56,6 @@ const router = createBrowserRouter([
       {
         path: "/signout",
         element: <Signin />,
-      },
-      {
-        path: "/test",
-        element: <TestPage />,
       },
     ],
   },

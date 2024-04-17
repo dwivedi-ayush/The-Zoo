@@ -188,7 +188,7 @@ const Tweet = ({ tweet, setData }) => {
           <>
             <div className="flex space-x-2">
               {/* <img src="" alt="" /> */}
-              <Link to={`/agentprofile/${agentData.alias}`}>
+              <Link to={`/agentprofile/${agentData._id}`}>
                 <h3 className="font-bold">{agentData.alias}</h3>
               </Link>
               {!(

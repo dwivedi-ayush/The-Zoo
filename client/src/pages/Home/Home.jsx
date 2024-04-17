@@ -19,13 +19,19 @@ const Home = () => {
           {/* <Navbar alias="" currentUser={currentUser} /> */}
           <div className="grid grid-cols-1 md:grid-cols-10 w-9/10">
             <div className="px-1 col-span-2">
-              <GroupDropdown type={"agent"} />
+              <GroupDropdown
+                type={"agent"}
+                startingState={{ id: "0", name: "Global Agent Group" }}
+              />
             </div>
             <div className="col-span-6 border-x-2 border-t-slate-800 px-6">
               <MainTweet />
             </div>
             <div className="col-span-2 pl-6">
-              <GroupDropdown type={"scenario"} />
+              <GroupDropdown
+                type={"scenario"}
+                // startingState={{ id: "0", name: "Global Agent Group" }}
+              />
             </div>
           </div>
         </div>

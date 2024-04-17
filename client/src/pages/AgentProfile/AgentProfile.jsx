@@ -45,26 +45,10 @@ const AgentProfile = () => {
         <Signin />
       ) : (
         <div className="flex h-screen w-auto">
-          <div className="flex-1 border-r border-black">
-            <GroupDropdown type={"agent"} />
+          <div className="flex-1  border-black">
+            <GroupDropdown type={"agent"} isGrey={true} />
           </div>
-          <div className="flex-1 border-r border-black">
-            {selectedAgentGroup && (
-              <DetailsCard
-                type={"agent"}
-                selectedGroup={"Global Agent Group"}
-              />
-            )}
-          </div>
-          <div className="flex-1 border-r border-black">
-            {selectedScenarioGroup && (
-              <DetailsCard
-                type={"scenario"}
-                selectedGroup={"Default Scenario Group"}
-              />
-            )}
-          </div>
-          <div className="flex-1 border-l border-black">
+          <div className="flex-1  border-black">
             <GroupDropdown type={"scenario"} />
           </div>
         </div>

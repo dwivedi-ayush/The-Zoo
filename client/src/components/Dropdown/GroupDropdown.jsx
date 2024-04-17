@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectAgentGroup } from "../../redux/agentGroupSlice";
 import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
 
-const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
+const GroupDropdown = ({ allowDelete = true, type, isGrey = false, startingState }) => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState();
   const [isOpen, setIsOpen] = useState(false);
@@ -134,19 +134,22 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
   useEffect(() => {
     if (type === "agent") {
       // setGroups([{ name: "Global Agent Group", id: "" }]);
-      setSelectedGroup({ name: "Global Agent Group", id: "" });
-      dispatch(selectAgentGroup({ name: "Global Agent Group", id: "" }));
+      setSelectedGroup({ name: startingState.name, id: startingState.id });
+      dispatch(
+        selectAgentGroup({ name: startingState.name, id: startingState.id })
+      );
       const fetchData = async () => {
         try {
           const user = await axios.get(
             `http://localhost:8000/api/users/v2/find/${currentUser._id}`
           );
-          const golbalAgents = await axios.get(
-            `http://localhost:8000/api/agents/v2/getglobal`
+          // const getAgents = 
+          const getAgents = await axios.get(
+            `http://localhost:8000/api/agents/v2/getbygroup/${startingState.id}`
           );
 
           setGroupMembers([
-            ...golbalAgents.data.map((item) => {
+            ...getAgents.data.map((item) => {
               return item.alias;
             }),
           ]);
@@ -295,6 +298,7 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
         aria-expanded={isOpen}
         aria-haspopup="true"
         onClick={toggleDropdown}
+        disabled = {isGrey}
       >
         {selectedGroup && <>{selectedGroup.name}</>}
         {isOpen ? (
@@ -452,7 +456,7 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
             type === "agent" &&
             selectedGroup.name !== "Global Agent Group" && (
               <div>
-                <Link className="text-sm text-gray-700" to="/agentform">
+                <Link className="text-sm text-gray-700" to="/agentadd">
                   + create new Agent
                 </Link>
               </div>

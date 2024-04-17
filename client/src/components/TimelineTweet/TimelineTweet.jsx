@@ -15,6 +15,9 @@ const TimelineTweet = () => {
   const currentScenarioGroup = useSelector(
     (state) => state.scenarioGroup.currentScenarioGroup
   );
+  useEffect(() => {
+    setPageNumber(1);
+  }, [currentAgentGroup, currentScenarioGroup]);
   const { loading, error, tweets, hasMore } = useTimeline(
     currentUser._id,
     currentScenarioGroup.id,

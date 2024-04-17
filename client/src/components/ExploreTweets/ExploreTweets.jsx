@@ -1,12 +1,14 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { List } from "react-content-loader";
 import axios from "axios";
 // import { useSelector } from "react-redux";
 import Tweet from "../Tweet/Tweet";
 import useExploreTweet from "../../useExploreTweet";
+import { set } from "date-fns";
 
 const ExploreTweets = () => {
+  
   const [pageNumber, setPageNumber] = useState(1);
   const items = new Array(2).fill(null);
   const currentAgentGroup = useSelector(
@@ -15,6 +17,9 @@ const ExploreTweets = () => {
   const currentScenarioGroup = useSelector(
     (state) => state.scenarioGroup.currentScenarioGroup
   );
+  useEffect(() => {
+    setPageNumber(1);
+  }, [currentAgentGroup, currentScenarioGroup]);
   const { loading, error, tweets, hasMore } = useExploreTweet(
     currentScenarioGroup.id,
     currentAgentGroup.id,
