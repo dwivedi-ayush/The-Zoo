@@ -70,7 +70,7 @@ def handle_form_submission():
     return jsonify({"message": "Form data received successfully"})
 
 
-@app.route("/generate-tweet/", methods=["POST"])
+@app.route("/generate-tweet", methods=["POST"])
 def generate_tweet():
 
     scenario_group_id = request.json.get("scenario_group_id")

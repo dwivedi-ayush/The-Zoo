@@ -266,7 +266,7 @@ const DetailsCard = ({ type, alreadySmall }) => {
   // console.log(type, currentGroup);
   return (
     <div
-      className={`bg-white rounded-lg p-6 w-full sm:w-auto md:w-auto lg:w-auto m-3 ${
+      className={`bg-white overflow-auto rounded-lg p-6 w-full aspect-square sm:w-auto md:w-auto lg:w-auto m-3 ${
         type === "agent"
           ? "shadow-red origin-top-left"
           : "shadow-green origin-top-right"
@@ -277,8 +277,8 @@ const DetailsCard = ({ type, alreadySmall }) => {
       onClick={handleClick}
     >
       <div className="flex flex-col md:flex-col sm:flex-col justify-between items-start md:items-center mb-4">
-        <h2 className="text-gray-800 font-bold text-lg mb-2 md:mb-0">
-          Details
+        <h2 className="text-gray-800 font-bold text-lg mb-2 md:mb-3">
+          {currentGroup.name}
         </h2>
         <div className="relative w-full md:w-auto">
           <input

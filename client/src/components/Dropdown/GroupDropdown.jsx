@@ -28,7 +28,10 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
             groupName: newGroup,
             userId: currentUser._id,
           };
-          const res = await axios.put(`agentGroups/v2/`, agentGroupBody);
+          const res = await axios.put(
+            `http://localhost:8000/api/agentGroups/v2/`,
+            agentGroupBody
+          );
 
           setGroups([
             ...groups,
@@ -51,7 +54,10 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
             title: newGroup,
             userId: currentUser._id,
           };
-          const res = await axios.put(`scenarioGroup/v2/`, scenarioGroupBody);
+          const res = await axios.put(
+            `http://localhost:8000/api/scenarioGroup/v2/`,
+            scenarioGroupBody
+          );
 
           setGroups([...groups, { name: res.data.title, id: res.data._id }]);
           if (res.status !== 201) {
@@ -81,12 +87,16 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
         dispatch(selectAgentGroup(selectedGroup));
         const fetchData = async () => {
           try {
-            const user = await axios.get(`users/v2/find/${currentUser._id}`);
+            // const user = await axios.get(`users/v2/find/${currentUser._id}`);
 
             const agents =
               selectedGroup.id === ""
-                ? await axios.get(`agents/v2/getglobal`)
-                : await axios.get(`agents/v2/getbygroup/${selectedGroup.id}`);
+                ? await axios.get(
+                    `http://localhost:8000/api/agents/v2/getglobal`
+                  )
+                : await axios.get(
+                    `http://localhost:8000/api/agents/v2/getbygroup/${selectedGroup.id}`
+                  );
             const AgentsNamesWithIds = await Promise.all(
               agents.data.map(async (agent) => {
                 return { name: agent.alias, id: agent._id };
@@ -103,7 +113,7 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
           try {
             // const user = await axios.get(`users/v2/find/${currentUser._id}`);
             const scenarios = await axios.get(
-              `scenarios/v2/getbygroup/${selectedGroup.id}`
+              `http://localhost:8000/api/scenarios/v2/getbygroup/${selectedGroup.id}`
             );
 
             const scenarioTitlesWithIds = await Promise.all(
@@ -128,8 +138,12 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
       dispatch(selectAgentGroup({ name: "Global Agent Group", id: "" }));
       const fetchData = async () => {
         try {
-          const user = await axios.get(`users/v2/find/${currentUser._id}`);
-          const golbalAgents = await axios.get(`agents/v2/getglobal`);
+          const user = await axios.get(
+            `http://localhost:8000/api/users/v2/find/${currentUser._id}`
+          );
+          const golbalAgents = await axios.get(
+            `http://localhost:8000/api/agents/v2/getglobal`
+          );
 
           setGroupMembers([
             ...golbalAgents.data.map((item) => {
@@ -140,7 +154,9 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
           // const user = await axios.get(`users/v2/find/${currentUser._id}`);
           const agentGroupNamesWithIds = await Promise.all(
             user.data.agentGroupIds.map(async (id) => {
-              const { data } = await axios.get(`agentgroups/v2/${id}`);
+              const { data } = await axios.get(
+                `http://localhost:8000/api/agentgroups/v2/${id}`
+              );
 
               return { name: data.groupName, id: id };
             })
@@ -159,10 +175,14 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
     } else if (type === "scenario") {
       const fetchData = async () => {
         try {
-          const user = await axios.get(`users/v2/find/${currentUser._id}`);
+          const user = await axios.get(
+            `http://localhost:8000/api/users/v2/find/${currentUser._id}`
+          );
           const scenarioGroupNamesWithIds = await Promise.all(
             user.data.scenarioGroupIds.map(async (id) => {
-              const { data } = await axios.get(`scenariogroups/v2/${id}`);
+              const { data } = await axios.get(
+                `http://localhost:8000/api/scenariogroups/v2/${id}`
+              );
               return { name: data.title, id: id };
             })
           );
@@ -194,7 +214,9 @@ const GroupDropdown = ({ allowDelete = true, type, isGrey = false }) => {
     if (allowDelete && index !== 0) {
       try {
         if (type === "agent") {
-          await axios.delete(`agentGroups/v2/${groups[index].id}`);
+          await axios.delete(
+            `http://localhost:8000/api/agentGroups/v2/${groups[index].id}`
+          );
           dispatch(selectAgentGroup({ name: "Global Agent Group", id: "" }));
         } else if (type === "scenario") {
           await axios.delete(`scenarioGroups/v2/${groups[index].id}`);
