@@ -25,6 +25,16 @@ export const getScenarioGroupById = async (req, res, next) => {
         next(err);
     }
 };
+
+export const getAllScenarioGroupsByUserId = async (req, res, next) => {
+    try {
+        // console.log(req.params)
+        const scenarioGroups = await ScenarioGroup.find({ userId: req.params.userId });
+
+        res.status(200).json(scenarioGroups);
+    } catch (err) { next(err); }
+};
+
 export const getDefaultScenarioGroupByUserId = async (req, res, next) => {
     try {
         // console.log(req.params)

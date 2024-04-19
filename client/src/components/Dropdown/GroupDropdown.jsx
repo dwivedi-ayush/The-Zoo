@@ -307,7 +307,7 @@ const GroupDropdown = ({
     : "bg-white cursor-pointer";
 
   return (
-    <div className=" mt-10 ml-10 relative inline-block text-left">
+    <div className=" mt-5 relative inline-block text-left">
       <button
         type="button"
         className={`inline-flex justify-center items-center rounded-md border border-gray-300 shadow-sm px-6 w-48 py-2 text-sm font-medium ${dropdownClasses}`}

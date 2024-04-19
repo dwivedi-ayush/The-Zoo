@@ -98,7 +98,7 @@ const AgentForm = () => {
     });
 
     // Console log the formData object
-    console.log(formData);
+    // console.log(formData);
 
     const url = "http://127.0.0.1:5000/submit-form";
 
@@ -109,18 +109,18 @@ const AgentForm = () => {
     };
 
     fetch(url, requestOptions)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Success:', data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const handleCreateGoogleForm = () => {

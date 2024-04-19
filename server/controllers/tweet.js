@@ -49,13 +49,13 @@ export const getAgentTweets = async (req, res, next) => {
   const skipCount = (page - 1) * perPage;
   try {
     const getAgentTweets = await Tweet.find({
-      agentId: req.params.agentId,
+      agentId: req.params.id,
       scenarioGroupId: req.params.scenarioGroupId
     }).sort({ createdAt: -1, })
       .skip(skipCount)
       .limit(perPage);
     // const getExploreTweets = await Tweet.find()
-
+    console.log(req.params, "-----------")
     res.status(200).json(getAgentTweets);
   } catch (err) {
     handleError(500, err);
