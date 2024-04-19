@@ -17,6 +17,8 @@ const MainTweet = () => {
     },
     [setScenarioText]
   );
+  const handleGenerateTweet = async (e) => {};
+  const handleReset = async (e) => {};
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -28,7 +30,7 @@ const MainTweet = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         setScenarioSuccess(true);
       } else {
         console.log("Error: Request failed with status", response.status);
@@ -51,40 +53,56 @@ const MainTweet = () => {
           type="text"
           placeholder="create your own custom scenario that affects this world"
           maxLength={280}
-          className="bg-slate-200 rounded-lg w-full p-2"
+          className="bg-slate-200 rounded-lg w-full p-2 mb-2"
         ></textarea>
-        <div className="flex items-center">
-          {!scenarioSuccess ? (
-            <button
-              onClick={handleSubmit}
-              className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600"
-            >
-              Create scenario
-            </button>
-          ) : (
-            <button
-              disabled
-              className="bg-blue-500/50 text-white py-2 px-4 rounded-full "
-            >
-              Create scenario
-            </button>
-          )}
+        <div className="flex items-center justify-between transition-all duration-200">
+          <div className="flex items-center">
+            {!scenarioSuccess ? (
+              <button
+                onClick={handleSubmit}
+                className="bg-blue-500 text-white py-2 px-4 rounded-full w-max transition-all duration-200 hover:bg-blue-600 hover:scale-105 hover:-translate-y-1"
+              >
+                Create scenario
+              </button>
+            ) : (
+              <button
+                disabled
+                className="bg-blue-500/50 text-white py-2 px-4 w-max rounded-full "
+              >
+                Create scenario
+              </button>
+            )}
 
-          {scenarioSuccess && (
-            // <p className="ml-4 border border-green-500 rounded-full p-2">
-            //   Custom Scenario Active
-            // </p>}
+            {scenarioSuccess && (
+              // <p className="ml-4 border border-green-500 rounded-full p-2">
+              //   Custom Scenario Active
+              // </p>}
+              <button
+                onClick={() => {
+                  setScenarioSuccess(false);
+                  setScenarioText("");
+                }}
+                className="ml-4 border border-green-500 py-2 px-4 rounded-full transition-all duration-200 hover:scale-105 hover:-translate-y-1 hover:bg-rose-600 hover:text-white"
+                title="Click to deactivate"
+              >
+                Custom Scenario Active
+              </button>
+            )}
+          </div>
+          <div className="border-solid border-1 border-black flex justify-end item-center">
             <button
-              onClick={() => {
-                setScenarioSuccess(false);
-                setScenarioText("");
-              }}
-              className="ml-4 border border-green-500 py-2 px-4 rounded-full hover:bg-red-500 hover:text-white"
-              title="Click to deactivate"
+              onClick={handleGenerateTweet}
+              className="bg-blue-500 text-white py-2 px-4 mr-2 rounded-full transition-all duration-200 hover:bg-blue-600 hover:scale-105 hover:-translate-y-1"
             >
-              Custom Scenario Active
+              Generate Tweets
             </button>
-          )}
+            <button
+              onClick={handleReset}
+              className="bg-rose-500 text-white py-2 px-4 rounded-full transition-all duration-200 hover:bg-rose-600 hover:scale-105 hover:-translate-y-1"
+            >
+              Reset
+            </button>
+          </div>
         </div>
       </form>
       <TimelineTweet />

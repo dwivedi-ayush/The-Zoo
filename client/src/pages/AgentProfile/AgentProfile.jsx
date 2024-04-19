@@ -65,7 +65,6 @@ const AgentProfile = () => {
   console.log("2", currentScenarioGroup.name);
 
   const handleScenarioGroupSelect = (scenario) => {
-
     console.log(scenario);
     setSelectedScenarioGroup({ id: scenario._id, name: scenario.title });
     dispatch(selectScenarioGroup({ id: scenario._id, name: scenario.title }));
@@ -125,7 +124,7 @@ const AgentProfile = () => {
                       selectedScenarioGroup.name === scenario.title
                         ? "shadow-2xl"
                         : ""
-                    } mb-6 pb-5 flex flex-col rounded-lg items-center`}
+                    } mb-6 pb-5 flex flex-col hover:shadow-md rounded-lg items-center`}
                     onClick={(e) => {
                       e.preventDefault();
                       handleScenarioGroupSelect(scenario);
