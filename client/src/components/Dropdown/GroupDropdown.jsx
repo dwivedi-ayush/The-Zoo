@@ -176,7 +176,7 @@ const GroupDropdown = ({
 
           setGroups([
             { name: "Global Agent Group", id: "0" },
-            ...groups.slice(1),
+
             ...agentGroupNamesWithIds,
           ]);
         } catch (err) {
@@ -221,7 +221,7 @@ const GroupDropdown = ({
           //     })
           //   );
           // }
-          setGroups([...groups, ...scenarioGroupNamesWithIds]);
+          setGroups([...scenarioGroupNamesWithIds]);
         } catch (err) {
           console.log("error", err);
         }
@@ -263,12 +263,18 @@ const GroupDropdown = ({
       }
     }
   };
-  const handleMemberDelete = (index) => {
+  const handleMemberDelete = async (member, index) => {
     if (
       allowDelete &&
       type === "agent" &&
       selectedGroup.name !== "Global Agent Group"
     ) {
+      // do we want to delete tweets of deleted agents?
+      await axios.delete(
+        `http://localhost:8000/api/agents/v2/delete/${member.id}`
+      );
+      setGroupMembers(groupMembers.filter((_, i) => i !== index));
+    } else if (allowDelete && type === "scenario") {
       setGroupMembers(groupMembers.filter((_, i) => i !== index));
     }
   };
@@ -432,11 +438,11 @@ const GroupDropdown = ({
         </div>
       ) : (
         <>
-          {groupMembers.map((item, index) => {
+          {groupMembers.map((member, index) => {
             return (
               <div className="cursor-default flex justify-between border-b-2 text-sm text-gray-700">
                 <div className="cursor-default  py-2 text-sm text-gray-700">
-                  {item.name}
+                  {member.name}
                 </div>
                 <button
                   type="button"
@@ -449,7 +455,7 @@ const GroupDropdown = ({
                   }`}
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleMemberDelete(index);
+                    handleMemberDelete(member, index);
                   }}
                 >
                   <svg

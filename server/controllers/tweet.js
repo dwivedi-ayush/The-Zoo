@@ -55,7 +55,7 @@ export const getAgentTweets = async (req, res, next) => {
       .skip(skipCount)
       .limit(perPage);
     // const getExploreTweets = await Tweet.find()
-    console.log(req.params, "-----------")
+
     res.status(200).json(getAgentTweets);
   } catch (err) {
     handleError(500, err);
