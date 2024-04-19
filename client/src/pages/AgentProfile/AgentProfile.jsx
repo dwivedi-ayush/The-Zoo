@@ -34,8 +34,9 @@ const AgentProfile = () => {
   const dispatch = useDispatch();
   const observer = useRef();
   useEffect(() => {
+    console.log("HELLO", currentScenarioGroup.name);
     setPageNumber(1);
-  }, [currentAgentGroup, currentScenarioGroup]);
+  }, [currentScenarioGroup]);
   const lastTweetElementRef = useCallback(
     (node) => {
       if (loading) return;
@@ -51,6 +52,7 @@ const AgentProfile = () => {
   );
 
   useEffect(() => {
+    console.log("1", currentScenarioGroup.name);
     const getData = async () => {
       const scenarioGroups = await axios.get(
         `http://localhost:8000/api/scenarioGroups/v2/getAllScenarioGroups/${currentUser._id}`
@@ -60,7 +62,10 @@ const AgentProfile = () => {
     getData();
   }, []);
 
+  console.log("2", currentScenarioGroup.name);
+
   const handleScenarioGroupSelect = (scenario) => {
+
     console.log(scenario);
     setSelectedScenarioGroup({ id: scenario._id, name: scenario.title });
     dispatch(selectScenarioGroup({ id: scenario._id, name: scenario.title }));
@@ -113,16 +118,6 @@ const AgentProfile = () => {
                 })}
             </div>
             <div className="col-span-2 pl-6">
-              {/* {defaultScenarioId && (
-                <GroupDropdown
-                  type={"scenario"}
-                  startingState={{
-                    id: defaultScenarioId,
-                    name: "Default Scenario Group",
-                  }}
-
-                />
-              )} */}
               {scenarioGroups.map((scenario) => {
                 return (
                   <div
@@ -132,6 +127,7 @@ const AgentProfile = () => {
                         : ""
                     } mb-6 pb-5 flex flex-col rounded-lg items-center`}
                     onClick={(e) => {
+                      e.preventDefault();
                       handleScenarioGroupSelect(scenario);
                     }}
                   >

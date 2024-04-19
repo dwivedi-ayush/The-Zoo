@@ -1,10 +1,16 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 const AgentForm = () => {
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [questionType, setQuestionType] = useState("");
   const [newQuestion, setNewQuestion] = useState("");
   const [questions, setQuestions] = useState([]);
+
+  const currentAgentGroup = useSelector(
+    (state) => state.agentGroup.currentAgentGroup
+  );
+  const { currentUser } = useSelector((state) => state.user);
 
   const handleAddQuestion = () => {
     setShowQuestionForm(true);
@@ -65,6 +71,8 @@ const AgentForm = () => {
     const cuisine = document.getElementById("cuisine").value;
     const travel = document.getElementById("travel").value;
     const misc = document.getElementById("misc").value;
+    const userID = currentUser._id;
+    const agentGroupID = currentAgentGroup.id;
 
     // Add the values to the formData object
     formData["Name"] = name;
@@ -91,6 +99,8 @@ const AgentForm = () => {
     formData["Cuisine"] = cuisine;
     formData["Travel"] = travel;
     formData["Miscellaneous"] = misc;
+    formData["UserID"] = userID;
+    formData["AgentGroupID"] = agentGroupID;
 
     // Add the added questions to the formData object
     questions.forEach((question, index) => {

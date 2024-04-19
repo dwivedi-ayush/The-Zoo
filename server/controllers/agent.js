@@ -1,4 +1,5 @@
 import Agent from "../models/Agent.js";
+import AgentGroup from "../models/AgentGroup.js";
 // import { handleError } from "../error.js";
 
 
@@ -6,7 +7,11 @@ export const createAgent = async (req, res, next) => {
   try {
     const agent = new Agent(req.body);
     const savedAgent = await agent.save();
+    const agentGroup = await AgentGroup.findById(req.body.agentGroupId);
+    agentGroup.agentIds.push(savedAgent._id);
+    await agentGroup.save();
     res.status(201).json(savedAgent);
+
   } catch (err) {
     next(err);
   }

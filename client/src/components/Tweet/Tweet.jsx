@@ -192,7 +192,7 @@ const Tweet = ({ tweet, setData }) => {
                 <h3 className="font-bold">{agentData.alias}</h3>
               </Link>
               {!(
-                location.includes("agentprofile") || location.includes("home")
+                location.includes("agentprofile") || location.includes("Home")
               ) && (
                 <>
                   {isFollowing ? (

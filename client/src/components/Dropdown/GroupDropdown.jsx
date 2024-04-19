@@ -83,13 +83,13 @@ const GroupDropdown = ({
     setIsAddingGroup(false);
   };
 
-  const handleGroupMemberInput = (newMember) => {
-    setGroupMembers([...groupMembers, newMember]);
-  };
+  // const handleGroupMemberInput = (newMember) => {
+  //   setGroupMembers([...groupMembers, newMember]);
+  // };
   useEffect(() => {
     if (selectedGroup) {
       if (type === "agent") {
-        setSelectedGroup(selectedGroup);
+        // setSelectedGroup(selectedGroup);
         dispatch(selectAgentGroup(selectedGroup));
         const fetchData = async () => {
           try {
@@ -100,6 +100,7 @@ const GroupDropdown = ({
             );
             const AgentsNamesWithIds = await Promise.all(
               agents.data.map(async (agent) => {
+                console.log(agent);
                 return { name: agent.alias, id: agent._id };
               })
             );
@@ -174,7 +175,7 @@ const GroupDropdown = ({
           );
 
           setGroups([
-            { name: "Global Agent Group", id: "" },
+            { name: "Global Agent Group", id: "0" },
             ...groups.slice(1),
             ...agentGroupNamesWithIds,
           ]);
@@ -198,12 +199,12 @@ const GroupDropdown = ({
             })
           );
           setSelectedGroup({ name: startingState.name, id: startingState.id });
-          dispatch(
-            selectScenarioGroup({
-              name: startingState.name,
-              id: startingState.id,
-            })
-          );
+          // dispatch(
+          //   selectScenarioGroup({
+          //     name: startingState.name,
+          //     id: startingState.id,
+          //   })
+          // );
 
           // const scenarioGroup = scenarioGroupNamesWithIds.find(
           //   (group) => group.name === "Default Scenario Group"

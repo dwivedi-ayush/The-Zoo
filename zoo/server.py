@@ -15,8 +15,7 @@ CORS(app)
 def get_personality(form_data):
     prompt = """
         You have just received a form submission with the following data:
-        {form_data}
-
+        """ + str(form_data) +"""
         Using this information, create a human-like personality that could have submitted this form. Describe this personality in detail, including their background, interests, goals, and any other relevant characteristics. Do not use exact words from the form data, instead understand the context and then create teh personality 
         Do not reference the person anywhere in teh prompt.
         Respond in first person singular ( talking like you are explaining your own personality ).
@@ -33,26 +32,26 @@ def get_personality(form_data):
     )
 
     personality = response.choices[0].message.content
-    # print('Personality:', personality)
+    print('Personality:', personality)
 
     return personality
 
 
-def send_to_DB(personality, alias):
+def send_to_DB(personality, alias, user_id, agent_group_id):
     url = "http://localhost:8000/api/agents/v2/create"
 
     payload = {
         "alias": alias,
         "personality": personality,
-        "userId": "some_user_id",
-        "agentGroupId": "some_agent_group_id",
+        "userId": user_id,
+        "agentGroupId": agent_group_id,
     }
 
     # Make the POST request to the API
-    response = requests.post(url, json=payload)
+    response = requests.put(url, json=payload)
 
     # Check the response status code
-    if response.status_code == 200:
+    if (response.status_code-200) < 100:
         print("Agent created successfully!")
         print(response.json())
     else:
@@ -65,7 +64,8 @@ def handle_form_submission():
     print("Received form data:", form_data["Name"])
 
     personality = get_personality(form_data)
-    send_to_DB(personality, form_data["Name"])
+    send_to_DB(personality, form_data["Name"],
+               form_data["UserID"], form_data["AgentGroupID"])
 
     return jsonify({"message": "Form data received successfully"})
 

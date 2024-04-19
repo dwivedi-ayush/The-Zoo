@@ -1,9 +1,15 @@
 import Scenario from '../models/Scenario.js';
+import ScenarioGroup from '../models/ScenarioGroup.js';
 
 export const createScenario = async (req, res, next) => {
     try {
         const scenario = new Scenario(req.body);
         const savedScenario = await scenario.save();
+        const scenarioGroup = await ScenarioGroup.findById(
+          req.body.scenarioGroupId
+        );
+        scenarioGroup.scenarioIds.push(savedScenario._id);
+        await scenarioGroup.save();
         res.status(201).json(savedScenario);
     } catch (err) {
         next(err);
