@@ -6,7 +6,7 @@ export const createScenario = async (req, res, next) => {
         const scenario = new Scenario(req.body);
         const savedScenario = await scenario.save();
         const scenarioGroup = await ScenarioGroup.findById(
-          req.body.scenarioGroupId
+            req.body.scenarioGroupId
         );
         scenarioGroup.scenarioIds.push(savedScenario._id);
         await scenarioGroup.save();
@@ -27,7 +27,8 @@ export const getScenario = async (req, res, next) => {
 };
 export const getScenariosByGroup = async (req, res, next) => {
     try {
-        const scenario = await Scenario.find({ scenarioGroupId: req.params.scenariogroupgid });
+
+        const scenario = await Scenario.find({ scenarioGroupId: req.params.scenariogroupid });
         res.status(200).json(scenario);
     } catch (err) {
         next(err);

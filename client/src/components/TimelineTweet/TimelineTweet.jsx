@@ -4,6 +4,7 @@ import { List } from "react-content-loader";
 import { useSelector } from "react-redux";
 import Tweet from "../Tweet/Tweet";
 import useTimeline from "../../useTimeline";
+
 const TimelineTweet = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const items = new Array(2).fill(null);

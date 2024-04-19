@@ -135,9 +135,9 @@ const GroupDropdown = ({
 
   useEffect(() => {
     // console.log(location);
+    setSelectedGroup({ name: startingState.name, id: startingState.id });
     if (type === "agent") {
       // setGroups([{ name: "Global Agent Group", id: "" }]);
-      setSelectedGroup({ name: startingState.name, id: startingState.id });
       dispatch(
         selectAgentGroup({ name: startingState.name, id: startingState.id })
       );
@@ -190,6 +190,17 @@ const GroupDropdown = ({
           const user = await axios.get(
             `http://localhost:8000/api/users/v2/find/${currentUser._id}`
           );
+          const getScenarios = await axios.get(
+            `http://localhost:8000/api/scenarios/v2/getbygroup/${startingState.id}`
+          );
+          console.log(getScenarios.data);
+          const scenarioNamesWithIds = await Promise.all(
+            getScenarios.data.map(async (scenario) => {
+              return { name: scenario.title, id: scenario._id };
+            })
+          );
+          setGroupMembers(scenarioNamesWithIds);
+
           const scenarioGroupNamesWithIds = await Promise.all(
             user.data.scenarioGroupIds.map(async (id) => {
               const { data } = await axios.get(
@@ -198,7 +209,8 @@ const GroupDropdown = ({
               return { name: data.title, id: id };
             })
           );
-          setSelectedGroup({ name: startingState.name, id: startingState.id });
+
+          // doesnot work when we need to call multiple dropdown like in agent profile dispatch it in the place of calling of dropdown
           // dispatch(
           //   selectScenarioGroup({
           //     name: startingState.name,
@@ -375,9 +387,9 @@ const GroupDropdown = ({
                 <span>{group.name}</span>
                 <button
                   type="button"
-                  className={`text-gray-400 hover:text-gray-600 focus:outline-none ${
+                  className={`text-gray-400  focus:outline-none ${
                     index !== 0
-                      ? "cursor-default"
+                      ? "cursor-default hover:text-gray-600"
                       : "cursor-not-allowed opacity-50"
                   }`}
                   onClick={(e) => {
@@ -446,11 +458,9 @@ const GroupDropdown = ({
                 </div>
                 <button
                   type="button"
-                  className={`text-gray-400 hover:text-gray-600 focus:outline-none ${
-                    selectedGroup &&
-                    type === "agent" &&
-                    selectedGroup.name !== "Global Agent Group"
-                      ? "cursor-default"
+                  className={`text-gray-400  focus:outline-none ${
+                    selectedGroup && selectedGroup.id !== "0"
+                      ? "cursor-default hover:text-gray-600"
                       : "cursor-not-allowed opacity-50"
                   }`}
                   onClick={(e) => {

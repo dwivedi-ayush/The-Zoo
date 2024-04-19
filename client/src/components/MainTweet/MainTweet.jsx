@@ -2,12 +2,17 @@ import React, { useState, useCallback } from "react";
 import TimelineTweet from "../TimelineTweet/TimelineTweet";
 // import ExploreTweets from "../ExploreTweets/ExploreTweets";
 import { useSelector } from "react-redux";
+
 import axios from "axios";
 
 const MainTweet = () => {
+  const [title, setTitle] = useState("");
   const [scenarioText, setScenarioText] = useState("");
   const [scenarioSuccess, setScenarioSuccess] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+  const currentScenarioGroup = useSelector(
+    (state) => state.scenarioGroup.currentScenarioGroup
+  );
   const handleScenarioTextChange = useCallback(
     (e) => {
       // console.log(e.target.value)t
@@ -26,7 +31,10 @@ const MainTweet = () => {
       const response = await axios.put(
         "http://localhost:8000/api/scenarios/v2/scenarios",
         {
-          scenario: scenarioText,
+          userId: currentUser._id,
+          title: title,
+          description: scenarioText,
+          scenarioGroupId: currentScenarioGroup.id,
         }
       );
 
@@ -47,14 +55,27 @@ const MainTweet = () => {
       )}
 
       <form className="border-b-2 pb-6">
-        <textarea
-          value={scenarioText}
-          onChange={handleScenarioTextChange}
-          type="text"
-          placeholder="create your own custom scenario that affects this world"
-          maxLength={280}
-          className="bg-slate-200 rounded-lg w-full p-2 mb-2"
-        ></textarea>
+        <div className="flex flex-col mb-2">
+          <input
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+            type="text"
+            placeholder="Set scenario Title"
+            maxLength={50}
+            className="bg-slate-200 rounded-lg  p-2 mb-2"
+            style={{ height: "4vh" }} // Adjust the height as needed
+          />
+          <textarea
+            value={scenarioText}
+            onChange={handleScenarioTextChange}
+            type="text"
+            placeholder="create your own custom scenario that affects this world"
+            maxLength={280}
+            className="bg-slate-200 rounded-lg w-full p-2 mb-2"
+          ></textarea>
+        </div>
         <div className="flex items-center justify-between transition-all duration-200">
           <div className="flex items-center">
             {!scenarioSuccess ? (
