@@ -249,7 +249,7 @@ def start(
         model = "gpt-3.5-turbo-1106"
         model = "gpt-3.5-turbo"
         model = "gpt-3.5-turbo-0125"
-        # model = "gpt-4-0125-preview"
+        model = "gpt-4-0125-preview"
         temperature = 1
         max_tokens = random.randint(100, 200)
         if is_error:
@@ -293,11 +293,11 @@ def start(
             print("COMMAND :", command)
             # save_response(response_string + "\n")  # save only new post
             previous_post = respones_array[1]
-            if save_tweet(agent_alias, agent_id, scenario_group_id, respones_array[1]):
-                print("Tweet saved successfully")
-            else:
-                print("DB Error")
-                break
+            # if save_tweet(agent_alias, agent_id, scenario_group_id, respones_array[1]):
+            #     print("Tweet saved successfully")
+            # else:
+            #     print("DB Error")
+            #     break
             # handle_new_tweet()
         elif command.split("-")[0] == "replyto":
             # reply case
@@ -314,36 +314,16 @@ def start(
 
                         # found the target tweet
                         # print(tweet.split('-')[1],indexed_tweet_dict)
-                        if save_reply(
-                            agent_alias,
-                            agent_id,
-                            tweet.split("-")[1],
-                            respones_array[1],
-                        ):
-                            print("Reply saved successfully")
-                        else:
-                            print("DB Error")
+                        # if save_reply(
+                        #     agent_alias,
+                        #     agent_id,
+                        #     tweet.split("-")[1],
+                        #     respones_array[1],
+                        # ):
+                        #     print("Reply saved successfully")
+                        # else:
+                        #     print("DB Error")
                         break
-            # elif len(l) == 4:
-            #     for i, tweet in enumerate(previous_tweets):
-            #         if i == int(l[1]):
-            #             for j, reply in enumerate(previous_tweets["replies"]):
-            #                 if j == j[3]:
-            #                     # found the target reply
-            #                     if save_reply(
-            #                         agent_alias,
-            #                         agent_id,
-            #                         tweet.split("-")[1],
-            #                         respones_array[1],
-            #                     ):
-            #                         print("Reply saved successfully")
-            #                     else:
-            #                         print("DB Error")
-            #                 break
-            #             break
-        # elif command == "reply":
-        #     recipient = respones_array[2]  # in case of reply
-        #     # handle_reply()
         else:
             # handle_error()  # parsing error or response error
             """restart the loop with initial state"""

@@ -72,3 +72,14 @@ def run(
     for p in processes:
         p.join()
         print(f"Process {p.pid} stopped.")
+
+
+run("", "6618ff0ef1ce9fb0b5eddb72", True, 5, 1, 0)
+
+
+# scenario_group_id,
+# agent_group_id,
+# test_mode,
+# loop_limit,
+# action_frequency,
+# reply_probablity,
