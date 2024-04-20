@@ -118,13 +118,13 @@ const Navbar = () => {
   const { currentUser } = useSelector((state) => state.user);
   return (
     <>
-      <nav className="flex items-center justify-between w-full px-4 bg-transparent rounded-md">
+      <nav className="flex items-center justify-between w-full px-4 bg-transparent rounded-md mt-0 mb-0">
         <div className="flex items-center">
           <Link to="/Home">
             <img
               src="/twitter-logo.png"
               alt="Logo"
-              className="h-20 w-auto mr-4"
+              className="h-20 w-auto mr-4 transition-all duration-200 hover:scale-105 hover:-translate-y-1 "
             />
           </Link>
           <div className="flex space-x-4">
@@ -142,9 +142,9 @@ const Navbar = () => {
             </Link>
           </div>
         </div>
-        <div>
+        <div className="flex space-x-4">
           <Link
-            to="/"
+            to={"/"}
             className="text-white bg-rose-500 hover:bg-rose-600 transition-all duration-200 hover:scale-105 hover:-translate-y-1 py-2 px-4 rounded-lg"
           >
             Logout
