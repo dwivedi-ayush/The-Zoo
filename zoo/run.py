@@ -76,7 +76,8 @@ def run(
 
 
 if __name__ == "__main__":
-    run("6616b49b256d7f7562551350", "6618ff0ef1ce9fb0b5eddb72", True, 5, 1, 0)
+    # run("6616b49b256d7f7562551350", "6618ff0ef1ce9fb0b5eddb72", True, 5, 1, 0)
+    pass
 
 
 # scenario_group_id,

@@ -100,7 +100,7 @@ const GroupDropdown = ({
             );
             const AgentsNamesWithIds = await Promise.all(
               agents.data.map(async (agent) => {
-                console.log(agent);
+                // console.log(agent);
                 return { name: agent.alias, id: agent._id };
               })
             );
@@ -193,7 +193,7 @@ const GroupDropdown = ({
           const getScenarios = await axios.get(
             `http://localhost:8000/api/scenarios/v2/getbygroup/${startingState.id}`
           );
-          console.log(getScenarios.data);
+          // console.log(getScenarios.data);
           const scenarioNamesWithIds = await Promise.all(
             getScenarios.data.map(async (scenario) => {
               return { name: scenario.title, id: scenario._id };
@@ -457,7 +457,14 @@ const GroupDropdown = ({
             return (
               <div className="cursor-default flex justify-between border-b-2 text-sm text-gray-700">
                 <div className="cursor-default  py-2 text-sm text-gray-700">
-                  {member.name}
+                  {type === "agent" ? (
+                    <Link to={`/agentprofile/${member.id}`}>
+                      {" "}
+                      {member.name}
+                    </Link>
+                  ) : (
+                    member.name
+                  )}
                 </div>
                 <button
                   type="button"

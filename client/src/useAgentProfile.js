@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 // import { useLocation } from "react-router-dom";
 import axios from 'axios'
 export default function useAgentprofile(scenarioGroupId, pageNumber, agentId) {
-    console.log(scenarioGroupId, pageNumber, agentId)
+    // console.log(scenarioGroupId, pageNumber, agentId)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
     const [tweets, setTweets] = useState([])
@@ -22,7 +22,7 @@ export default function useAgentprofile(scenarioGroupId, pageNumber, agentId) {
             cancelToken: new axios.CancelToken(c => cancel = c),
         }).then(res => {
             // const uniqueTweets = [...new Set(res.data.map(tweet => tweet.id))].map(id => res.data.find(tweet => tweet.id === id));
-            console.log(res.data)
+            // console.log(res.data)
             // setTweets(prevTweets => [...prevTweets, ...uniqueTweets])
             setTweets(prevTweets => {
                 return [...new Set([...prevTweets, ...res.data])]
