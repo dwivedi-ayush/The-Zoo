@@ -91,7 +91,7 @@ def get_random_activity(type_id=-1, accessibility=-1, participants=-1, price=-1)
     return activity
 
 
-def get_smart_activitiy(client, alias):
+def get_smart_activity(client, alias):
     config = dotenv_values(".env")
     mongodb_client = MongoClient(config["ATLAS_URI"])
     database = mongodb_client[config["DB_NAME"]]
@@ -189,10 +189,10 @@ def start(
         if stop_event.is_set():
             break
         start_time = time.time()
-        if test_mode:
-            if loop_limit == 0:
-                break
-            loop_limit -= 1
+
+        if loop_limit == 0:
+            break
+        loop_limit -= 1
 
         # save initial state in case of error
         prompt_content = ""
@@ -225,7 +225,7 @@ def start(
                 # random_activity = get_random_activity(
                 #     type_id=8
                 # )  # 8 is busywork activity, can use random number or some heuristics
-                random_activity = get_smart_activitiy(client, agent_alias)
+                random_activity = get_smart_activity(client, agent_alias)
                 previous_activity_time = int(current_time)
                 initial_loop = False
         else:
@@ -273,7 +273,7 @@ def start(
         print(random_activity)
         if response_string == "Error" or response_string == "error":
             is_error = True
-            print("Error has occured")
+            print("Error has occurred")
             continue
         print("end")
         print(
@@ -281,8 +281,8 @@ def start(
         )
 
         # parse responses
-        respones_array = response_string.split(";")
-        command = respones_array[0]
+        response_array = response_string.split(";")
+        command = response_array[0]
         message_content = recipient = ""
         print("Time this iteration: ", (time.time() - start_time))
         time.sleep(max(0, action_frequency - (time.time() - start_time)))
@@ -292,12 +292,14 @@ def start(
         if command == "newtweet":
             print("COMMAND :", command)
             # save_response(response_string + "\n")  # save only new post
-            previous_post = respones_array[1]
-            # if save_tweet(agent_alias, agent_id, scenario_group_id, respones_array[1]):
-            #     print("Tweet saved successfully")
-            # else:
-            #     print("DB Error")
-            #     break
+            previous_post = response_array[1]
+            if not test_mode and save_tweet(
+                agent_alias, agent_id, scenario_group_id, response_array[1]
+            ):
+                print("Tweet saved successfully")
+            else:
+                print("DB Error")
+                break
             # handle_new_tweet()
         elif command.split("-")[0] == "replyto":
             # reply case
@@ -314,15 +316,15 @@ def start(
 
                         # found the target tweet
                         # print(tweet.split('-')[1],indexed_tweet_dict)
-                        # if save_reply(
-                        #     agent_alias,
-                        #     agent_id,
-                        #     tweet.split("-")[1],
-                        #     respones_array[1],
-                        # ):
-                        #     print("Reply saved successfully")
-                        # else:
-                        #     print("DB Error")
+                        if not test_mode and save_reply(
+                            agent_alias,
+                            agent_id,
+                            tweet.split("-")[1],
+                            response_array[1],
+                        ):
+                            print("Reply saved successfully")
+                        else:
+                            print("DB Error")
                         break
         else:
             # handle_error()  # parsing error or response error

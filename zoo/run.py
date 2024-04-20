@@ -13,7 +13,7 @@ def run(
     test_mode,
     loop_limit,
     action_frequency,
-    reply_probablity,
+    reply_probability,
 ):
 
     stop_event = multiprocessing.Event()
@@ -50,9 +50,9 @@ def run(
                 test_mode,
                 loop_limit,
                 action_frequency,
-                reply_probablity,
+                reply_probability,
             ),
-        )  # true means debug mode and finite loop
+        )  # true means debug mode - no saving to db
         p.start()
         processes.append(p)
 
@@ -82,4 +82,4 @@ run("", "6618ff0ef1ce9fb0b5eddb72", True, 5, 1, 0)
 # test_mode,
 # loop_limit,
 # action_frequency,
-# reply_probablity,
+# reply_probability,

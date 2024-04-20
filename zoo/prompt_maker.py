@@ -7,6 +7,30 @@ from explore import get_tweets, explore_tweets
 from summary_algo_test import openAI_summariser
 from dotenv import dotenv_values
 from pymongo import MongoClient
+from bson.json_util import dumps
+from bson.json_util import loads
+
+
+def get_scenario(scenario_group_id):
+    config = dotenv_values(".env")
+    mongodb_client = MongoClient(config["ATLAS_URI"])
+    database = mongodb_client[config["DB_NAME"]]
+    scenarios = database["scenarios"]
+    scenario_arr = [
+        (scenario.title, scenario.description)
+        for scenario in loads(
+            dumps(scenarios.find({"scenarioGroupId": scenario_group_id}))
+        )
+    ]
+    return scenario_arr
+
+
+def make_Scenario_string(scenario_group_id):
+    scenarios = get_scenario(scenario_group_id)
+    final_string = ""
+    for i in range(len(scenarios)):
+        final_string += f"{i}) {scenarios[i][0]}:{scenarios[i][1]}\n"
+    return final_string, len(scenarios)
 
 
 def get_location_info(city=""):
@@ -59,52 +83,6 @@ def make_prompt(
     activity_type="",
     is_error=False,
 ):
-    scenario_part_1 = """
-        Focus on the below. These are the most important events happening in your world right now. Below is the current news in your world. You are to make tweets based on the below happening events.
-        """
-
-    scenario_delimiting_text = """ The greated the index of the event, the mroe recently is has occured in your world. Below are your news hedlines of your world:
-        """
-
-    scenario_part_2 = """
-        This is the current news - greater the index, the more recent the news is.
-
-        1)
-        The moon was stolen by a mafia gang residing in jupiter.
-        2)
-        Gravity suddenly stops existing in most parts of the world ( everything starts to float ).
-        3)
-        India launches a new chain of smartphones called "Wphones" which are better than iphones in all regards.
-        4)
-        Apple stops making iphones as a whole.
-        5)
-        Taylor Swift is performing in India.
-
-        """
-    
-    scenario_part_2 = """This is the current news - greater the index, the more recent the news is.
-    1)
-    Russia declares war on North Korea
-    2) 
-    USA decides to intervene in the war
-    3)
-    Russia stops the attack and USA fights North Korea
-    4) 
-    Russia starts supporting North Korea
-    """
-    
-
-    final_scenario_string = ""
-
-    count_ids = 5
-    if count_ids == 0:
-            final_scenario_string = ""
-    elif count_ids == 1:
-        final_scenario_string = scenario_part_1 + scenario_part_2
-    else:
-        final_scenario_string = scenario_part_1 + \
-            scenario_delimiting_text + scenario_part_2
-                
 
     # print(get_time(timezone="America/New_York"))  # extra
     """
@@ -117,6 +95,33 @@ def make_prompt(
     different summary algos to be explored
     """
     prompt = "this is an error prompt, if you see this prompt, only reply with word error and nothing else. example response: 'Error' "
+
+    scenario_indexed, count = make_Scenario_string(scenario_group_id)
+    scenario_part_1 = """
+        Focus on the below. These are the most important events happening in your world right now. Below is the current news in your world. You are to make tweets based on the below happening events.
+        """
+
+    scenario_delimiting_text = """ The greated the index of the event, the mroe recently is has occured in your world. Below are your news hedlines of your world:
+        """
+
+    scenario_part_2 = (
+        """
+        This is the current news - greater the index, the more recent the news is.
+        """
+        + scenario_indexed
+    )
+
+    final_scenario_string = ""
+
+    if count == 0:
+        final_scenario_string = ""
+    elif count == 1:
+        final_scenario_string = scenario_part_1 + scenario_part_2
+    else:
+        final_scenario_string = (
+            scenario_part_1 + scenario_delimiting_text + scenario_part_2
+        )
+
     location_info = get_location_info("Bangalore")  # might be unreliable
 
     config = dotenv_values(".env")
@@ -136,16 +141,13 @@ def make_prompt(
         Adhere to this strict format only.
         """
 
-
-
-        
-
         prompt = (
             "this is your alias:"
             + agent["alias"]
             + reply_prompt
             + "Your personality is given below: "
             + agent_personality
+            + final_scenario_string
             + "This is today's surrounding information"
             + str(location_info)
             + "context tweets are as follows -"
@@ -168,7 +170,6 @@ def make_prompt(
             + tweet_prompt
             + "Your personality is given below: "
             + agent_personality
-            + "Be very very specific about the news around you, do not throw out generic opinions about the same, focus on the specifics and make comments about the same"
             + final_scenario_string
             + " assume details about what you are about to do and tweet about the same. A random activity you are about to do can be this:"
             + random_activity

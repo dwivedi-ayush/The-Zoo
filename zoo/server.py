@@ -79,8 +79,10 @@ def handle_form_submission():
 def get_tweet_count(scenario_group_id, agent_group_id):
     url = f"http://localhost:8000/api/tweets/v2/explore/scenarioGroup/{scenario_group_id}/agentGroup/{agent_group_id}"
     response = requests.get(url)
-    return(response.json())
+    return response.json()
     # pass
+
+
 def _build_cors_preflight_response():
     response = make_response()
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -99,7 +101,7 @@ def generate_tweet():
     test_mode = request.json.get("test_mode")
     loop_limit = request.json.get("loop_limit")
     action_frequency = request.json.get("action_frequency")
-    reply_probablity = request.json.get("reply_probablity")
+    reply_probability = request.json.get("reply_probability")
 
     count = get_tweet_count(scenario_group_id, agent_group_id)
     print("Received data:")
@@ -108,7 +110,7 @@ def generate_tweet():
     print("Test Mode:", test_mode)
     print("Loop Limit:", loop_limit)
     print("Action Frequency:", action_frequency)
-    print("Reply Probablity:", reply_probablity)
+    print("Reply Probability:", reply_probability)
     if count < 10:
         run(
             scenario_group_id,
@@ -125,10 +127,9 @@ def generate_tweet():
             test_mode,
             loop_limit,
             action_frequency,
-            reply_probablity,
+            reply_probability,
         )
 
-    
     # asyncio.create_task(
     #     run_async(
     #         scenario_group_id,
