@@ -36,9 +36,10 @@ def run(
 
         agents = loads(dumps(agent_collection.find({"_id": {"$in": agent_ids}})))
 
-    print(agents)
+    # print(agents)
 
     for agent in agents:
+
         p = multiprocessing.Process(
             target=start,
             args=(
@@ -65,7 +66,7 @@ def run(
     # except KeyboardInterrupt:
     #     print("\nInterrupted by user.")
 
-    # Set the event to stop processes
+    # # Set the event to stop processes
     # stop_event.set()
 
     # Join processes
@@ -74,7 +75,8 @@ def run(
         print(f"Process {p.pid} stopped.")
 
 
-run("", "6618ff0ef1ce9fb0b5eddb72", True, 5, 1, 0)
+if __name__ == "__main__":
+    run("6616b49b256d7f7562551350", "6618ff0ef1ce9fb0b5eddb72", True, 5, 1, 0)
 
 
 # scenario_group_id,

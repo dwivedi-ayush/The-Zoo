@@ -17,7 +17,7 @@ def get_scenario(scenario_group_id):
     database = mongodb_client[config["DB_NAME"]]
     scenarios = database["scenarios"]
     scenario_arr = [
-        (scenario.title, scenario.description)
+        (scenario["title"], scenario["description"])
         for scenario in loads(
             dumps(scenarios.find({"scenarioGroupId": scenario_group_id}))
         )
@@ -27,9 +27,9 @@ def get_scenario(scenario_group_id):
 
 def make_Scenario_string(scenario_group_id):
     scenarios = get_scenario(scenario_group_id)
-    final_string = ""
+    final_string = "\n"
     for i in range(len(scenarios)):
-        final_string += f"{i}) {scenarios[i][0]}:{scenarios[i][1]}\n"
+        final_string += f"{i+1}) {scenarios[i][0]} : {scenarios[i][1]}\n"
     return final_string, len(scenarios)
 
 
@@ -97,17 +97,12 @@ def make_prompt(
     prompt = "this is an error prompt, if you see this prompt, only reply with word error and nothing else. example response: 'Error' "
 
     scenario_indexed, count = make_Scenario_string(scenario_group_id)
-    scenario_part_1 = """
-        Focus on the below. These are the most important events happening in your world right now. Below is the current news in your world. You are to make tweets based on the below happening events.
-        """
+    scenario_part_1 = """Focus on the below. These are the most important events happening in your world right now. Below is the current news in your world. You are to make tweets based on the below happening events."""
 
-    scenario_delimiting_text = """ The greated the index of the event, the mroe recently is has occured in your world. Below are your news hedlines of your world:
-        """
+    scenario_delimiting_text = """ The greated the index of the event, the mroe recently is has occured in your world. Below are your news hedlines of your world:"""
 
     scenario_part_2 = (
-        """
-        This is the current news - greater the index, the more recent the news is.
-        """
+        """This is the current news - greater the index, the more recent the news is."""
         + scenario_indexed
     )
 
@@ -123,7 +118,8 @@ def make_prompt(
         )
 
     location_info = get_location_info("Bangalore")  # might be unreliable
-
+    # print("------", final_scenario_string)
+    # a = 1 / 0
     config = dotenv_values(".env")
     mongodb_client = MongoClient(config["ATLAS_URI"])
     database = mongodb_client[config["DB_NAME"]]

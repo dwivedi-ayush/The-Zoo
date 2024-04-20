@@ -269,7 +269,7 @@ def start(
             "============================================================================================================"
         )
         response_string = response.choices[0].message.content
-        print(agent_alias, response_string)
+        print(agent_alias, ":", response_string)
         print(random_activity)
         if response_string == "Error" or response_string == "error":
             is_error = True
@@ -306,7 +306,7 @@ def start(
             print("COMMAND :", command)
             # length can be 2 (reply to original tweet) or 4 reply to a reply of the tweet
             l = command.split("-")
-            print("THE ARRAY L: ", l)
+            # print("THE ARRAY L: ", l)
             if len(l) == 2:
                 # previous_tweets
                 # indexed_tweet_dict
