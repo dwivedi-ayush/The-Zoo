@@ -76,11 +76,11 @@ def handle_form_submission():
     return jsonify({"message": "Form data received successfully"})
 
 
-# def get_tweet_count(scenario_group_id, agent_group_id):
-#     # url = f"http://localhost:8000/api/agents/v2/explore/scenarioGroup/{scenario_group_id}/agentGroup/{agent_group_id}"
-#     # response = requests.get(url)
-#     # print(response)
-#     pass
+def get_tweet_count(scenario_group_id, agent_group_id):
+    url = f"http://localhost:8000/api/tweets/v2/explore/scenarioGroup/{scenario_group_id}/agentGroup/{agent_group_id}"
+    response = requests.get(url)
+    return(response.json())
+    # pass
 def _build_cors_preflight_response():
     response = make_response()
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -101,7 +101,7 @@ def generate_tweet():
     action_frequency = request.json.get("action_frequency")
     reply_probablity = request.json.get("reply_probablity")
 
-    # count = get_tweet_count(scenario_group_id, agent_group_id)
+    count = get_tweet_count(scenario_group_id, agent_group_id)
     print("Received data:")
     print("Scenario Group ID:", scenario_group_id)
     print("Agent Group ID:", agent_group_id)
@@ -109,14 +109,26 @@ def generate_tweet():
     print("Loop Limit:", loop_limit)
     print("Action Frequency:", action_frequency)
     print("Reply Probablity:", reply_probablity)
-    # run(
-    #     scenario_group_id,
-    #     agent_group_id,
-    #     test_mode,
-    #     loop_limit,
-    #     action_frequency,
-    #     reply_probablity,
-    # )
+    if count < 10:
+        run(
+            scenario_group_id,
+            agent_group_id,
+            test_mode,
+            loop_limit,
+            action_frequency,
+            0,
+        )
+    else:
+        run(
+            scenario_group_id,
+            agent_group_id,
+            test_mode,
+            loop_limit,
+            action_frequency,
+            reply_probablity,
+        )
+
+    
     # asyncio.create_task(
     #     run_async(
     #         scenario_group_id,
