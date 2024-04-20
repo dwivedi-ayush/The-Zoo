@@ -4,6 +4,7 @@ from dotenv import dotenv_values
 from pymongo import MongoClient
 from bson.json_util import dumps
 from bson.json_util import loads
+from bson.objectid import ObjectId
 
 
 def run(
@@ -22,12 +23,17 @@ def run(
     mongodb_client = MongoClient(config["ATLAS_URI"])
     database = mongodb_client[config["DB_NAME"]]
     agent_collection = database["agents"]
-    agent_group_collection = database["agent_group_id"]
-    if(agent_group_id == ""):
+    agent_group_collection = database["agentgroups"]
+    # print(agent_group_id,"**")
+    if agent_group_id == "":
         agents = loads(dumps(agent_collection.find({"agentGroupId": ""})))
     else:
-        agent_group = agent_group_collection.find({"_id": agent_group_id})
-        agent_ids = agent_group.fetchall("agentIds", [])
+        agent_group = agent_group_collection.find({"_id": ObjectId(agent_group_id)})
+        # agent_ids = agent_group.fetchall("agentIds", [])
+        # agent_ids = loads(dumps(agent_group["agentIds"]))
+        # print(loads(dumps(agent_group))[-1], "--")
+        agent_ids = loads(dumps(agent_group))[-1]["agentIds"]
+
         agents = loads(dumps(agent_collection.find({"_id": {"$in": agent_ids}})))
 
     print(agents)
@@ -54,13 +60,13 @@ def run(
         print(f"{temp} started with PID {p.pid}")
         # break
 
-    try:
-        input("Press Enter to stop the processes...")
-    except KeyboardInterrupt:
-        print("\nInterrupted by user.")
+    # try:
+    #     input("Press Enter to stop the processes...")
+    # except KeyboardInterrupt:
+    #     print("\nInterrupted by user.")
 
     # Set the event to stop processes
-    stop_event.set()
+    # stop_event.set()
 
     # Join processes
     for p in processes:

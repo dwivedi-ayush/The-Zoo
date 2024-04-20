@@ -130,13 +130,13 @@ const Navbar = () => {
           <div className="flex space-x-4">
             <Link
               to="/Explore"
-              className="text-black bg-blue-200 hover:bg-blue-400 py-2 px-4 rounded-lg"
+              className="text-white bg-blue-500 hover:bg-blue-600 transition-all duration-200 hover:scale-105 hover:-translate-y-1 py-2 px-4 rounded-lg"
             >
               Explore
             </Link>
             <Link
               to={`/profile/${currentUser._id}`}
-              className="text-black bg-blue-200 hover:bg-blue-400 py-2 px-4 rounded-lg"
+              className="text-white bg-blue-500 hover:bg-blue-600 transition-all duration-200 hover:scale-105 hover:-translate-y-1 py-2 px-4 rounded-lg"
             >
               Profile
             </Link>
@@ -145,7 +145,7 @@ const Navbar = () => {
         <div>
           <Link
             to="/"
-            className="text-black bg-red-200 hover:bg-red-400 py-2 px-4 rounded-lg"
+            className="text-white bg-rose-500 hover:bg-rose-600 transition-all duration-200 hover:scale-105 hover:-translate-y-1 py-2 px-4 rounded-lg"
           >
             Logout
           </Link>

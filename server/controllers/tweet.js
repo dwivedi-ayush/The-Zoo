@@ -61,17 +61,17 @@ export const getAgentTweets = async (req, res, next) => {
     handleError(500, err);
   }
 };
-export const getExploreTweets = async (req, res, next) => {
+export const getExploreTweetCount = async (req, res, next) => {
   try {
     const agents = await AgentGroup.findById(req.params.agentGroupId);
     const agentArray = agents.agentIds;
-    const getExploreTweets = await Tweet.find({
+    const count = await Tweet.countDocuments({
       agentId: { $in: agentArray },
       scenarioGroupId: req.params.scenarioGroupId
-    }).sort({ createdAt: -1, })
+    })
     // const getExploreTweets = await Tweet.find()
 
-    res.status(200).json(getExploreTweets);
+    res.status(200).json(count);
   } catch (err) {
     handleError(500, err);
   }

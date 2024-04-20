@@ -44,14 +44,12 @@ def explore_tweets(current_agent_id, agent_group_id, scenario_group_id):
     agent_ids = []
     if agent_group_id == "":
         agents = loads(dumps(agents_collection.find({"agentGroupId": ""})))
-        agent_ids = [
-            row["_id"] for row in agents
-            if row["_id"] != current_agent_id
-        ]
+        agent_ids = [row["_id"] for row in agents if row["_id"] != current_agent_id]
     else:
         agent_group = agent_group_collection.find({"_id": agent_group_id})
         agent_ids = [
-            row["agentIds"] for row in list(agent_group)
+            row["agentIds"]
+            for row in list(agent_group)
             if row["agentIds"] != current_agent_id
         ]
 
@@ -65,9 +63,9 @@ def explore_tweets(current_agent_id, agent_group_id, scenario_group_id):
             .sort([("createdAt", -1)])
             .limit(10)
         )
+    descriptions = {}
     if tweet_response:
         latest_tweets = loads(dumps(tweet_response))
-        descriptions = {}
         for tweet in latest_tweets:
             key = tweet["alias"] + "-" + str(tweet["_id"])
             descriptions[key] = {}
@@ -80,7 +78,7 @@ def explore_tweets(current_agent_id, agent_group_id, scenario_group_id):
             # print(tweet)
 
     else:
-        print(f"Request failed with status code {tweet_response.status_code}")
+        print(f"Request failed with error -{tweet_response}-")
     indexed_descriptions = dict()
     # print(descriptions)
     for i, key in enumerate(descriptions.keys()):

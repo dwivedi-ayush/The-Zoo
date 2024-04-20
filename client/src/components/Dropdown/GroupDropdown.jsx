@@ -287,6 +287,9 @@ const GroupDropdown = ({
       );
       setGroupMembers(groupMembers.filter((_, i) => i !== index));
     } else if (allowDelete && type === "scenario") {
+      await axios.delete(
+        `http://localhost:8000/api/scenarios/v2/delete/${member.id}`
+      );
       setGroupMembers(groupMembers.filter((_, i) => i !== index));
     }
   };
