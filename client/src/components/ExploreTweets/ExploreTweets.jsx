@@ -8,7 +8,6 @@ import useExploreTweet from "../../useExploreTweet";
 import { set } from "date-fns";
 
 const ExploreTweets = () => {
-  
   const [pageNumber, setPageNumber] = useState(1);
   const items = new Array(2).fill(null);
   const currentAgentGroup = useSelector(
@@ -57,9 +56,9 @@ const ExploreTweets = () => {
     <div className="mt-6">
       {!error &&
         loading &&
-        items.map(() => (
+        items.map((item, index) => (
           <>
-            <div className="border-b-2 pb-6 pt-6">
+            <div key={index} className="border-b-2 pb-6 pt-6">
               <List />
             </div>
           </>
@@ -79,16 +78,16 @@ const ExploreTweets = () => {
         tweets.map((tweet, index) => {
           if (tweets.length === index + 1) {
             return (
-              <div>
-                <div ref={lastTweetElementRef} key={tweet._id} className="p-2">
+              <div key={tweet._id}>
+                <div ref={lastTweetElementRef} className="p-2">
                   <Tweet tweet={tweet} setData={setExplore} />
                 </div>
               </div>
             );
           } else {
             return (
-              <div>
-                <div key={tweet._id} className="p-2">
+              <div key={tweet._id}>
+                <div className="p-2">
                   <Tweet tweet={tweet} setData={setExplore} />
                 </div>
               </div>

@@ -455,7 +455,10 @@ const GroupDropdown = ({
         <>
           {groupMembers.map((member, index) => {
             return (
-              <div className="cursor-default flex justify-between border-b-2 text-sm text-gray-700">
+              <div
+                key={index + type}
+                className="cursor-default flex justify-between border-b-2 text-sm text-gray-700"
+              >
                 <div className="cursor-default  py-2 text-sm text-gray-700">
                   {type === "agent" ? (
                     <Link to={`/agentprofile/${member.id}`}>

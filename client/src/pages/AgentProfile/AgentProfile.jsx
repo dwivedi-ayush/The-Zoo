@@ -173,20 +173,16 @@ const AgentProfile = () => {
                 tweets.map((tweet, index) => {
                   if (tweets.length === index + 1) {
                     return (
-                      <div>
-                        <div
-                          ref={lastTweetElementRef}
-                          key={tweet._id}
-                          className="p-2"
-                        >
+                      <div key={tweet._id}>
+                        <div ref={lastTweetElementRef} className="p-2">
                           <Tweet tweet={tweet} />
                         </div>
                       </div>
                     );
                   } else {
                     return (
-                      <div>
-                        <div key={tweet._id} className="p-2">
+                      <div key={tweet._id}>
+                        <div className="p-2">
                           <Tweet tweet={tweet} />
                         </div>
                       </div>
