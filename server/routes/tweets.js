@@ -3,6 +3,7 @@ import { verifyToken } from "../verifyToken.js";
 import {
   createTweet,
   deleteTweet,
+  deleteTweetByScenarioGroup,
   getAgentTweets,
   likeOrDislike,
   getExploreTweetCount,
@@ -16,6 +17,7 @@ const router = express.Router();
 
 router.put("/v2", createTweet);
 router.delete("/v2/:id", deleteTweet);
+router.delete("/v2/scenarioGroup/:id", deleteTweetByScenarioGroup);
 router.put("/v2/:id/like", likeOrDislike);
 router.get("/v2/agent/:id/scenarioGroup/:scenarioGroupId/page/:page", getAgentTweets);
 router.get("/v2/explore/scenarioGroup/:scenarioGroupId/agentGroup/:agentGroupId", getExploreTweetCount);

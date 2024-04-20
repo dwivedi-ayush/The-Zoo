@@ -29,6 +29,22 @@ export const deleteTweet = async (req, res, next) => {
   }
 };
 
+export const deleteTweetByScenarioGroup = async (req, res, next) => {
+  try {
+    const deleteResult = await Tweet.deleteMany({ "scenarioGroupId": req.params.id });
+
+    if (deleteResult.deletedCount > 0) {
+      console.log(`${deleteResult.deletedCount} tweets deleted successfully.`);
+    } else {
+      console.log(`No tweets found with scenarioGroupId ${req.params.id}.`);
+    }
+    res.status(200).json("tweets has been deleted");
+
+  } catch (err) {
+    handleError(500, err);
+  }
+};
+
 export const likeOrDislike = async (req, res, next) => {
   try {
     const tweet = await Tweet.findById(req.params.id);
