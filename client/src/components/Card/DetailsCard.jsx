@@ -89,7 +89,7 @@ import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
 import axios from "axios";
 import "./DetailsCard.css";
 
-import { DeleteScenarioDialogueBox } from "../Dropdown/GroupDropdown";
+// import { DeleteScenarioDialogueBox } from "../Dropdown/GroupDropdown";
 
 const DetailsCard = ({ type, alreadySmall }) => {
   const { currentUser } = useSelector((state) => state.user);
@@ -157,7 +157,11 @@ const DetailsCard = ({ type, alreadySmall }) => {
           // ]);
           const golbalAgentsNamesWithIds = await Promise.all(
             golbalAgents.data.map(async (agent) => {
-              return { name: agent.alias, id: agent._id };
+              return {
+                name: agent.alias,
+                id: agent._id,
+                text: agent.personality,
+              };
             })
           );
           setGroupMembers(golbalAgentsNamesWithIds);
@@ -238,7 +242,11 @@ const DetailsCard = ({ type, alreadySmall }) => {
                   );
             const AgentsNamesWithIds = await Promise.all(
               agents.data.map(async (agent) => {
-                return { name: agent.alias, id: agent._id };
+                return {
+                  name: agent.alias,
+                  id: agent._id,
+                  text: agent.personality,
+                };
               })
             );
             setGroupMembers(AgentsNamesWithIds);
@@ -257,7 +265,11 @@ const DetailsCard = ({ type, alreadySmall }) => {
 
             const scenarioTitlesWithIds = await Promise.all(
               scenarios.data.map(async (scenario) => {
-                return { name: scenario.title, id: scenario._id };
+                return {
+                  name: scenario.title,
+                  id: scenario._id,
+                  text: scenario.description,
+                };
               })
             );
             setGroupMembers(scenarioTitlesWithIds);
@@ -287,24 +299,24 @@ const DetailsCard = ({ type, alreadySmall }) => {
   // console.log(type, currentGroup);
   return (
     <div
-      className={`bg-white overflow-auto rounded-lg p-6 w-full aspect-square sm:w-auto md:w-auto lg:w-auto m-3 ${
+      className={`bg-white overflow-auto rounded-lg p-6 w-full h-[70vh] sm:w-auto md:w-auto lg:w-auto m-3 ${
         type === "agent"
           ? "shadow-red origin-top-left"
           : "shadow-green origin-top-right"
-      }  transition ease-in-out delay-200 ${
-        isSmall && alreadySmall ? "scale-50" : ""
+      }  transition ease-in-out duration-300 hover:scale-105${
+        isSmall && alreadySmall ? "" : ""
       } `}
       // style={{ left: position.x, top: position.y }}
       onClick={handleClick}
     >
-      {deletePopup && (
+      {/* {deletePopup && (
         <DeleteScenarioDialogueBox
           toBeDeletedmember={toBeDeletedmember}
           setDeletePopup={setDeletePopup}
           deletePopup={deletePopup}
           setGroupMembers={setGroupMembers}
         />
-      )}
+      )} */}
       <div className="flex flex-col md:flex-col sm:flex-col justify-between items-start md:items-center mb-4">
         <h2 className="text-gray-800 font-bold text-lg mb-2 md:mb-3">
           {currentGroup.name}
@@ -339,32 +351,34 @@ const DetailsCard = ({ type, alreadySmall }) => {
             key={index}
             className="bg-gray-100 rounded-md px-4 py-2 flex justify-between items-center"
           >
-            {member.name}
-            <button
-              className={`text-red-500 hover:text-red-600 focus:outline-none ${
-                (type === "agent" &&
-                  currentGroup.name !== "Global Agent Group") ||
-                type === "scenario"
-                  ? "cursor-default"
-                  : "cursor-not-allowed opacity-50"
-              }`}
-              onClick={() => handleDelete(index, member)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            {member.name} {member.text && `: ${member.text}`}
+            {type === "" && (
+              <button
+                className={`text-red-500 hover:text-red-600 focus:outline-none ${
+                  (type === "agent" &&
+                    currentGroup.name !== "Global Agent Group") ||
+                  type === "scenario"
+                    ? "cursor-default"
+                    : "cursor-not-allowed opacity-50"
+                }`}
+                onClick={() => handleDelete(index, member)}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            )}
           </li>
         ))}
       </ul>
