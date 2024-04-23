@@ -10,11 +10,13 @@ import Signin from "./pages/Signin/Signin";
 import Error from "./pages/Error/Error";
 import Navbar from "./components/Navbar/Navbar";
 import AgentAdd from "./pages/AgentForm/AgentAdd";
-
+import { useLocation } from "react-router-dom";
 const Layout = () => {
+  const location = useLocation().pathname.split("/");
+  console.log(location.length, location)
   return (
     <>
-      <Navbar />
+      {location && (location[1] === "" || location[1] === "signout") ? <></> : <Navbar />}
       <div className="w-full px-12 py-4">
         <Outlet></Outlet>
       </div>
