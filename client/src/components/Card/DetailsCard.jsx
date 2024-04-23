@@ -82,12 +82,15 @@
 
 // export default DetailsCard;
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectAgentGroup } from "../../redux/agentGroupSlice";
 import { selectScenarioGroup } from "../../redux/scenarioGroupSlice";
 import axios from "axios";
 import "./DetailsCard.css";
+
+import { DeleteScenarioDialogueBox } from "../Dropdown/GroupDropdown";
+
 const DetailsCard = ({ type, alreadySmall }) => {
   const { currentUser } = useSelector((state) => state.user);
   const [isSmall, setIsSmall] = useState(false);
@@ -98,6 +101,11 @@ const DetailsCard = ({ type, alreadySmall }) => {
   const dispatch = useDispatch();
   const [groupMembers, setGroupMembers] = useState([]);
   const [currentGroup, setCurrentGroup] = useState("");
+  const [deletePopup, setDeletePopup] = useState(false);
+  const [toBeDeletedmember, setToBeDeletedmember] = useState({
+    index: "",
+    memeber: "",
+  });
   const currentAgentGroup = useSelector(
     (state) => state.agentGroup.currentAgentGroup
   );
@@ -262,15 +270,18 @@ const DetailsCard = ({ type, alreadySmall }) => {
     }
   }, [currentGroup]);
 
-  const handleDelete = (index) => {
+  const handleDelete = (index, member) => {
     if (type === "agent" && currentGroup !== "Global Agent Group") {
       const updatedGroup = [...groupMembers];
       updatedGroup.splice(index, 1);
       setGroups(updatedGroup);
+    } else if (type === "scenario") {
+      setDeletePopup(true);
+      setToBeDeletedmember({ index: index, member: member });
     }
   };
 
-  const filteredGroups = groupMembers.filter((member) =>
+  const filteredMembers = groupMembers.filter((member) =>
     member.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   // console.log(type, currentGroup);
@@ -286,6 +297,14 @@ const DetailsCard = ({ type, alreadySmall }) => {
       // style={{ left: position.x, top: position.y }}
       onClick={handleClick}
     >
+      {deletePopup && (
+        <DeleteScenarioDialogueBox
+          toBeDeletedmember={toBeDeletedmember}
+          setDeletePopup={setDeletePopup}
+          deletePopup={deletePopup}
+          setGroupMembers={setGroupMembers}
+        />
+      )}
       <div className="flex flex-col md:flex-col sm:flex-col justify-between items-start md:items-center mb-4">
         <h2 className="text-gray-800 font-bold text-lg mb-2 md:mb-3">
           {currentGroup.name}
@@ -315,12 +334,12 @@ const DetailsCard = ({ type, alreadySmall }) => {
         </div>
       </div>
       <ul className="space-y-2">
-        {filteredGroups.map((group, index) => (
+        {filteredMembers.map((member, index) => (
           <li
             key={index}
             className="bg-gray-100 rounded-md px-4 py-2 flex justify-between items-center"
           >
-            {group.name}
+            {member.name}
             <button
               className={`text-red-500 hover:text-red-600 focus:outline-none ${
                 (type === "agent" &&
@@ -329,7 +348,7 @@ const DetailsCard = ({ type, alreadySmall }) => {
                   ? "cursor-default"
                   : "cursor-not-allowed opacity-50"
               }`}
-              onClick={() => handleDelete(index)}
+              onClick={() => handleDelete(index, member)}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

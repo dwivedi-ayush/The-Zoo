@@ -2,7 +2,6 @@ import React, { useState, useCallback, Fragment, useRef } from "react";
 import TimelineTweet from "../TimelineTweet/TimelineTweet";
 // import ExploreTweets from "../ExploreTweets/ExploreTweets";
 import { useSelector } from "react-redux";
-
 import axios from "axios";
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -87,7 +86,8 @@ const ResetDialogueBox = ({
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto transition-all duration-200 hover:scale-105
+                hover:-translate-y-1 "
                     onClick={() => {
                       setOpen(false);
                       handleReset();
@@ -97,7 +97,8 @@ const ResetDialogueBox = ({
                   </button>
                   <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto transition-all duration-200 hover:scale-105
+                hover:-translate-y-1 "
                     onClick={() => {
                       setOpen(false);
                       setIsResetting(false);
@@ -260,7 +261,8 @@ const GenerateDialogueBox = ({
                 <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                   <button
                     type="button"
-                    className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 sm:ml-3 sm:w-auto transition-all duration-200 hover:scale-105
+                hover:-translate-y-1 "
                     onClick={() => {
                       setOpen(false);
                       handleGenerate();
@@ -270,7 +272,8 @@ const GenerateDialogueBox = ({
                   </button>
                   <button
                     type="button"
-                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto transition-all duration-200 hover:scale-105
+                hover:-translate-y-1 "
                     onClick={() => {
                       setOpen(false);
                       setIsGeneration(false);
@@ -288,6 +291,7 @@ const GenerateDialogueBox = ({
     </Transition.Root>
   );
 };
+
 const MainTweet = () => {
   const [title, setTitle] = useState("");
   const [isResetting, setIsResetting] = useState("");
