@@ -13,7 +13,6 @@ import AgentAdd from "./pages/AgentForm/AgentAdd";
 import { useLocation } from "react-router-dom";
 const Layout = () => {
   const location = useLocation().pathname.split("/");
-  console.log(location.length, location)
   return (
     <>
       {location && (location[1] === "" || location[1] === "signout") ? <></> : <Navbar />}
