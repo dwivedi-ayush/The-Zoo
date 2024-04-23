@@ -166,6 +166,7 @@ const Tweet = ({ tweet, setData }) => {
       console.error("Error following user:", error);
       // Handle error
     }
+    window.location.reload();
   };
   const handleUnfollow = async (e) => {
     e.preventDefault();
@@ -180,6 +181,7 @@ const Tweet = ({ tweet, setData }) => {
       console.error("Error unfollowing user:", error);
       // Handle error
     }
+    window.location.reload();
   };
   if (agentData) {
     return (
