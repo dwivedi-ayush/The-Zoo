@@ -27,25 +27,52 @@ export const DeleteScenarioDialogueBox = ({
 }) => {
   const [open, setOpen] = useState(true);
 
-  const DeleteScenarioButtonRef = useRef(null);
-  const RollbackScenarioButtonRef = useRef(null);
+  const cancelButtonRef = useRef(null);
 
   const handleDelete = () => {
-    setGroupMembers(
-      groupMembers.filter((_, i) => i !== toBeDeletedMember.index)
-    );
+    const deleteScenario = async () => {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/api/scenarios/v2/delete/${toBeDeletedMember.member.id}`
+        );
+        if (response.status === 200) {
+          setOpen(false);
+          setDeletePopup(false);
+          setGroupMembers(
+            groupMembers.filter((_, i) => i !== toBeDeletedMember.index)
+          );
+        }
+      } catch (e) {
+        console.log("Error", e);
+      }
+    };
+    deleteScenario();
   };
   const handleRollback = () => {
-    setGroupMembers(
-      groupMembers.filter((_, i) => i !== toBeDeletedMember.index)
-    );
+    const rollbackScenario = async () => {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/api/scenarios/v2/rollback/${toBeDeletedMember.member.id}`
+        );
+        if (response.status === 200) {
+          setOpen(false);
+          setDeletePopup(false);
+          setGroupMembers(
+            groupMembers.filter((_, i) => i < toBeDeletedMember.index)
+          );
+        }
+      } catch (e) {
+        console.log("Error", e);
+      }
+    };
+    rollbackScenario();
   };
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-10"
-        initialFocus={DeleteScenarioButtonRef}
+        initialFocus={cancelButtonRef}
         onClose={setOpen}
       >
         <Transition.Child
@@ -88,7 +115,14 @@ export const DeleteScenarioDialogueBox = ({
                         Select Deletion Type
                       </Dialog.Title>
                       <div className="mt-2">
-                        <p className="text-sm text-gray-500">Delete/Rollback</p>
+                        <p className="text-sm text-gray-500">
+                          Deleting a scenario will simply remove the scenario
+                          from the group, if you wish to delete the tweets you
+                          will have to reset the whole scenario group, Rollback
+                          scenario will delete scenarios after the target
+                          scenario and all the tweets generated after the time
+                          of creation of the target scenario
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -126,7 +160,7 @@ export const DeleteScenarioDialogueBox = ({
                       setOpen(false);
                       setDeletePopup(false);
                     }}
-                    ref={DeleteScenarioButtonRef}
+                    ref={cancelButtonRef}
                   >
                     Cancel
                   </button>

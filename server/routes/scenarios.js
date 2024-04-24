@@ -3,7 +3,7 @@ import {
     createScenario,
     getScenariosByGroup,
     getScenario,
-    deleteScenario
+    deleteScenario, rollbackTillScenario
 } from "../controllers/scenario.js";
 
 const router = express.Router();
@@ -12,7 +12,7 @@ const router = express.Router();
 router.put("/v2/scenarios", createScenario);
 router.get("/v2/scenarios/:id", getScenario);
 router.get("/v2/getbygroup/:scenariogroupid", getScenariosByGroup);
-
-router.delete("/v2/scenarios/:id", deleteScenario);
+router.delete("/v2/delete/:id", deleteScenario);
+router.delete("/v2/rollback/:id", rollbackTillScenario);
 
 export default router;

@@ -309,9 +309,8 @@ const DetailsCard = ({ type, alreadySmall }) => {
           )}
         </div>
         <ul className="space-y-2">
-          {filteredMembers.map(
-            (member, index) =>
-              type === "agent" &&
+          {filteredMembers.map((member, index) =>
+            type === "agent" ? (
               (!showOnlyFollowing || following.includes(member.id)) && (
                 <li
                   key={index}
@@ -354,6 +353,15 @@ const DetailsCard = ({ type, alreadySmall }) => {
                   )}
                 </li>
               )
+            ) : (
+              <li
+                key={index}
+                className={`bg-gray-100 rounded-md px-4 py-2 flex justify-between items-center`}
+                onClick={(e) => handleFollowUnfollow(e, member, index)}
+              >
+                {member.name} {member.text && `: ${member.text}`}
+              </li>
+            )
           )}
         </ul>
       </div>
