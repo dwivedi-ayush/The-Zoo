@@ -24,6 +24,7 @@ export const DeleteScenarioDialogueBox = ({
   deletePopup,
   setGroupMembers,
   groupMembers,
+  agentGroupId,
 }) => {
   const [open, setOpen] = useState(true);
 
@@ -47,12 +48,14 @@ export const DeleteScenarioDialogueBox = ({
       }
     };
     deleteScenario();
+    setOpen(false);
+    setDeletePopup(false);
   };
   const handleRollback = () => {
     const rollbackScenario = async () => {
       try {
         const response = await axios.delete(
-          `http://localhost:8000/api/scenarios/v2/rollback/${toBeDeletedMember.member.id}`
+          `http://localhost:8000/api/scenarios/v2/rollback/${toBeDeletedMember.member.id}/agentGroup/${agentGroupId}`
         );
         if (response.status === 200) {
           setOpen(false);
@@ -66,6 +69,11 @@ export const DeleteScenarioDialogueBox = ({
       }
     };
     rollbackScenario();
+    setOpen(false);
+    setDeletePopup(false);
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
   };
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -513,6 +521,7 @@ const GroupDropdown = ({
           deletePopup={deletePopup}
           setGroupMembers={setGroupMembers}
           groupMembers={groupMembers}
+          agentGroupId={currentAgentGroup.id}
         />
       )}
       <button

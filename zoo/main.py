@@ -249,7 +249,7 @@ def start(
         model = "gpt-3.5-turbo-1106"
         model = "gpt-3.5-turbo"
         model = "gpt-3.5-turbo-0125"
-        model = "gpt-4-0125-preview"
+        # model = "gpt-4-0125-preview"
         temperature = 1
         max_tokens = random.randint(100, 200)
         if is_error:

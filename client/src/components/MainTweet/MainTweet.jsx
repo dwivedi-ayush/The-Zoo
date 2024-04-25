@@ -130,17 +130,17 @@ const GenerateDialogueBox = ({
   const handleGenerate = () => {
     const body = {
       scenario_group_id: currentScenarioGroup.id,
-      agent_group_id: currentAgentGroup.id,
+      agent_group_id: currentAgentGroup.id === "" ? "0" : currentAgentGroup.id,
       test_mode: false,
       loop_limit: numberOfActions,
       action_frequency: actionFrequency,
-      reply_probablity: replyProbability,
+      reply_probability: replyProbability,
     };
     setIsGeneration((prev) => !prev);
-    axios.post("http://localhost:5000/generatetweet", body);
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 5000);
+    axios.post("http://localhost:8080/generatetweet", body);
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
     setIsGeneration(false);
   };
   return (
@@ -240,7 +240,10 @@ const GenerateDialogueBox = ({
                               value={replyProbability}
                               onChange={(e) =>
                                 setReplyProbability(
-                                  Math.max(0, parseFloat(e.target.value))
+                                  Math.min(
+                                    1,
+                                    Math.max(0, parseFloat(e.target.value))
+                                  )
                                 )
                               }
                               type="number"
@@ -448,7 +451,7 @@ const MainTweet = () => {
                 <div className="flex item-center justify-between">
                   <svg
                     aria-hidden="true"
-                    class="w-4 h-4 mr-2 mt-1 text-gray-200 animate-spin fill-blue-600"
+                    className="w-4 h-4 mr-2 mt-1 text-gray-200 animate-spin fill-blue-600"
                     viewBox="0 0 100 101"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"

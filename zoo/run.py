@@ -25,7 +25,7 @@ def run(
     agent_collection = database["agents"]
     agent_group_collection = database["agentgroups"]
     # print(agent_group_id,"**")
-    if agent_group_id == "":
+    if agent_group_id == "0":
         agents = loads(dumps(agent_collection.find({"agentGroupId": ""})))
     else:
         agent_group = agent_group_collection.find({"_id": ObjectId(agent_group_id)})
