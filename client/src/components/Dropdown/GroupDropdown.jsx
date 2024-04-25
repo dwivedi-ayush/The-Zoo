@@ -300,12 +300,10 @@ const GroupDropdown = ({
               `http://localhost:8000/api/scenarios/v2/getbygroup/${selectedGroup.id}`
             );
 
-            const scenarioTitlesWithIds = await Promise.all(
-              scenarios.data.map(async (scenario) => {
-                return { name: scenario.title, id: scenario._id };
-              })
-            );
-            setGroupMembers(scenarioTitlesWithIds);
+            const scenarioTitlesWithIds = scenarios.data.map((scenario) => {
+              return { name: scenario.title, id: scenario._id };
+            });
+            setGroupMembers([...scenarioTitlesWithIds]);
           } catch (err) {
             console.log("error", err);
           }
@@ -387,7 +385,7 @@ const GroupDropdown = ({
           );
           const scenarioGroupNamesWithIds = getScenarioGroups.data.map(
             (scenarioGroup) => {
-              return { name: scenarioGroup.title, id: scenarioGroup };
+              return { name: scenarioGroup.title, id: scenarioGroup._id };
             }
           );
 
@@ -482,7 +480,7 @@ const GroupDropdown = ({
   };
 
   const handleGroupSelect = (group) => {
-    setSelectedGroup(group);
+    setSelectedGroup({ name: group.name, id: group.id });
     const fetchGroupMembers = async () => {
       if (type === "agent") {
         // const agents = await axios.get(`agents/v2/getbygroup/${group.id}`);

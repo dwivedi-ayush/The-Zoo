@@ -329,7 +329,7 @@ const MainTweet = () => {
       reply_probablity: 0.75,
     };
     setIsGeneration((prev) => !prev);
-    // axios.post("http://localhost:5000/generatetweet", body);
+    // axios.post("http://localhost:8080/generatetweet", body);
     // setTimeout(() => {
     //   window.location.reload();
     // }, 5000);
