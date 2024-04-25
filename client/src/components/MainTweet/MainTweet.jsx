@@ -340,6 +340,7 @@ const MainTweet = () => {
     setIsResetting(true);
   };
   const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.put(
         "http://localhost:8000/api/scenarios/v2/scenarios",

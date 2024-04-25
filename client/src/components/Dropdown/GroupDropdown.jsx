@@ -382,14 +382,13 @@ const GroupDropdown = ({
             })
           );
           setGroupMembers(scenarioNamesWithIds);
-
-          const scenarioGroupNamesWithIds = await Promise.all(
-            user.data.scenarioGroupIds.map(async (id) => {
-              const { data } = await axios.get(
-                `http://localhost:8000/api/scenariogroups/v2/${id}`
-              );
-              return { name: data.title, id: id };
-            })
+          const getScenarioGroups = await axios.get(
+            `http://localhost:8000/api/scenariogroups/v2/getAllScenarioGroups/${currentUser._id}`
+          );
+          const scenarioGroupNamesWithIds = getScenarioGroups.data.map(
+            (scenarioGroup) => {
+              return { name: scenarioGroup.title, id: scenarioGroup };
+            }
           );
 
           // doesnot work when we need to call multiple dropdown like in agent profile dispatch it in the place of calling of dropdown
