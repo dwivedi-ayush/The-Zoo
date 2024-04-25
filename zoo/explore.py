@@ -108,9 +108,8 @@ def explore_tweets(current_agent_id, agent_group_id, scenario_group_id):
     return descriptions, indexed_descriptions
 
 
-a, b = explore_tweets(
-    "662260e0e3c3485bdda50ea8", "6618ff0ef1ce9fb0b5eddb72", "661fc2cc7e847eef1648aa60"
-)
-print(a)
-print("------")
-print(b)
+# current_agent_id, agent_group_id, scenario_group_id
+# a, b = explore_tweets("66169ead208af682a327aa58", "0", "661fc2cc7e847eef1648aa60")
+# print(a)
+# print("------")
+# print(b)
