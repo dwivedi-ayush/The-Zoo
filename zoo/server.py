@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, make_response
+
 from flask_cors import CORS, cross_origin
 import openai
 import os
@@ -9,7 +10,9 @@ from run import run
 openai.api_key = os.getenv("API_KEY")
 
 app = Flask(__name__)
+# cors = CORS(app)
 cors = CORS(app, origins="http://localhost:3000")
+# cors = CORS(app, resources={r"/generatetweet": {"origins": "http://localhost:3000"}})
 # app.config["CORS_HEADERS"] = "Content-Type"
 
 
@@ -83,34 +86,41 @@ def get_tweet_count(scenario_group_id, agent_group_id):
     # pass
 
 
-def _build_cors_preflight_response():
-    response = make_response()
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Allow-Headers", "*")
-    response.headers.add("Access-Control-Allow-Methods", "*")
-    return response
+# def _build_cors_preflight_response():
+#     response = make_response()
+#     response.headers.add("Access-Control-Allow-Origin", "*")
+#     response.headers.add("Access-Control-Allow-Headers", "*")
+#     response.headers.add("Access-Control-Allow-Methods", "*")
+#     return response
+
+
+# @app.route("/generatetweet", methods=["OPTIONS"])
+# # @cross_origin(origin="*")
+# def fun():
+#     return "Success", 201
 
 
 # @app.route("/generate-tweet", methods=["POST", "OPTIONS"])
-@app.route("/generatetweet", methods=["POST"])
+# @cross_origin(origin="*")
+@app.route("/generatetweet", methods=["POST", "OPTIONS"])
 def generate_tweet():
-    # if request.method == "OPTIONS":  # CORS preflight
-    #     return _build_cors_preflight_response()
+    if request.method == "OPTIONS":  # CORS preflight
+        return {}, 200
     scenario_group_id = request.json.get("scenario_group_id")
+    print("Scenario Group ID:", scenario_group_id)
     agent_group_id = request.json.get("agent_group_id")
+    print("Agent Group ID:", agent_group_id)
     test_mode = request.json.get("test_mode")
+    print("Test Mode:", test_mode)
     loop_limit = request.json.get("loop_limit")
+    print("Loop Limit:", loop_limit)
     action_frequency = request.json.get("action_frequency")
+    print("Action Frequency:", action_frequency)
     reply_probability = request.json.get("reply_probability")
+    print("Reply Probability:", reply_probability)
 
     count = get_tweet_count(scenario_group_id, agent_group_id)
-    print("Received data:")
-    print("Scenario Group ID:", scenario_group_id)
-    print("Agent Group ID:", agent_group_id)
-    print("Test Mode:", test_mode)
-    print("Loop Limit:", loop_limit)
-    print("Action Frequency:", action_frequency)
-    print("Reply Probability:", reply_probability)
+    print("Tweet Count:", count)
     if count < 10:
         run(
             scenario_group_id,
@@ -130,18 +140,20 @@ def generate_tweet():
             reply_probability,
         )
 
-    # asyncio.create_task(
-    #     run_async(
-    #         scenario_group_id,
-    #         agent_group_id,
-    #         test_mode,
-    #         loop_limit,
-    #         action_frequency,
-    #         reply_probablity,
-    #     )
-    # )
-    return {"message": "Generation Started successfully!"}
+        # asyncio.create_task(
+        #     run_async(
+        #         scenario_group_id,
+        #         agent_group_id,
+        #         test_mode,
+        #         loop_limit,
+        #         action_frequency,
+        #         reply_probablity,
+        #     )
+        # )
+    response = {"message": "Generation Started successfully!"}
+    # response.headers.add("Access-Control-Allow-Origin", "*")
+    return response, 200
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="localhost")
+    app.run(host="localhost", port=8080)

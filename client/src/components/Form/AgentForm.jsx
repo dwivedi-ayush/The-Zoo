@@ -134,8 +134,118 @@ const AgentForm = () => {
   };
 
   const handleCreateGoogleForm = () => {
-    // Logic to create the Google Form
+    const defaultQuestions = [
+      // Personal Information
+      { text: "Name:", type: "text" },
+      { text: "Age:", type: "number" },
+      { text: "Gender:", type: "text" },
+      { text: "Occupation:", type: "text" },
+
+      // Hobbies and Interests
+      {
+        text: "What are your favorite hobbies or activities to do in your free time?",
+        type: "textarea",
+      },
+      {
+        text: "Do you have any specific interests or passions? If so, please specify.",
+        type: "textarea",
+      },
+
+      // Educational Background
+      { text: "What is your highest level of education?", type: "text" },
+      {
+        text: "Did you major in a specific field? If yes, please specify.",
+        type: "text",
+      },
+      {
+        text: "Any notable academic achievements or extracurricular activities?",
+        type: "textarea",
+      },
+
+      // Professional Life
+      {
+        text: "What is your current occupation or field of work?",
+        type: "text",
+      },
+      {
+        text: "Could you briefly describe your responsibilities or daily tasks at work?",
+        type: "textarea",
+      },
+      { text: "What do you enjoy most about your job?", type: "textarea" },
+
+      // Personality Traits
+      {
+        text: "How would you describe your personality in three words?",
+        type: "text",
+      },
+      { text: "Are you more introverted or extroverted?", type: "text" },
+      {
+        text: "What values are most important to you in life?",
+        type: "textarea",
+      },
+
+      // Communication Style
+      {
+        text: "How do you typically communicate with others? (e.g., in person, phone calls, text messages, emails)",
+        type: "text",
+      },
+      { text: "Do you consider yourself a good listener?", type: "text" },
+
+      // Goals and Aspirations
+      {
+        text: "What are your short-term and long-term goals?",
+        type: "textarea",
+      },
+      {
+        text: "Is there something specific you're working towards in your personal or professional life?",
+        type: "textarea",
+      },
+
+      // Challenges and Struggles
+      {
+        text: "What are some challenges you've faced recently?",
+        type: "textarea",
+      },
+      {
+        text: "How do you typically handle stress or difficult situations?",
+        type: "textarea",
+      },
+
+      // Favorites
+      { text: "Favorite book/movie/TV show/music genre?", type: "textarea" },
+      { text: "Favorite food or type of cuisine?", type: "text" },
+      {
+        text: "Favorite travel destination or dream vacation spot?",
+        type: "text",
+      },
+
+      // Miscellaneous
+      {
+        text: "Is there anything else you'd like to share about yourself that wasn't covered in the questions above?",
+        type: "textarea",
+      },
+    ];
+
+    const allQuestions = [...defaultQuestions, ...questions];
+    const questionsData = JSON.stringify(allQuestions);
+
+    // Call the Apps Script web app URL
+    const url =
+      "https://script.google.com/macros/s/AKfycby73mmW4ZL1105CDDh69Ba4N2KVXYAnxCrNz27xjZRZdtEV8-MjEyigR-lO-fpUfL91/exec";
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: questionsData,
+    };
+
+    fetch(url, requestOptions)
+      .then((response) => response.text())
+      .then((data) => {
+        console.log("Google Form URL:", data);
+      })
+      .catch((error) => console.error("Error:", error));
   };
+
   return (
     <div className="p-8 bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-bold mb-4">

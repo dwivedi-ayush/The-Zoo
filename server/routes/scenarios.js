@@ -13,6 +13,6 @@ router.put("/v2/scenarios", createScenario);
 router.get("/v2/scenarios/:id", getScenario);
 router.get("/v2/getbygroup/:scenariogroupid", getScenariosByGroup);
 router.delete("/v2/delete/:id", deleteScenario);
-router.delete("/v2/rollback/:id", rollbackTillScenario);
+router.delete("/v2/rollback/:scenarioId/agentGroup/:agentGroupId", rollbackTillScenario);
 
 export default router;

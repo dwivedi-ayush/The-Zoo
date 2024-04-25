@@ -79,8 +79,8 @@ export const getAgentTweets = async (req, res, next) => {
 };
 export const getExploreTweetCount = async (req, res, next) => {
   try {
-    const agents = await AgentGroup.findById(req.params.agentGroupId);
-    const agentArray = agents.agentIds;
+    const agents = req.params.agentGroupId === "0" ? await Agent.find({ "agentGroupId": "" }) : await AgentGroup.findById(req.params.agentGroupId);
+    const agentArray = req.params.agentGroupId === "0" ? agents.map(agent => agent._id) : agents.agentIds;
     const count = await Tweet.countDocuments({
       agentId: { $in: agentArray },
       scenarioGroupId: req.params.scenarioGroupId
