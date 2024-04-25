@@ -49,8 +49,8 @@ def save_tweet(agent_alias, agent_id, scenario_group_id, tweet):
         "scenarioGroupId": scenario_group_id,
         "likes": [],
         "replies": [],
-        "createdAt": datetime.now().isoformat(),
-        "updatedAt": datetime.now().isoformat(),
+        "createdAt": datetime.now(),
+        "updatedAt": datetime.now(),
     }
     result = tweets_collection.insert_one(new_tweet)
     if result.acknowledged:

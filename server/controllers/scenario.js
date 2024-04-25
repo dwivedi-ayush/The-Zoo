@@ -41,7 +41,11 @@ export const getScenariosByGroup = async (req, res, next) => {
 
 export const deleteScenario = async (req, res, next) => {
     try {
-        await Scenario.findByIdAndDelete(req.params.id);
+        const scenario = await Scenario.findByIdAndDelete(req.params.id);
+        const scenarioGroup = await ScenarioGroup.findById(scenario.scenarioGroupId)
+        const result = await scenarioGroup.updateOne(
+            { $pull: { scenarioIds: scenario._id } }
+        );
         res.status(200).json({ message: "Scenario deleted successfully" });
     } catch (err) {
         next(err);
@@ -60,17 +64,29 @@ export const rollbackTillScenario = async (req, res, next) => {
         const targetScenarioGroup = await ScenarioGroup.findById(targetScenario.scenarioGroupId);
         const scenariosToDelete = await Scenario.find({
             _id: { $in: targetScenarioGroup.scenarioIds },
-            createdAt: { $gt: targetScenario.createdAt }
+            createdAt: { $gte: targetScenario.createdAt }
         });
-        const agents = req.params.agentGroupId === "0" ? await Agent.find({ "agentGroupId": "" }) : await AgentGroup.findById(req.params.agentGroupId);
-        const agentArray = req.params.agentGroupId === "0" ? agents.map(agent => agent._id) : agents.agentIds;
-        const a = await Tweet.deleteMany({
-            agentId: { $in: agentArray },
-            createdAt: { $gt: targetScenario.createdAt }
+        // const agents = req.params.agentGroupId === "0" ? await Agent.find({ "agentGroupId": "" }) : await AgentGroup.findById(req.params.agentGroupId);
+        // const agentArray = req.params.agentGroupId === "0" ? agents.map(agent => agent._id) : agents.agentIds;
+        // const a = await Tweet.deleteMany({
+        //     agentId: { $in: agentArray },
+        //     createdAt: { $gt: targetScenario.createdAt }
+        // })
+        const a = await Tweet.find({
+            scenarioGroupId: targetScenario.scenarioGroupId,
+            createdAt: { $gte: targetScenario.createdAt }
         })
-        console.log(a)
-        await Scenario.deleteMany({ _id: { $in: scenariosToDelete.map(scenario => scenario._id) } })
-        await Scenario.findByIdAndDelete(targetScenario._id)
+        const b = await Tweet.find()
+        b.map(async (tweet) => {
+            await Tweet.updateOne({ _id: tweet._id }, { $set: { createdAt: new Date(tweet.createdAt) } });
+        })
+
+        console.log(b.length)
+        // const result = await targetScenarioGroup.updateOne(
+        //     { $pull: { scenarioIds: { $in: arrayOfScenarioIdsToRemove } } }
+        // );
+        // await Scenario.deleteMany({ _id: { $in: scenariosToDelete.map(scenario => scenario._id) } })
+        // await Scenario.findByIdAndDelete(targetScenario._id)
         // {"session":session}
 
 

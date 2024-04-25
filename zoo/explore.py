@@ -5,6 +5,7 @@ from pymongo import MongoClient
 from dotenv import dotenv_values
 from bson.json_util import dumps
 from bson.json_util import loads
+from bson.objectid import ObjectId
 
 
 def get_tweets(agent_id, scenario_group_id):
@@ -30,7 +31,7 @@ def explore_tweets(current_agent_id, agent_group_id, scenario_group_id):
     mongodb_client = MongoClient(config["ATLAS_URI"])
     database = mongodb_client[config["DB_NAME"]]
     tweet_collection = database["tweets"]
-    agent_group_collection = database["agentGroups"]
+    agent_group_collection = database["agentgroups"]
     agents_collection = database["agents"]
 
     # if (agent_group_id == ""):
@@ -42,18 +43,17 @@ def explore_tweets(current_agent_id, agent_group_id, scenario_group_id):
     #         dumps(agent_collection.find({"_id": {"$in": agent_ids}})))
 
     agent_ids = []
-    if agent_group_id == "":
+    if agent_group_id == "0" or agent_group_id == "":
         agents = loads(dumps(agents_collection.find({"agentGroupId": ""})))
         agent_ids = [row["_id"] for row in agents if row["_id"] != current_agent_id]
     else:
-        agent_group = agent_group_collection.find({"_id": agent_group_id})
-        agent_ids = [
-            row["agentIds"]
-            for row in list(agent_group)
-            if row["agentIds"] != current_agent_id
-        ]
+        agent_group = agent_group_collection.find({"_id": ObjectId(agent_group_id)})
+        temp = loads(dumps((agent_group)))[0]
+        agent_ids = [id for id in temp["agentIds"] if id != ObjectId(current_agent_id)]
+        # agent_ids = [id for id in temp["agentIds"]]
 
     tweet_response = ""
+    print(agent_ids)
     if agent_ids:
         # Query the tweet_collection using the filtered agent_ids
         tweet_response = (
@@ -78,7 +78,9 @@ def explore_tweets(current_agent_id, agent_group_id, scenario_group_id):
             # print(tweet)
 
     else:
-        print(f"Request failed with error -{tweet_response}-")
+        print(
+            f"Request failed with error explore tweet '{tweet_response}' this was the response from query"
+        )
     indexed_descriptions = dict()
     # print(descriptions)
     for i, key in enumerate(descriptions.keys()):
@@ -106,8 +108,9 @@ def explore_tweets(current_agent_id, agent_group_id, scenario_group_id):
     return descriptions, indexed_descriptions
 
 
-# a, b = explore_tweets("66169ead208af682a327aa51",
-#                       "", "6616b49b256d7f7562551350")
-# print(a)
-# print("------")
-# print(b)
+a, b = explore_tweets(
+    "662260e0e3c3485bdda50ea8", "6618ff0ef1ce9fb0b5eddb72", "661fc2cc7e847eef1648aa60"
+)
+print(a)
+print("------")
+print(b)
