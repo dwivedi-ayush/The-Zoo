@@ -138,9 +138,9 @@ const GenerateDialogueBox = ({
     };
     setIsGeneration((prev) => !prev);
     axios.post("http://localhost:5000/generatetweet", body);
-    setTimeout(() => {
-      window.location.reload();
-    }, 5000);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 5000);
     setIsGeneration(false);
   };
   return (
