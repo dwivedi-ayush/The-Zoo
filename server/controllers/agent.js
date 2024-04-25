@@ -67,7 +67,12 @@ export const getAgentByAlias = async (req, res, next) => {
 
 export const deleteAgent = async (req, res, next) => {
   try {
-    await Agent.deleteOne({ _id: req.params.id });
+    const agent = await Agent.findByIdAndDelete(req.params.id);
+    const agentGroup = await AgentGroup.findById(agent.agentGroupId)
+    const result = await agentGroup.updateOne(
+      { $pull: { agentIds: agent._id } }
+    );
+
     res.status(200).json({ message: "Agent deleted successfully" });
   } catch (err) {
     next(err);

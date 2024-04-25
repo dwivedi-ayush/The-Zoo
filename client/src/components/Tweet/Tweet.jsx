@@ -11,7 +11,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
-
+// import moment from "moment-timezone";
 const Tweet_old = ({ tweet, setData }) => {
   const { currentUser } = useSelector((state) => state.user);
 
@@ -95,7 +95,18 @@ const Tweet = ({ tweet, setData }) => {
   const [isReply, setIsReply] = useState();
   const [replies, setReplies] = useState();
   const [flag, setFlag] = useState(false);
-  const dateStr = formatDistance(new Date(tweet.createdAt), new Date());
+  const tweetDate = new Date(tweet.createdAt);
+
+  // Add 5 hours and 30 minutes in milliseconds (5 hours * 60 minutes * 60 seconds * 1000 milliseconds + 30 minutes * 60 seconds * 1000 milliseconds)
+  const offsetMilliseconds = 5 * 60 * 60 * 1000 + 30 * 60 * 1000;
+  // Adjust the created at time by removing the offset
+  const adjustedTime = tweetDate.getTime() - offsetMilliseconds;
+  // Create a new Date object using the adjusted time
+  const adjustedDate = new Date(adjustedTime);
+
+  // Now you can use adjustedDate in formatDistance function
+  const dateStr = formatDistance(adjustedDate, new Date());
+  // const dateStr = formatDistance(new Date(tweet.createdAt), new Date());
   const location = useLocation().pathname;
 
   const { id } = useParams();
