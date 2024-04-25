@@ -220,7 +220,6 @@ const handleCreateGoogleForm = () => {
     },
   ];
 
-  // Prepare the questions data
   const allQuestions = [...defaultQuestions, ...questions];
   const questionsData = JSON.stringify(allQuestions);
 
