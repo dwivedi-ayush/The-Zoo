@@ -1,19 +1,22 @@
 import mongoose from "mongoose";
 
 const AgentGroupSchema = new mongoose.Schema(
-    {
-        groupName: {
-            type: String,
-        },
-        userId: {
-            type: String
-        },
-        agentIds: {
-            type: Array,
-            defaultValue: [],
-        }
+  {
+    groupName: {
+      type: String,
     },
-    { timestamps: true }
+    userId: {
+      type: String,
+    },
+    formURL: {
+      type: String,
+    },
+    agentIds: {
+      type: Array,
+      defaultValue: [],
+    },
+  },
+  { timestamps: true }
 );
 
 export default mongoose.model("AgentGroup", AgentGroupSchema);

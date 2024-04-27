@@ -1,24 +1,67 @@
-import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 const AgentForm = () => {
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [questionType, setQuestionType] = useState("");
   const [newQuestion, setNewQuestion] = useState("");
   const [questions, setQuestions] = useState([]);
-
+  const [formURL, setFormURL] = useState("");
+  const [loading, setLoading] = useState(true);
   const currentAgentGroup = useSelector(
     (state) => state.agentGroup.currentAgentGroup
   );
   const { currentUser } = useSelector((state) => state.user);
 
+  useEffect(() => {
+    const fetchFormUrl = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/agentGroups/v2/getFormUrl/${currentAgentGroup.id}`
+        );
+        setFormURL(response.data.url);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchFormUrl();
+  },[])
+
+
   const handleAddQuestion = () => {
     setShowQuestionForm(true);
   };
 
-  const handleQuestionTypeChange = (e) => {
-    setQuestionType(e.target.value);
-  };
+  // const handleQuestionTypeChange = (e) => {
+  //   setQuestionType(e.target.value);
+  // };
+
+  const saveFormData =  (e) => {
+    const tempFunc = async  () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/agentGroups/v2/saveFormData/${currentAgentGroup.id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              formId: formURL,
+            }),
+          }
+        );
+        if (response.status === 200) {
+          console.log("SUCCESS");
+          setFormURL("");
+        }        
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    tempFunc();
+}
 
   const handleNewQuestionChange = (e) => {
     setNewQuestion(e.target.value);
@@ -134,6 +177,7 @@ const AgentForm = () => {
   };
 
   const handleCreateGoogleForm = () => {
+    setLoading(true);
     const defaultQuestions = [
       // Personal Information
       { text: "Name:", type: "text" },
@@ -229,21 +273,40 @@ const AgentForm = () => {
     const allQuestions = [...defaultQuestions, ...questions];
     const questionsData = JSON.stringify(allQuestions);
 
-    // Call the Apps Script web app URL
-    const url =
-      "https://script.google.com/macros/s/AKfycbxVwVyQ84EP83hnIwYnzQnT3IkaosE51Dt4moQlPshsS4zINYtTF9LHbHaS18yh4X87/exec";
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: questionsData,
-    };
+    const proxyUrl = "https://proxy.cors.sh/";
+    // const proxyUrl = "";
+    const targetUrl =
+      "https://script.google.com/macros/s/AKfycbzmdIS6g_WFMcnydpxL2Ycvp4h0tLt434W2ZdSqwB6N8eg5szyqPrYnxTxy_gMFJoba/exec";
 
-    fetch(url, requestOptions)
-      .then((response) => response.text())
-      .then((data) => {
-        console.log("Google Form URL:", data);
+    axios
+      .post(proxyUrl + targetUrl, questionsData, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-cors-api-key": "temp_a1c3ce37d2a63f227cbf8f4e93a2b853",
+        },
       })
-      .catch((error) => console.error("Error:", error));
+      .then((response) => {
+        console.log("Google Form URL:", response.data);
+        setFormURL(response.data);
+
+        axios
+          .post(
+            `http://localhost:8000/api/agentGroups/v2/createFormUrl/${currentAgentGroup.id}`,
+            {
+              id: currentAgentGroup.id,
+              url: response.data,
+            }
+          )
+          .then((response) => {
+            console.log(response.data);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => console.error("Error:", error));    
+
   };
 
   return (
@@ -703,14 +766,29 @@ const AgentForm = () => {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={handleCreateForm}
           >
-            Create Form Directly
+            Create Agent Directly
           </button>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={handleCreateGoogleForm}
-          >
-            Create Google Form
-          </button>
+          {loading ? (
+            <button
+              className="bg-blue-700  text-white font-bold py-2 px-4 rounded"
+            >
+              Loading...
+            </button>
+          ) : formURL === "" ? (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleCreateGoogleForm}
+            >
+              Create Google Form
+            </button>
+          ) : (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={saveFormData}
+            >
+              Save Form Data
+            </button>
+          )}
         </div>
       </div>
     </div>

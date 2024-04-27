@@ -85,22 +85,6 @@ def get_tweet_count(scenario_group_id, agent_group_id):
     return response.json()
     # pass
 
-
-# def _build_cors_preflight_response():
-#     response = make_response()
-#     response.headers.add("Access-Control-Allow-Origin", "*")
-#     response.headers.add("Access-Control-Allow-Headers", "*")
-#     response.headers.add("Access-Control-Allow-Methods", "*")
-#     return response
-
-
-# @app.route("/generatetweet", methods=["OPTIONS"])
-# # @cross_origin(origin="*")
-# def fun():
-#     return "Success", 201
-
-
-# @app.route("/generate-tweet", methods=["POST", "OPTIONS"])
 # @cross_origin(origin="*")
 @app.route("/generatetweet", methods=["POST", "OPTIONS"])
 def generate_tweet():
@@ -140,16 +124,6 @@ def generate_tweet():
             reply_probability,
         )
 
-        # asyncio.create_task(
-        #     run_async(
-        #         scenario_group_id,
-        #         agent_group_id,
-        #         test_mode,
-        #         loop_limit,
-        #         action_frequency,
-        #         reply_probablity,
-        #     )
-        # )
     response = {"message": "Generation Started successfully!"}
     # response.headers.add("Access-Control-Allow-Origin", "*")
     return response, 200

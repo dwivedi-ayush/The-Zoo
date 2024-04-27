@@ -24,6 +24,50 @@ export const getAgentGroupById = async (req, res, next) => {
         next(err);
     }
 };
+export const getFormUrl = async (req, res, next) => {
+  try {
+    const agentGroup = await AgentGroup.findById(req.params.id);
+    res.status(200).json(agentGroup.formURL);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const createFormUrl = async (req, res, next) => {
+  try {
+    const agentGroup = await AgentGroup.findById(req.params.id);
+    agentGroup.formURL = req.body.url;
+    await agentGroup.save();
+    res.status(200).json(agentGroup);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const saveFormData = async (req, res, next) => {
+  try {
+    const agentGroup = await AgentGroup.findById(req.params.id);
+    const formId = req.body.formId;
+    const response = await axios.post(
+      `https://script.google.com/macros/s/AKfycbyxweMrM8MrhrR--dvYkGLLR3Bo0bCHZ4JB7XcOMS5DXmm7RvLr9uF64JpVc9trL1LqgA/exec`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          formId: formId,
+        }),
+      }
+    );
+    if (response.status === 200) {
+        for (let item of response.data) {
+          await axios.post("http://localhost:8080/submit-form", item);
+        }
+    }
+  } catch (err) {
+    next(err);
+  }
+};
 export const deleteAgentGroup = async (req, res, next) => {
     // const session = await mongoose.startSession();
     // session.startTransaction();
