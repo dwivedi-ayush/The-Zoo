@@ -1,4 +1,10 @@
-import React, { useState, useCallback, Fragment, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  Fragment,
+  useRef,
+} from "react";
 import TimelineTweet from "../TimelineTweet/TimelineTweet";
 // import ExploreTweets from "../ExploreTweets/ExploreTweets";
 import { useSelector } from "react-redux";
@@ -126,12 +132,15 @@ const GenerateDialogueBox = ({
   const [numberOfActions, setNumberOfActions] = useState(4);
   const [actionFrequency, setActionFrequency] = useState(1);
   const [replyProbability, setReplyProbability] = useState(0.3);
+  const [scenarioFocus, setScenarioFocus] = useState(false);
   const generateButtonRef = useRef(null);
+
   const handleGenerate = () => {
     const body = {
       scenario_group_id: currentScenarioGroup.id,
       agent_group_id: currentAgentGroup.id === "" ? "0" : currentAgentGroup.id,
       test_mode: false,
+      scenario_focus: scenarioFocus,
       loop_limit: numberOfActions,
       action_frequency: actionFrequency,
       reply_probability: replyProbability,
@@ -252,6 +261,17 @@ const GenerateDialogueBox = ({
                               className="bg-slate-200 rounded-lg p-2 mb-2"
                               style={{ height: "4vh", width: "6vw" }}
                             />
+                          </div>
+                          <div className="flex item-center">
+                            <span>Scenario Focused:</span>
+                            <input
+                              className="ml-4"
+                              type="checkbox"
+                              checked={scenarioFocus}
+                              onChange={() => {
+                                setScenarioFocus((prev) => !prev);
+                              }}
+                            ></input>
                           </div>
                         </div>
                         <div className="flex items-center justify-between transition-all duration-200">

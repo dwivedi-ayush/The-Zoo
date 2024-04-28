@@ -53,7 +53,7 @@ def explore_tweets(current_agent_id, agent_group_id, scenario_group_id):
         # agent_ids = [id for id in temp["agentIds"]]
 
     tweet_response = ""
-    print(agent_ids)
+    # print(agent_ids)
     if agent_ids:
         # Query the tweet_collection using the filtered agent_ids
         tweet_response = (

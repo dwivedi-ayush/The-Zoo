@@ -85,6 +85,7 @@ def get_tweet_count(scenario_group_id, agent_group_id):
     return response.json()
     # pass
 
+
 # @cross_origin(origin="*")
 @app.route("/generatetweet", methods=["POST", "OPTIONS"])
 def generate_tweet():
@@ -96,6 +97,8 @@ def generate_tweet():
     print("Agent Group ID:", agent_group_id)
     test_mode = request.json.get("test_mode")
     print("Test Mode:", test_mode)
+    scenario_focus = request.json.get("scenario_focus")
+    print("Scenario Focus:", scenario_focus)
     loop_limit = request.json.get("loop_limit")
     print("Loop Limit:", loop_limit)
     action_frequency = request.json.get("action_frequency")
@@ -110,6 +113,7 @@ def generate_tweet():
             scenario_group_id,
             agent_group_id,
             test_mode,
+            scenario_focus,
             loop_limit,
             action_frequency,
             0,
@@ -119,6 +123,7 @@ def generate_tweet():
             scenario_group_id,
             agent_group_id,
             test_mode,
+            scenario_focus,
             loop_limit,
             action_frequency,
             reply_probability,

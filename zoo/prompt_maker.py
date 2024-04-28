@@ -76,6 +76,7 @@ def make_prompt(
     agent_alias="",
     agent_id="",
     scenario_group_id="",
+    scenario_focus="",
     agent_group_id="",
     explore_tweets="",
     previous_post="",
