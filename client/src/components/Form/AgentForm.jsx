@@ -48,7 +48,7 @@ const AgentForm = () => {
           `http://localhost:8000/api/agentGroups/v2/saveFormData/${currentAgentGroup.id}`,
 
           {
-            formId: formId,
+            formUrl: formURL,
           }
         );
         if (response.status === 200) {

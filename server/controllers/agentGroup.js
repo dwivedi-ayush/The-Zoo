@@ -60,37 +60,23 @@ export const saveFormData = async (req, res, next) => {
   try {
     const agentGroup = await AgentGroup.findById(req.params.id);
     const formId = req.body.formId;
-<<<<<<< HEAD
-    const response = await axios.post(
-      `https://proxy.cors.sh/https://script.google.com/macros/s/AKfycbyxweMrM8MrhrR--dvYkGLLR3Bo0bCHZ4JB7XcOMS5DXmm7RvLr9uF64JpVc9trL1LqgA/exec`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          formId: formId,
-        }),
-      }
-    );
-=======
     const body = JSON.stringify({
       formId: formId
     })
     const targetUrl =
-      "https://script.google.com/macros/s/AKfycbzXm1enDUHhEcLTvHCCItqhxpGzREpy17KMMg4xpLPYhib_H0Al61PrtRavE3zbdX7WzQ/exec";
+      "https://script.google.com/macros/s/AKfycbyDHhzZ4M_HaEgG2rul9fUORKl1MICEztU8HmmNlVAnCahqSuZwFRioejDgZlw0gdF7tw/exec";
     const response = await axios.post(targetUrl, body, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log(response.data, response.status)
->>>>>>> 42f65adb90e598da2ee2af5cee3c608673917f4d
+    console.log(response.status)
     if (response.status === 200) {
-      // agentGroup.formURL = "";
-      // agentGroup.save();
-      // for (let item of response.data) {
-      //   await axios.post("http://localhost:8080/submit-form", item);
-      // }
+      agentGroup.formURL = "";
+      agentGroup.save();
+      for (let item of response.data) {
+        await axios.post("http://localhost:8080/submit-form", item);
+      }
     }
     res.status(200).json(response.data);
   } catch (err) {
