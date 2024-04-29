@@ -49,7 +49,7 @@ export const saveFormData = async (req, res, next) => {
     const agentGroup = await AgentGroup.findById(req.params.id);
     const formId = req.body.formId;
     const response = await axios.post(
-      `https://script.google.com/macros/s/AKfycbyxweMrM8MrhrR--dvYkGLLR3Bo0bCHZ4JB7XcOMS5DXmm7RvLr9uF64JpVc9trL1LqgA/exec`,
+      `https://proxy.cors.sh/https://script.google.com/macros/s/AKfycbyxweMrM8MrhrR--dvYkGLLR3Bo0bCHZ4JB7XcOMS5DXmm7RvLr9uF64JpVc9trL1LqgA/exec`,
       {
         headers: {
           "Content-Type": "application/json",
