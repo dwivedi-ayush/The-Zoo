@@ -27,7 +27,7 @@ export const getAgentGroupById = async (req, res, next) => {
 export const getFormUrl = async (req, res, next) => {
   try {
     const agentGroup = await AgentGroup.findById(req.params.id);
-    res.status(200).json(agentGroup.formURL);
+    res.status(200).json({ url: agentGroup.formURL });
   } catch (err) {
     next(err);
   }
@@ -37,20 +37,20 @@ export const createFormUrl = async (req, res, next) => {
   try {
     const agentGroup = await AgentGroup.findById(req.params.id);
     const targetUrl =
-      "https://script.google.com/macros/s/AKfycby5ZPGk9DjrQ5iNrwgtxULZsAgfOdEf6dLjVPz5pwgCD6YVZ8U8sqSjbe_M-eNpDrWQ/exec";
+      "https://script.google.com/macros/s/AKfycbxapvki_hzgkr5ZdJ8ZC4iykJDv_c1ly8uCxKNQ-Ebh7BGjEz39c_erpVhEr4jnN6Bm/exec";
     const body = JSON.stringify(req.body.formData)
-    console.log(body)
+
     const response = await axios.post(targetUrl, body, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log(response.data)
-    // agentGroup.formURL = response.formURL;
-    // agentGroup.save();
 
-    // res.status(200).json(response.data.formURL);
-    res.status(200)
+    agentGroup.formURL = response.data.formUrl;
+    agentGroup.save();
+
+    res.status(200).json(response.data.formUrl);
+
   } catch (err) {
     next(err);
   }
@@ -60,24 +60,25 @@ export const saveFormData = async (req, res, next) => {
   try {
     const agentGroup = await AgentGroup.findById(req.params.id);
     const formId = req.body.formId;
-    const response = await axios.post(
-      `https://proxy.cors.sh/https://script.google.com/macros/s/AKfycbyxweMrM8MrhrR--dvYkGLLR3Bo0bCHZ4JB7XcOMS5DXmm7RvLr9uF64JpVc9trL1LqgA/exec`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "x-cors-api-key": "temp_ee6baa959028542c1924a38f378f2092",
-        },
-        body: JSON.stringify({
-          formId: formId,
-        }),
-      }
-    );
+    const body = JSON.stringify({
+      formId: formId
+    })
+    const targetUrl =
+      "https://script.google.com/macros/s/AKfycbzXm1enDUHhEcLTvHCCItqhxpGzREpy17KMMg4xpLPYhib_H0Al61PrtRavE3zbdX7WzQ/exec";
+    const response = await axios.post(targetUrl, body, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response.data, response.status)
     if (response.status === 200) {
-      for (let item of response.data) {
-        await axios.post("http://localhost:8080/submit-form", item);
-      }
+      // agentGroup.formURL = "";
+      // agentGroup.save();
+      // for (let item of response.data) {
+      //   await axios.post("http://localhost:8080/submit-form", item);
+      // }
     }
-    res.status(200).json(response);
+    res.status(200).json(response.data);
   } catch (err) {
     next(err);
   }

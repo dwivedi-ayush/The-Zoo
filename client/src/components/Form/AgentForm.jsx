@@ -21,6 +21,7 @@ const AgentForm = () => {
           `http://localhost:8000/api/agentGroups/v2/getFormUrl/${currentAgentGroup.id}`
         );
         setFormURL(response.data.url ? response.data.url : "");
+        // console.log(response.data.url ? response.data.url : "");
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -40,15 +41,14 @@ const AgentForm = () => {
   const saveFormData = (e) => {
     const tempFunc = async () => {
       try {
-        const response = await axios.get(
+        const parts = formURL.split("/");
+        const formId = parts[parts.length - 2];
+        // console.log(parts, formId);
+        const response = await axios.put(
           `http://localhost:8000/api/agentGroups/v2/saveFormData/${currentAgentGroup.id}`,
+
           {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              formId: formURL,
-            }),
+            formId: formId,
           }
         );
         if (response.status === 200) {
@@ -299,7 +299,7 @@ const AgentForm = () => {
             formData: questionsData,
           }
         );
-        console.log("Google Form URL:", response.data);
+        // console.log("Google Form URL:", response.data);
         setFormURL(response.data);
       } catch (e) {
         console.log("Error:", e);
@@ -780,17 +780,33 @@ const AgentForm = () => {
               Create Google Form
             </button>
           ) : (
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={saveFormData}
-            >
-              Save Form Data
-            </button>
+            <div className="flex items-center flex-col">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={saveFormData}
+              >
+                Save Form Data
+              </button>
+            </div>
           )}
         </div>
+        {loading ? (
+          <></>
+        ) : formURL === "" ? (
+          <></>
+        ) : (
+          <div className="flex item-center mt-2">
+            <p className="mr-2 w-max">Form link:</p>
+            <input
+              className="mt-2 block w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+              type="text"
+              value={formURL}
+              disabled
+            ></input>
+          </div>
+        )}
       </div>
     </div>
   );
 };
-
 export default AgentForm;
