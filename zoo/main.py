@@ -300,8 +300,9 @@ def start(
             ):
                 print("Tweet saved successfully")
             else:
-                print("DB Error")
-                break
+                print("DB Error or test mode")
+                if not test_mode:
+                    break
             # handle_new_tweet()
         elif command.split("-")[0] == "replyto":
             # reply case
@@ -326,7 +327,7 @@ def start(
                         ):
                             print("Reply saved successfully")
                         else:
-                            print("DB Error")
+                            print("DB Error or test mode")
                         break
         else:
             # handle_error()  # parsing error or response error

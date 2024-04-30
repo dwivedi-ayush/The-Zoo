@@ -59,9 +59,9 @@ export const createFormUrl = async (req, res, next) => {
 export const saveFormData = async (req, res, next) => {
   try {
     const agentGroup = await AgentGroup.findById(req.params.id);
-    const formId = req.body.formId;
+    const formUrl = req.body.formUrl;
     const body = JSON.stringify({
-      formId: formId
+      formUrl: formUrl
     })
     const targetUrl =
       "https://script.google.com/macros/s/AKfycbyDHhzZ4M_HaEgG2rul9fUORKl1MICEztU8HmmNlVAnCahqSuZwFRioejDgZlw0gdF7tw/exec";
@@ -70,7 +70,7 @@ export const saveFormData = async (req, res, next) => {
         "Content-Type": "application/json",
       },
     });
-    console.log(response.status)
+    console.log(response.data, response.status)
     if (response.status === 200) {
       agentGroup.formURL = "";
       agentGroup.save();

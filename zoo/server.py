@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify, make_response
 
 from flask_cors import CORS, cross_origin
-import openai
+import openai as ai
 import os
 import requests
 from pydantic import BaseModel
 from run import run
 
-openai.api_key = os.getenv("API_KEY")
+# openai.api_key = os.getenv("API_KEY")
 
 app = Flask(__name__)
 # cors = CORS(app)
@@ -24,13 +24,15 @@ def get_personality(form_data):
         + str(form_data)
         + """
         Using this information, create a human-like personality that could have submitted this form. Describe this personality in detail, including their background, interests, goals, and any other relevant characteristics. Do not use exact words from the form data, instead understand the context and then create teh personality 
-        Do not reference the person anywhere in teh prompt.
+        Do not reference the person anywhere in the prompt.
         Respond in first person singular ( talking like you are explaining your own personality ).
         Respond with only the personality description, without any additional context or instructions.
+        take all details into consideration. try to be as authentic as possible. take into consideration every question of the form.
         """
     )
-
-    response = openai.chat.completions.create(
+    api_key = os.getenv("API_KEY")
+    client = ai.OpenAI(api_key=api_key)
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": prompt},
@@ -66,8 +68,10 @@ def send_to_DB(personality, alias, user_id, agent_group_id):
         print("Failed to create agent. Error:", response.status_code, response.text)
 
 
-@app.route("/submit-form", methods=["POST", "OPTIONS"])
+@app.route("/submitform", methods=["POST", "OPTIONS"])
 def handle_form_submission():
+    if request.method == "OPTIONS":  # CORS preflight
+        return {}, 200
     form_data = request.get_json()
     print("Received form data:", form_data["Name"])
 

@@ -98,7 +98,7 @@ def make_prompt(
     prompt = "this is an error prompt, if you see this prompt, only reply with word error and nothing else. example response: 'Error' "
 
     scenario_indexed, count = make_Scenario_string(scenario_group_id)
-    scenario_part_1 = """Focus on the below. These are the most important events happening in your world right now. Below is the current news in your world. You are to make tweets based on the below happening events."""
+    scenario_part_1 = """Focus on the below. These are the most important events happening in your world right now. Below is the current news in your world. You are to make tweets based on the below happening events. you can either support the things or oppose it. respond as authentic as possible to the personality, avoid giving very neutral or objective response, understand that each personality is subjective and people take sides. try to take side according to the personality given, their likes and dislikes and their goals."""
 
     scenario_delimiting_text = """ The greater the index of the event, the more recently is has occurred in your world. Below are your news headlines of your world:"""
 
@@ -200,9 +200,9 @@ def make_prompt(
                 + tweet_prompt
                 + "Your personality is given below: "
                 + agent_personality
-                + final_scenario_string
                 + " assume details about what you are about to do and tweet about the same. A random activity you are about to do can be this:"
                 + random_activity
+                + final_scenario_string
                 + "reply in this format only 'newtweet;tweet content goes here;' .previous tweet summary is as follows -"
                 + previous_summary
                 + "END SUMMARY. Try not to repeat same tweet or similar tweets more than once,never be monotonous, use this summary to avoid the topics you have already touched."

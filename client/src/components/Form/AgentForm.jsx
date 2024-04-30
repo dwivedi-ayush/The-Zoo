@@ -84,7 +84,8 @@ const AgentForm = () => {
     setQuestions(updatedQuestions);
   };
 
-  const handleCreateForm = () => {
+  const handleCreateForm = (e) => {
+    e.preventDefault();
     // Create the form data object
     const formData = {};
 
@@ -152,7 +153,7 @@ const AgentForm = () => {
     // Console log the formData object
     // console.log(formData);
 
-    const url = "http://127.0.0.1:5000/submit-form";
+    const url = "http://127.0.0.1:8080/submitform";
 
     const requestOptions = {
       method: "POST",
