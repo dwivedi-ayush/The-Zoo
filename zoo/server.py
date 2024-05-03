@@ -72,7 +72,9 @@ def send_to_DB(personality, alias, user_id, agent_group_id):
 def handle_form_submission():
     if request.method == "OPTIONS":  # CORS preflight
         return {}, 200
-    form_data = request.get_json()
+    # print(request.json)
+    form_data = dict(request.json)
+    print(form_data.keys())
     print("Received form data:", form_data["Name"])
 
     personality = get_personality(form_data)

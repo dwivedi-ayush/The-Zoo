@@ -116,6 +116,7 @@ const AgentForm = () => {
     const misc = document.getElementById("misc").value;
     const userID = currentUser._id;
     const agentGroupID = currentAgentGroup.id;
+    // const type = "";
 
     // Add the values to the formData object
     formData["Name"] = name;
@@ -144,6 +145,7 @@ const AgentForm = () => {
     formData["Miscellaneous"] = misc;
     formData["UserID"] = userID;
     formData["AgentGroupID"] = agentGroupID;
+    // formData["type"] = "";
 
     // Add the added questions to the formData object
     questions.forEach((question, index) => {
@@ -180,10 +182,10 @@ const AgentForm = () => {
     setLoading(true);
     const defaultQuestions = [
       // Personal Information
-      { text: "Name:", type: "text" },
-      { text: "Age:", type: "number" },
-      { text: "Gender:", type: "text" },
-      { text: "Occupation:", type: "text" },
+      { text: "Name", type: "text" },
+      { text: "Age", type: "number" },
+      { text: "Gender", type: "text" },
+      { text: "Occupation", type: "text" },
 
       // Hobbies and Interests
       {
@@ -271,7 +273,7 @@ const AgentForm = () => {
     ];
 
     const allQuestions = [...defaultQuestions, ...questions];
-    const questionsData = { questions: allQuestions };
+    const questionsData = { type: "", questions: allQuestions };
     const createURL = async () => {
       try {
         // const proxyUrl = "https://proxy.cors.sh/";
