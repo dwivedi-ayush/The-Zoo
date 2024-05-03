@@ -45,7 +45,7 @@ const AgentForm = () => {
         const formId = parts[parts.length - 2];
         // console.log(parts, formId);
         const response = await axios.put(
-          `http://localhost:8000/api/agentGroups/v2/saveFormData/${currentAgentGroup.id}`,
+          `http://localhost:8000/api/agentGroups/v2/saveFormData/${currentAgentGroup.id}/${currentUser._id}`,
 
           {
             formUrl: formURL,
@@ -54,6 +54,7 @@ const AgentForm = () => {
         if (response.status === 200) {
           console.log("SUCCESS");
           setFormURL("");
+          window.history.back();
         }
       } catch (error) {
         console.error(error);

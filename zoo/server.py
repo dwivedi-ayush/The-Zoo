@@ -68,8 +68,11 @@ def send_to_DB(personality, alias, user_id, agent_group_id):
         print("Failed to create agent. Error:", response.status_code, response.text)
 
 
-@app.route("/submitform", methods=["POST", "OPTIONS"])
-def handle_form_submission():
+@app.route(
+    "/submitform/userID/<agentGroupId>/agentGroupID/<userId>",
+    methods=["POST", "OPTIONS"],
+)
+def handle_form_submission(agentGroupId, userId):
     if request.method == "OPTIONS":  # CORS preflight
         return {}, 200
     # print(request.json)
@@ -78,9 +81,7 @@ def handle_form_submission():
     print("Received form data:", form_data["Name"])
 
     personality = get_personality(form_data)
-    send_to_DB(
-        personality, form_data["Name"], form_data["UserID"], form_data["AgentGroupID"]
-    )
+    send_to_DB(personality, form_data["Name"], userId, agentGroupId)
 
     return jsonify({"message": "Form data received successfully"})
 

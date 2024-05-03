@@ -65,10 +65,10 @@ export const saveFormData = async (req, res, next) => {
     const formUrl = req.body.formUrl;
     const body = JSON.stringify({
       formUrl: formUrl,
-      type : 0
+      type: 0
     })
     const targetUrl = app_script_url;
-      // "https://script.google.com/macros/s/AKfycbyDHhzZ4M_HaEgG2rul9fUORKl1MICEztU8HmmNlVAnCahqSuZwFRioejDgZlw0gdF7tw/exec";
+    // "https://script.google.com/macros/s/AKfycbyDHhzZ4M_HaEgG2rul9fUORKl1MICEztU8HmmNlVAnCahqSuZwFRioejDgZlw0gdF7tw/exec";
     const response = await axios.post(targetUrl, body, {
       headers: {
         "Content-Type": "application/json",
@@ -84,14 +84,15 @@ export const saveFormData = async (req, res, next) => {
     // });
     console.log(response.data, response.status)
     if (response.status === 200) {
-      
-      // agentGroup.formURL = "";
-      // agentGroup.save();
-      // const agentGroup = await AgentGroup.findById(req.params.id);
+
+
+
       for (let json of response.data) {
         console.log(json);
-        await axios.post("http://localhost:8080/submitform/userID/123/agentGroupID/123", json);
+        await axios.post(`http://localhost:8080/submitform/userID/${req.params.agentGroupId}/agentGroupID/${req.params.userId}`, json);
       }
+      agentGroup.formURL = "";
+      agentGroup.save();
     }
     res.status(200).json(response.data);
   } catch (err) {
