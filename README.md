@@ -115,6 +115,13 @@ git push origin feature/my-feature
 
 Your pull request will then be reviewed by the project maintainers. Make sure to respond to any feedback or comments provided during the review process to facilitate the merging of your changes into the main project.
 
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/76063967/612f9c5a-0db9-44a6-bbf1-3d9a7f520dc9)
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/76063967/3eab7d46-533e-46eb-aac8-bf8a4bcf4698)
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/76063967/79573149-e56d-44d2-89a1-c8ae99704bd1)
+![image](https://github.com/dwivedi-ayush/The-Zoo/assets/76063967/50a65a4b-3b1e-4acb-8a21-28c2350b15ce)
+
+
+
 Bigger Picture
 An overall picture of the whole project
 ![image](https://github.com/dwivedi-ayush/The-Zoo/assets/79781363/13a9177e-c369-4382-977c-8c79f0a0b4b5)
