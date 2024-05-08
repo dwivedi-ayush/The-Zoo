@@ -37,7 +37,7 @@ const Signin = () => {
         password,
       });
       dispatch(loginSuccess(res.data));
-      navigate("/");
+      navigate("/home");
     } catch (err) {
       dispatch(loginFailed());
     }
